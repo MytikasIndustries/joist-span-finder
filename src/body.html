@@ -1,0 +1,117 @@
+<header class="masthead">
+  <div class="wrap">
+    <p class="eyebrow">Mytikas Steel</p>
+    <h1>Floor joist span finder.</h1>
+    <p class="lede">Describe the floor and the span. We list the Mytikas Steel 2" flange joists that make it, lightest first.</p>
+  </div>
+</header>
+
+<main class="wrap sheet">
+  <form class="inputs" id="inputs" novalidate>
+    <fieldset>
+      <legend>What's the floor for?</legend>
+      <div class="choices" id="uses"></div>
+      <p class="hint">Typical minimum live loads from IBC Table 1607.1. Your local code and the engineer of record govern.</p>
+    </fieldset>
+
+    <fieldset id="custom-loads" hidden>
+      <legend>Your loads</legend>
+      <div class="pair">
+        <div class="field">
+          <label for="dl-custom">Dead load</label>
+          <div class="box"><input id="dl-custom" name="dl-custom" type="number" inputmode="decimal" min="0" step="1"><span class="unit">psf</span></div>
+        </div>
+        <div class="field">
+          <label for="ll-custom">Live load</label>
+          <div class="box"><input id="ll-custom" name="ll-custom" type="number" inputmode="decimal" min="0" step="1"><span class="unit">psf</span></div>
+        </div>
+      </div>
+      <p class="hint">Loads between our tables use the next heavier table, so spans stay on the safe side.</p>
+    </fieldset>
+
+    <fieldset id="floor-weight">
+      <legend>What's on the floor?</legend>
+      <div class="choices" id="weights"></div>
+      <p class="hint">Dead load is the weight of the floor itself. These are typical values; add up your assembly if it differs.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Span</legend>
+      <div class="pair">
+        <div class="field">
+          <label for="ft">Feet</label>
+          <div class="box"><input id="ft" name="ft" type="number" inputmode="numeric" min="0" max="60" step="1" placeholder="0"><span class="unit">ft</span></div>
+        </div>
+        <div class="field">
+          <label for="in">Inches</label>
+          <div class="box"><input id="in" name="in" type="number" inputmode="numeric" min="0" max="11" step="1" placeholder="0"><span class="unit">in</span></div>
+        </div>
+      </div>
+      <p class="hint" id="span-hint">Clear span between supports.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>Joist spacing</legend>
+      <div class="segmented" id="spacing">
+        <label><input type="radio" name="oc" id="oc-12" value="12"><span>12"<small>on center</small></span></label>
+        <label><input type="radio" name="oc" id="oc-16" value="16"><span>16"<small>on center</small></span></label>
+        <label><input type="radio" name="oc" id="oc-24" value="24"><span>24"<small>on center</small></span></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Supports</legend>
+      <div class="segmented" id="supports">
+        <label><input type="radio" name="span" id="span-single" value="single"><span>
+          <svg viewBox="0 0 120 22" aria-hidden="true"><line class="beam" x1="6" y1="6" x2="114" y2="6"/><path class="support" d="M10 9 L4 20 L16 20 Z"/><path class="support" d="M110 9 L104 20 L116 20 Z"/></svg>
+          One span<small>Supported at each end</small></span></label>
+        <label><input type="radio" name="span" id="span-two" value="two"><span>
+          <svg viewBox="0 0 120 22" aria-hidden="true"><line class="beam" x1="6" y1="6" x2="114" y2="6"/><path class="support" d="M10 9 L4 20 L16 20 Z"/><path class="support" d="M60 9 L54 20 L66 20 Z"/><path class="support" d="M110 9 L104 20 L116 20 Z"/></svg>
+          Two equal spans<small>Continuous over a center support</small></span></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Floor stiffness</legend>
+      <div class="segmented" id="stiffness">
+        <label><input type="radio" name="defl" id="defl-360" value="L/360"><span>Standard<small>L/360</small></span></label>
+        <label><input type="radio" name="defl" id="defl-480" value="L/480"><span>Stiffer, less bounce<small>L/480</small></span></label>
+      </div>
+      <p class="hint" id="defl-hint"></p>
+    </fieldset>
+  </form>
+
+  <section class="results" id="results" aria-live="polite"></section>
+</main>
+
+<a class="jump" id="jump" href="#results"><span id="jump-text"></span><span class="go">See joists ↓</span></a>
+
+<div class="notes-band">
+  <section class="wrap notes">
+    <div class="stack">
+      <h2>Before you spec.</h2>
+      <ul>
+        <li>Spans are for uniform floor loads. Concentrated loads, openings, cantilevers and continuous spans other than two equal spans need an engineer.</li>
+        <li>The top (compression) flange is braced along its full length by sheathing fastened to it. Joists are braced against rotation at every support, and flanges are fastened to the support.</li>
+        <li>Every support assumes 3-1/2" of bearing. Shorter bearing changes the web stiffener requirement and may reduce capacity.</li>
+        <li>Two equal spans: enter each span, measured from an end support to the center support. The joist runs continuous over the center support.</li>
+        <li>Total-load deflection is limited to L/240 in every table, with live-load deflection at L/360 or L/480 as selected.</li>
+        <li>With sheathing on the top flange only, install bridging on the bottom flange at no more than 8 ft on center.</li>
+        <li>Web punchouts near a support may need reinforcement.</li>
+      </ul>
+    </div>
+    <div class="stack">
+      <h2>Where the numbers come from.</h2>
+      <p>Allowable spans are from the ClarkDietrich “Cold-Formed Structural Framing Products Technical Design Guide” (Pub. No. CD-STR-TechGuide, effective 06/01/24), floor joist tables pp. 63 to 88, designed to AISI S100-16 (2020) w/S2-20. It is the industry reference our engineers use. Joist weights are from the same guide, pp. 13 to 17.</p>
+      <p>Mytikas Steel joists are roll-formed from 50 ksi steel in Florence, Colorado, and meet or exceed the ClarkDietrich sections these tables are based on: 2" flange, 5/8" lip, 54, 68 and 97 mil.</p>
+      <p>This tool is for preliminary sizing and pricing. The engineer of record is responsible for the final design.</p>
+    </div>
+  </section>
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>Mytikas Industries · 1173 SH 120, Florence, CO 81226 · (719) 258-9891 · info@mytikasindustries.com</span>
+    <span>© 2026 Mytikas Industries. All rights reserved.</span>
+  </div>
+</footer>

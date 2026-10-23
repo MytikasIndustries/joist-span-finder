@@ -1,0 +1,2579 @@
+Workbook: 13 worksheets. Cell values are tab-separated rows; "Formulas" lists formula cells by source (which can differ from the displayed value).
+Worksheets (startPage and endPage select them by these numbers):
+1. Read Me
+2. Span Lookup
+3. 10DL-20LL
+4. 10DL-30LL
+5. 10DL-40LL
+6. 10DL-50LL
+7. 10DL-100LL
+8. 10DL-125LL
+9. 15DL-125LL
+10. 25DL-125LL
+11. 40DL-125LL
+12. All Data
+13. Abbreviations
+
+## Sheet: Read Me — 51 rows × 2 columns (A1:B51)
+ClarkDietrich Floor Joist Span Limitations — Mytikas 7800 Line (2" Flange, 50 ksi)	
+Extracted from ClarkDietrich "Cold-Formed Structural Framing Products Technical Design Guide," Pub. No. CD-STR-TechGuide, effective 06/01/24, pp. 61–88. Prepared 10/23/2026.	
+[1 empty row]
+1  What is in this workbook	
+1.1	Span Lookup — pick a load case, live-load deflection limit, span condition and joist spacing; enter a required span to see which 7800-line profiles work. Inputs are blue text on yellow.
+1.2	One tab per load case (10DL-20LL through 40DL-125LL) laid out exactly like the ClarkDietrich tables, limited to the 7800-line profiles. Use these to cross-check against the PDF.
+1.3	All Data — every extracted value in one filterable list (9 load cases × 2 deflection limits × 2 span conditions × 3 spacings × 15 profiles = 1,620 rows). Span in feet-inches, total inches and decimal feet.
+1.4	Abbreviations — every abbreviation used in this workbook, spelled out.
+[1 empty row]
+2  Profiles included (15) — 7800 line, 2" flange, Fy = 50 ksi	
+2.1	6" web: 600S200-54 (16 ga), 600S200-68 (14 ga), 600S200-97 (12 ga)
+2.2	8" web: 800S200-54 (16 ga), 800S200-68 (14 ga), 800S200-97 (12 ga)
+2.3	10" web: 1000S200-54 (16 ga), 1000S200-68 (14 ga), 1000S200-97 (12 ga)
+2.4	12" web: 1200S200-54 (16 ga), 1200S200-68 (14 ga), 1200S200-97 (12 ga)
+2.5	14" web: 1400S200-54 (16 ga), 1400S200-68 (14 ga), 1400S200-97 (12 ga)
+2.6	Scope: the 2" flange (S200) profiles run on the Mytikas 7800 machine, 6" through 14" web (the floor joist tables start at 6"; 14" is our largest web). Every value in this workbook is published by ClarkDietrich at Fy = 50 ksi.
+2.7	20 ga and 18 ga (33 and 43 mil) are not included. ClarkDietrich publishes those thicknesses only at Fy = 33 ksi, in the floor joist tables and everywhere else in the guide (p. 41 note 4: "For material thickness of 33mil and 43mil, Fy = 33ksi, for 54mil and thicker, Fy=50ksi"; p. 62 note 7). The guide has no 50 ksi floor joist table for 33 or 43 mil. ClarkDietrich notes that its online iTools carry more design tables than the printed guide (p. 5); a 50 ksi span for 20 or 18 ga would have to come from there or from the engineer of record.
+2.8	Not published for floor joists at 50 ksi: 1000S200-33 does not exist in the guide, and 1200S200 and 1400S200 start at 54 mil. Every 2" flange joist the guide publishes at 50 ksi is in this workbook.
+[1 empty row]
+3  Load cases and source pages	
+3.1	10 psf dead load + 20 psf live load = 30 psf total — tab "10DL-20LL" — guide pp. 63–65
+3.2	10 psf dead load + 30 psf live load = 40 psf total — tab "10DL-30LL" — guide pp. 66–67
+3.3	10 psf dead load + 40 psf live load = 50 psf total — tab "10DL-40LL" — guide pp. 68–70
+3.4	10 psf dead load + 50 psf live load = 60 psf total — tab "10DL-50LL" — guide pp. 71–73
+3.5	10 psf dead load + 100 psf live load = 110 psf total — tab "10DL-100LL" — guide pp. 74–76
+3.6	10 psf dead load + 125 psf live load = 135 psf total — tab "10DL-125LL" — guide pp. 77–79
+3.7	15 psf dead load + 125 psf live load = 140 psf total — tab "15DL-125LL" — guide pp. 80–82
+3.8	25 psf dead load + 125 psf live load = 150 psf total — tab "25DL-125LL" — guide pp. 83–85
+3.9	40 psf dead load + 125 psf live load = 165 psf total — tab "40DL-125LL" — guide pp. 86–88
+3.10	Every load case is checked at total-load deflection L/240, with live-load deflection at L/360 and at L/480, for single span and two equal spans, at 12", 16" and 24" on center.
+[1 empty row]
+4  ClarkDietrich general notes that govern these values (guide p. 62, summarized)	
+4.1	Spans assume the compression flange is continuously supported (braced) over the full length of the joist — in practice, sheathing fastened to the top flange.
+4.2	Deflection limits: L/240 for total load; L/360 or L/480 for live load, as labeled.
+4.3	Two equal spans: the listed span is the distance from either end to the center support (i.e., each of the two spans), with the joist continuous over the center support. Alternate-span live loading and unbalanced loads for deflection were considered.
+4.4	Joists must be braced against rotation at all supports, and joist flanges must be fastened to the support.
+4.5	A 3-1/2" bearing length was assumed at every support. Shorter bearing changes the web stiffener requirement and may reduce capacity.
+4.6	Web stiffener codes: "e" = web stiffeners required at the end supports only; "i" = at the interior support only; "a" = at all supports; no code = not required under the table assumptions.
+4.7	Strength increase from cold work of forming was included for flexural strength where AISI S100 permits. Distortional buckling based on an assumed rotational stiffness Kφ = 0. Capacities per AISI S100-16 (2020) w/S2-20.
+4.8	Yield strength used for each row is shown in the tables: 33 ksi for 33 and 43 mil members; 50 ksi for 54, 68 and 97 mil members.
+4.9	ClarkDietrich joists are punched with a 4" × 1-1/2" oval; unpunched joists must be specified when ordering. Punchouts are not considered for shear or web crippling, and punchouts near a bearing may need reinforcement.
+4.10	Bridging opposite the sheathed flange is recommended at no more than 8 ft on center when sheathing is applied to the compression flange only.
+[1 empty row]
+5  Items specific to Mytikas material — read before quoting	
+5.1	Yield strength. Every row here is published at Fy = 50 ksi, which matches the Grade 50 steel Mytikas runs. No 33 ksi values appear in this workbook.
+5.2	Section match. These values apply to ClarkDietrich sections. A Mytikas profile qualifies only if its web, flange, lip, thickness and steel grade match or exceed the ClarkDietrich section, so the section properties used in the tables hold for our part.
+5.3	Design responsibility. Manufacturer span tables are design guidance for pricing and preliminary sizing. They do not replace the engineer of record's design, especially for concentrated loads, openings, cantilevers or continuous spans other than two equal spans.
+[1 empty row]
+6  Gauge equivalents used in this workbook	
+6.1	33 mil = 20 ga · 43 mil = 18 ga · 54 mil = 16 ga · 68 mil = 14 ga · 97 mil = 12 ga
+6.2	SSMA designation example: 800S200-54 = 8.00" web depth, S = stud/joist (C-shape with stiffening lips), 2.00" flange, 54 mil (0.054") minimum base-metal thickness ≈ 16 ga.
+
+## Sheet: Span Lookup — 32 rows × 14 columns (A1:N32)
+Floor Joist Span Lookup — Mytikas 7800 Line (2" Flange, 50 ksi)													
+Change the blue-on-yellow cells. Results pull from the All Data tab (ClarkDietrich CD-STR-TechGuide, eff. 06/01/24, pp. 63–88).													
+													Dropdown lists (do not edit)
+Load case	10 psf DL / 40 psf LL	Total load (psf):		50									10 psf DL / 20 psf LL
+Live load deflection limit	L/360												10 psf DL / 30 psf LL
+Span condition	Single span												10 psf DL / 40 psf LL
+Joist spacing (in o.c.)	16												10 psf DL / 50 psf LL
+Required span — feet (optional)	14	Example shown: 10 psf DL / 40 psf LL, L/360, single span, 16" o.c., 14'-0" required. Leave feet and inches blank (or 0) to list spans without a pass/fail check.											10 psf DL / 100 psf LL
+Required span — inches (optional)	0												10 psf DL / 125 psf LL
+Required span (total in)	168												15 psf DL / 125 psf LL
+													25 psf DL / 125 psf LL
+Member	Gauge	Web (in)	Flange (in)	Thickness (mil)	Fy in Table (ksi)	Allowable Span (ft-in)	Allowable Span (in)	Web Stiffeners	Meets Required Span?	Spare Span (in)	Data Row		40 psf DL / 125 psf LL
+600S200-54	16 ga	6.00	2.000	54	50	14' 0"	168	Not required (3-1/2" bearing)	Yes	0	377		
+600S200-68	14 ga	6.00	2.000	68	50	15' 0"	180	Not required (3-1/2" bearing)	Yes	12	378		
+600S200-97	12 ga	6.00	2.000	97	50	16' 8"	200	Not required (3-1/2" bearing)	Yes	32	379		
+800S200-54	16 ga	8.00	2.000	54	50	17' 6"	210	Not required (3-1/2" bearing)	Yes	42	380		
+800S200-68	14 ga	8.00	2.000	68	50	18' 10"	226	Not required (3-1/2" bearing)	Yes	58	381		
+800S200-97	12 ga	8.00	2.000	97	50	20' 11"	251	Not required (3-1/2" bearing)	Yes	83	382		
+1000S200-54	16 ga	10.00	2.000	54	50	20' 8"	248	Not required (3-1/2" bearing)	Yes	80	383		
+1000S200-68	14 ga	10.00	2.000	68	50	22' 4"	268	Not required (3-1/2" bearing)	Yes	100	384		
+1000S200-97	12 ga	10.00	2.000	97	50	25' 1"	301	Not required (3-1/2" bearing)	Yes	133	385		
+1200S200-54	16 ga	12.00	2.000	54	50	23' 1"	277	Required at end supports only	Yes	109	386		
+1200S200-68	14 ga	12.00	2.000	68	50	25' 9"	309	Not required (3-1/2" bearing)	Yes	141	387		
+1200S200-97	12 ga	12.00	2.000	97	50	29' 2"	350	Not required (3-1/2" bearing)	Yes	182	388		
+1400S200-54	16 ga	14.00	2.000	54	50	24' 6"	294	Required at end supports only	Yes	126	389		
+1400S200-68	14 ga	14.00	2.000	68	50	29' 0"	348	Not required (3-1/2" bearing)	Yes	180	390		
+1400S200-97	12 ga	14.00	2.000	97	50	32' 11"	395	Not required (3-1/2" bearing)	Yes	227	391		
+[1 empty row]
+Spare Span = allowable span minus required span, in inches. "—" means no required span was entered.													
+All profiles are 7800-line 2" flange at Fy = 50 ksi, as published by ClarkDietrich.													
+Two equal spans: required span is each span (end support to center support), joist continuous over the center support.													
+Web stiffener requirements assume 3-1/2" bearing with joist flanges fastened to the support. Data Row (column L) is the matching row on the All Data tab.													
+Formulas:
+E4: =IFERROR(INDEX('All Data'!$D:$D,MATCH($B$4,'All Data'!$A:$A,0)),"")
+B10: =IF(AND(B8="",B9=""),0,N(B8)*12+N(B9))
+B13: =@INDEX('All Data'!$L$1:$L$1621,L13)&" ga"
+C13: =@INDEX('All Data'!$I$1:$I$1621,L13)
+D13: =@INDEX('All Data'!$J$1:$J$1621,L13)
+E13: =@INDEX('All Data'!$K$1:$K$1621,L13)
+F13: =@INDEX('All Data'!$M$1:$M$1621,L13)
+G13: =@INDEX('All Data'!$P$1:$P$1621,L13)
+H13: =@INDEX('All Data'!$Q$1:$Q$1621,L13)
+I13: =@INDEX('All Data'!$T$1:$T$1621,L13)
+J13: =IF($B$10=0,"—",IF(H13>=$B$10,"Yes","No"))
+K13: =IF($B$10=0,"—",H13-$B$10)
+L13: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A13,'All Data'!$V$2:$V$1621,0)+1
+B14: =@INDEX('All Data'!$L$1:$L$1621,L14)&" ga"
+C14: =@INDEX('All Data'!$I$1:$I$1621,L14)
+D14: =@INDEX('All Data'!$J$1:$J$1621,L14)
+E14: =@INDEX('All Data'!$K$1:$K$1621,L14)
+F14: =@INDEX('All Data'!$M$1:$M$1621,L14)
+G14: =@INDEX('All Data'!$P$1:$P$1621,L14)
+H14: =@INDEX('All Data'!$Q$1:$Q$1621,L14)
+I14: =@INDEX('All Data'!$T$1:$T$1621,L14)
+J14: =IF($B$10=0,"—",IF(H14>=$B$10,"Yes","No"))
+K14: =IF($B$10=0,"—",H14-$B$10)
+L14: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A14,'All Data'!$V$2:$V$1621,0)+1
+B15: =@INDEX('All Data'!$L$1:$L$1621,L15)&" ga"
+C15: =@INDEX('All Data'!$I$1:$I$1621,L15)
+D15: =@INDEX('All Data'!$J$1:$J$1621,L15)
+E15: =@INDEX('All Data'!$K$1:$K$1621,L15)
+F15: =@INDEX('All Data'!$M$1:$M$1621,L15)
+G15: =@INDEX('All Data'!$P$1:$P$1621,L15)
+H15: =@INDEX('All Data'!$Q$1:$Q$1621,L15)
+I15: =@INDEX('All Data'!$T$1:$T$1621,L15)
+J15: =IF($B$10=0,"—",IF(H15>=$B$10,"Yes","No"))
+K15: =IF($B$10=0,"—",H15-$B$10)
+L15: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A15,'All Data'!$V$2:$V$1621,0)+1
+B16: =@INDEX('All Data'!$L$1:$L$1621,L16)&" ga"
+C16: =@INDEX('All Data'!$I$1:$I$1621,L16)
+D16: =@INDEX('All Data'!$J$1:$J$1621,L16)
+E16: =@INDEX('All Data'!$K$1:$K$1621,L16)
+F16: =@INDEX('All Data'!$M$1:$M$1621,L16)
+G16: =@INDEX('All Data'!$P$1:$P$1621,L16)
+H16: =@INDEX('All Data'!$Q$1:$Q$1621,L16)
+I16: =@INDEX('All Data'!$T$1:$T$1621,L16)
+J16: =IF($B$10=0,"—",IF(H16>=$B$10,"Yes","No"))
+K16: =IF($B$10=0,"—",H16-$B$10)
+L16: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A16,'All Data'!$V$2:$V$1621,0)+1
+B17: =@INDEX('All Data'!$L$1:$L$1621,L17)&" ga"
+C17: =@INDEX('All Data'!$I$1:$I$1621,L17)
+D17: =@INDEX('All Data'!$J$1:$J$1621,L17)
+E17: =@INDEX('All Data'!$K$1:$K$1621,L17)
+F17: =@INDEX('All Data'!$M$1:$M$1621,L17)
+G17: =@INDEX('All Data'!$P$1:$P$1621,L17)
+H17: =@INDEX('All Data'!$Q$1:$Q$1621,L17)
+I17: =@INDEX('All Data'!$T$1:$T$1621,L17)
+J17: =IF($B$10=0,"—",IF(H17>=$B$10,"Yes","No"))
+K17: =IF($B$10=0,"—",H17-$B$10)
+L17: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A17,'All Data'!$V$2:$V$1621,0)+1
+B18: =@INDEX('All Data'!$L$1:$L$1621,L18)&" ga"
+C18: =@INDEX('All Data'!$I$1:$I$1621,L18)
+D18: =@INDEX('All Data'!$J$1:$J$1621,L18)
+E18: =@INDEX('All Data'!$K$1:$K$1621,L18)
+F18: =@INDEX('All Data'!$M$1:$M$1621,L18)
+G18: =@INDEX('All Data'!$P$1:$P$1621,L18)
+H18: =@INDEX('All Data'!$Q$1:$Q$1621,L18)
+I18: =@INDEX('All Data'!$T$1:$T$1621,L18)
+J18: =IF($B$10=0,"—",IF(H18>=$B$10,"Yes","No"))
+K18: =IF($B$10=0,"—",H18-$B$10)
+L18: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A18,'All Data'!$V$2:$V$1621,0)+1
+B19: =@INDEX('All Data'!$L$1:$L$1621,L19)&" ga"
+C19: =@INDEX('All Data'!$I$1:$I$1621,L19)
+D19: =@INDEX('All Data'!$J$1:$J$1621,L19)
+E19: =@INDEX('All Data'!$K$1:$K$1621,L19)
+F19: =@INDEX('All Data'!$M$1:$M$1621,L19)
+G19: =@INDEX('All Data'!$P$1:$P$1621,L19)
+H19: =@INDEX('All Data'!$Q$1:$Q$1621,L19)
+I19: =@INDEX('All Data'!$T$1:$T$1621,L19)
+J19: =IF($B$10=0,"—",IF(H19>=$B$10,"Yes","No"))
+K19: =IF($B$10=0,"—",H19-$B$10)
+L19: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A19,'All Data'!$V$2:$V$1621,0)+1
+B20: =@INDEX('All Data'!$L$1:$L$1621,L20)&" ga"
+C20: =@INDEX('All Data'!$I$1:$I$1621,L20)
+D20: =@INDEX('All Data'!$J$1:$J$1621,L20)
+E20: =@INDEX('All Data'!$K$1:$K$1621,L20)
+F20: =@INDEX('All Data'!$M$1:$M$1621,L20)
+G20: =@INDEX('All Data'!$P$1:$P$1621,L20)
+H20: =@INDEX('All Data'!$Q$1:$Q$1621,L20)
+I20: =@INDEX('All Data'!$T$1:$T$1621,L20)
+J20: =IF($B$10=0,"—",IF(H20>=$B$10,"Yes","No"))
+K20: =IF($B$10=0,"—",H20-$B$10)
+L20: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A20,'All Data'!$V$2:$V$1621,0)+1
+B21: =@INDEX('All Data'!$L$1:$L$1621,L21)&" ga"
+C21: =@INDEX('All Data'!$I$1:$I$1621,L21)
+D21: =@INDEX('All Data'!$J$1:$J$1621,L21)
+E21: =@INDEX('All Data'!$K$1:$K$1621,L21)
+F21: =@INDEX('All Data'!$M$1:$M$1621,L21)
+G21: =@INDEX('All Data'!$P$1:$P$1621,L21)
+H21: =@INDEX('All Data'!$Q$1:$Q$1621,L21)
+I21: =@INDEX('All Data'!$T$1:$T$1621,L21)
+J21: =IF($B$10=0,"—",IF(H21>=$B$10,"Yes","No"))
+K21: =IF($B$10=0,"—",H21-$B$10)
+L21: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A21,'All Data'!$V$2:$V$1621,0)+1
+B22: =@INDEX('All Data'!$L$1:$L$1621,L22)&" ga"
+C22: =@INDEX('All Data'!$I$1:$I$1621,L22)
+D22: =@INDEX('All Data'!$J$1:$J$1621,L22)
+E22: =@INDEX('All Data'!$K$1:$K$1621,L22)
+F22: =@INDEX('All Data'!$M$1:$M$1621,L22)
+G22: =@INDEX('All Data'!$P$1:$P$1621,L22)
+H22: =@INDEX('All Data'!$Q$1:$Q$1621,L22)
+I22: =@INDEX('All Data'!$T$1:$T$1621,L22)
+J22: =IF($B$10=0,"—",IF(H22>=$B$10,"Yes","No"))
+K22: =IF($B$10=0,"—",H22-$B$10)
+L22: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A22,'All Data'!$V$2:$V$1621,0)+1
+B23: =@INDEX('All Data'!$L$1:$L$1621,L23)&" ga"
+C23: =@INDEX('All Data'!$I$1:$I$1621,L23)
+D23: =@INDEX('All Data'!$J$1:$J$1621,L23)
+E23: =@INDEX('All Data'!$K$1:$K$1621,L23)
+F23: =@INDEX('All Data'!$M$1:$M$1621,L23)
+G23: =@INDEX('All Data'!$P$1:$P$1621,L23)
+H23: =@INDEX('All Data'!$Q$1:$Q$1621,L23)
+I23: =@INDEX('All Data'!$T$1:$T$1621,L23)
+J23: =IF($B$10=0,"—",IF(H23>=$B$10,"Yes","No"))
+K23: =IF($B$10=0,"—",H23-$B$10)
+L23: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A23,'All Data'!$V$2:$V$1621,0)+1
+B24: =@INDEX('All Data'!$L$1:$L$1621,L24)&" ga"
+C24: =@INDEX('All Data'!$I$1:$I$1621,L24)
+D24: =@INDEX('All Data'!$J$1:$J$1621,L24)
+E24: =@INDEX('All Data'!$K$1:$K$1621,L24)
+F24: =@INDEX('All Data'!$M$1:$M$1621,L24)
+G24: =@INDEX('All Data'!$P$1:$P$1621,L24)
+H24: =@INDEX('All Data'!$Q$1:$Q$1621,L24)
+I24: =@INDEX('All Data'!$T$1:$T$1621,L24)
+J24: =IF($B$10=0,"—",IF(H24>=$B$10,"Yes","No"))
+K24: =IF($B$10=0,"—",H24-$B$10)
+L24: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A24,'All Data'!$V$2:$V$1621,0)+1
+B25: =@INDEX('All Data'!$L$1:$L$1621,L25)&" ga"
+C25: =@INDEX('All Data'!$I$1:$I$1621,L25)
+D25: =@INDEX('All Data'!$J$1:$J$1621,L25)
+E25: =@INDEX('All Data'!$K$1:$K$1621,L25)
+F25: =@INDEX('All Data'!$M$1:$M$1621,L25)
+G25: =@INDEX('All Data'!$P$1:$P$1621,L25)
+H25: =@INDEX('All Data'!$Q$1:$Q$1621,L25)
+I25: =@INDEX('All Data'!$T$1:$T$1621,L25)
+J25: =IF($B$10=0,"—",IF(H25>=$B$10,"Yes","No"))
+K25: =IF($B$10=0,"—",H25-$B$10)
+L25: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A25,'All Data'!$V$2:$V$1621,0)+1
+B26: =@INDEX('All Data'!$L$1:$L$1621,L26)&" ga"
+C26: =@INDEX('All Data'!$I$1:$I$1621,L26)
+D26: =@INDEX('All Data'!$J$1:$J$1621,L26)
+E26: =@INDEX('All Data'!$K$1:$K$1621,L26)
+F26: =@INDEX('All Data'!$M$1:$M$1621,L26)
+G26: =@INDEX('All Data'!$P$1:$P$1621,L26)
+H26: =@INDEX('All Data'!$Q$1:$Q$1621,L26)
+I26: =@INDEX('All Data'!$T$1:$T$1621,L26)
+J26: =IF($B$10=0,"—",IF(H26>=$B$10,"Yes","No"))
+K26: =IF($B$10=0,"—",H26-$B$10)
+L26: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A26,'All Data'!$V$2:$V$1621,0)+1
+B27: =@INDEX('All Data'!$L$1:$L$1621,L27)&" ga"
+C27: =@INDEX('All Data'!$I$1:$I$1621,L27)
+D27: =@INDEX('All Data'!$J$1:$J$1621,L27)
+E27: =@INDEX('All Data'!$K$1:$K$1621,L27)
+F27: =@INDEX('All Data'!$M$1:$M$1621,L27)
+G27: =@INDEX('All Data'!$P$1:$P$1621,L27)
+H27: =@INDEX('All Data'!$Q$1:$Q$1621,L27)
+I27: =@INDEX('All Data'!$T$1:$T$1621,L27)
+J27: =IF($B$10=0,"—",IF(H27>=$B$10,"Yes","No"))
+K27: =IF($B$10=0,"—",H27-$B$10)
+L27: =MATCH($B$4&"|"&$B$5&"|"&$B$6&"|"&$B$7&"|"&A27,'All Data'!$V$2:$V$1621,0)+1
+
+## Sheet: 10DL-20LL — 26 rows × 15 columns (A1:O26)
+Floor Joist Span Limitations — 10 psf Dead Load and 20 psf Live Load (Total Load Deflection = L/240)														
+Source: ClarkDietrich CD-STR-TechGuide (eff. 06/01/24), pp. 63–65. Mytikas 7800 line only: 2" flange, 16/14/12 ga, Fy = 50 ksi. Values are allowable spans as published.														
+[1 empty row]
+Member	Gauge	Yield strength in table, Fy (ksi)	Live Load Deflection L/360						Live Load Deflection L/480					
+			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.		
+			12	16	24	12	16	24	12	16	24	12	16	24
+600S200-54	16 ga	50	19' 4"	17' 7"	15' 4"	21' 9"	19' 9" i	17' 2" i	17' 7"	16' 0"	14' 0"	19' 9"	17' 11"	15' 8" i
+600S200-68	14 ga	50	20' 9"	18' 10"	16' 6"	23' 4"	21' 2"	18' 6" i	18' 10"	17' 2"	15' 0"	21' 2"	19' 3"	16' 10"
+600S200-97	12 ga	50	23' 1"	20' 11"	18' 4"	25' 11"	23' 6"	20' 7"	20' 11"	19' 0"	16' 8"	23' 6"	21' 4"	18' 8"
+800S200-54	16 ga	50	24' 4"	22' 1"	19' 4"	27' 3" i	24' 7" i	20' 1" i	22' 1"	20' 1"	17' 6"	24' 10"	22' 6" i	19' 8" i
+800S200-68	14 ga	50	26' 1"	23' 9"	20' 9"	29' 4"	26' 8" i	23' 3" i	23' 9"	21' 7"	18' 10"	26' 8"	24' 2"	21' 2" i
+800S200-97	12 ga	50	29' 0"	26' 5"	23' 1"	32' 7"	29' 7"	25' 11"	26' 5"	24' 0"	20' 11"	29' 7"	26' 11"	23' 6"
+1000S200-54	16 ga	50	28' 8"	26' 0"	22' 5"	31' 9" i	27' 6" i	22' 5" i	26' 0"	23' 8"	20' 8"	29' 3" i	26' 7" i	22' 5" i
+1000S200-68	14 ga	50	31' 0"	28' 2"	24' 7"	34' 10" i	31' 8" i	26' 4" i	28' 2"	25' 7"	22' 4"	31' 8"	28' 9" i	25' 1" i
+1000S200-97	12 ga	50	34' 10"	31' 8"	27' 8"	39' 1"	35' 6"	31' 0"	31' 8"	28' 9"	25' 1"	35' 6"	32' 3"	28' 2"
+1200S200-54	16 ga	50	32' 11" e	29' 10" e	24' 4" e	34' 5" a	29' 10" a	24' 4" a	29' 11" e	27' 2" e	23' 9" e	33' 7" a	29' 10" a	24' 4" a
+1200S200-68	14 ga	50	35' 9"	32' 5"	28' 4"	40' 1" i	35' 2" i	28' 9" i	32' 5"	29' 6"	25' 9"	36' 5" i	33' 1" i	28' 9" i
+1200S200-97	12 ga	50	40' 5"	36' 8"	32' 1"	45' 4"	41' 3"	36' 0" i	36' 8"	33' 4"	29' 2"	41' 3"	37' 5"	32' 9"
+1400S200-54	16 ga	50	36' 7" e	31' 8" e	25' 10" e	36' 7" a	31' 8" a	24' 3" a	33' 8" e	30' 7" e	25' 10" e	36' 7" a	31' 8" a	24' 3" a
+1400S200-68	14 ga	50	40' 3"	36' 7"	30' 8"	43' 5" i	37' 7" i	30' 8" i	36' 7"	33' 3"	29' 0"	41' 0" i	37' 3" i	30' 8" i
+1400S200-97	12 ga	50	45' 8"	41' 6"	36' 3"	51' 3"	46' 7" i	39' 9" i	41' 6"	37' 8"	32' 11"	46' 7"	42' 4"	37' 0" i
+[1 empty row]
+Web stiffeners: "e" = required at end supports only; "i" = at the interior support only; "a" = at all supports; no letter = not required (3-1/2" bearing assumed).														
+Two equal spans: listed span is from either end to the center support, joist continuous over the center support.														
+All rows published at Fy = 50 ksi. 20 and 18 ga are omitted because ClarkDietrich publishes them at 33 ksi only (see Read Me 2).														
+Spans assume the compression flange is continuously braced and joists are braced against rotation at supports. See Read Me section 4 for the full ClarkDietrich notes.														
+
+## Sheet: 10DL-30LL — 26 rows × 15 columns (A1:O26)
+Floor Joist Span Limitations — 10 psf Dead Load and 30 psf Live Load (Total Load Deflection = L/240)														
+Source: ClarkDietrich CD-STR-TechGuide (eff. 06/01/24), pp. 66–67. Mytikas 7800 line only: 2" flange, 16/14/12 ga, Fy = 50 ksi. Values are allowable spans as published.														
+[1 empty row]
+Member	Gauge	Yield strength in table, Fy (ksi)	Live Load Deflection L/360						Live Load Deflection L/480					
+			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.		
+			12	16	24	12	16	24	12	16	24	12	16	24
+600S200-54	16 ga	50	16' 11"	15' 4"	13' 5"	19' 0" i	17' 3" i	14' 10" i	15' 4"	14' 0"	12' 2"	17' 3"	15' 8"	13' 8" i
+600S200-68	14 ga	50	18' 2"	16' 6"	14' 5"	20' 4"	18' 6"	16' 2" i	16' 6"	15' 0"	13' 1"	18' 6"	16' 10"	14' 8"
+600S200-97	12 ga	50	20' 2"	18' 4"	16' 0"	22' 7"	20' 7"	17' 11"	18' 4"	16' 8"	14' 6"	20' 7"	18' 8"	16' 4"
+800S200-54	16 ga	50	21' 3"	19' 4"	16' 10"	23' 10" i	21' 3" i	17' 4" i	19' 4"	17' 6"	15' 4"	21' 8" i	19' 8" i	17' 2" i
+800S200-68	14 ga	50	22' 10"	20' 9"	18' 1"	25' 7"	23' 3" i	20' 3" i	20' 9"	18' 10"	16' 5"	23' 3"	21' 2"	18' 6" i
+800S200-97	12 ga	50	25' 4"	23' 1"	20' 2"	28' 6"	25' 11"	22' 7"	23' 1"	20' 11"	18' 4"	25' 11"	23' 6"	20' 6"
+1000S200-54	16 ga	50	25' 0"	22' 9"	19' 5"	27' 6" i	23' 9" i	19' 5" i	22' 9"	20' 8"	18' 1"	25' 6" i	23' 2" i	19' 5" i
+1000S200-68	14 ga	50	27' 1"	24' 7"	21' 6"	30' 5" i	27' 8" i	22' 10" i	24' 7"	22' 4"	19' 7"	27' 8"	25' 1" i	21' 11" i
+1000S200-97	12 ga	50	30' 5"	27' 8"	24' 2"	34' 2"	31' 0"	27' 1" i	27' 8"	25' 1"	21' 11"	31' 0"	28' 2"	24' 8"
+1200S200-54	16 ga	50	28' 9" e	25' 10" e	21' 1" e	29' 10" a	25' 10" a	20' 4" a	26' 2" e	23' 9" e	20' 9" e	29' 4" a	25' 10" a	20' 4" a
+1200S200-68	14 ga	50	31' 2"	28' 4"	24' 9"	35' 0" i	30' 6" i	24' 11" i	28' 4"	25' 9"	22' 6"	31' 10" i	28' 11" i	24' 11" i
+1200S200-97	12 ga	50	35' 4"	32' 1"	28' 0"	39' 8"	36' 0" i	31' 5" i	32' 1"	29' 2"	25' 5"	36' 0"	32' 9"	28' 7" i
+1400S200-54	16 ga	50	31' 8" e	27' 5" e	22' 5" e	31' 8" a	26' 4" a	19' 8" a	29' 5" e	26' 8" e	22' 5" e	31' 8" a	26' 4" a	19' 8" a
+1400S200-68	14 ga	50	35' 2"	31' 11"	26' 7"	37' 7" i	32' 7" i	26' 7" i	31' 11"	29' 0"	25' 4"	35' 10" i	32' 7" i	26' 7" i
+1400S200-97	12 ga	50	39' 11"	36' 3"	31' 8"	44' 10"	40' 8" i	34' 5" i	36' 3"	32' 11"	28' 9"	40' 8"	37' 0"	32' 4" i
+[1 empty row]
+Web stiffeners: "e" = required at end supports only; "i" = at the interior support only; "a" = at all supports; no letter = not required (3-1/2" bearing assumed).														
+Two equal spans: listed span is from either end to the center support, joist continuous over the center support.														
+All rows published at Fy = 50 ksi. 20 and 18 ga are omitted because ClarkDietrich publishes them at 33 ksi only (see Read Me 2).														
+Spans assume the compression flange is continuously braced and joists are braced against rotation at supports. See Read Me section 4 for the full ClarkDietrich notes.														
+
+## Sheet: 10DL-40LL — 26 rows × 15 columns (A1:O26)
+Floor Joist Span Limitations — 10 psf Dead Load and 40 psf Live Load (Total Load Deflection = L/240)														
+Source: ClarkDietrich CD-STR-TechGuide (eff. 06/01/24), pp. 68–70. Mytikas 7800 line only: 2" flange, 16/14/12 ga, Fy = 50 ksi. Values are allowable spans as published.														
+[1 empty row]
+Member	Gauge	Yield strength in table, Fy (ksi)	Live Load Deflection L/360						Live Load Deflection L/480					
+			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.		
+			12	16	24	12	16	24	12	16	24	12	16	24
+600S200-54	16 ga	50	15' 4"	14' 0"	12' 2"	17' 3" i	15' 8" i	13' 3" i	14' 0"	12' 8"	11' 1"	15' 8"	14' 3" i	12' 5" i
+600S200-68	14 ga	50	16' 6"	15' 0"	13' 1"	18' 6"	16' 10"	14' 8" i	15' 0"	13' 7"	11' 11"	16' 10"	15' 3"	13' 4" i
+600S200-97	12 ga	50	18' 4"	16' 8"	14' 6"	20' 7"	18' 8"	16' 4"	16' 8"	15' 1"	13' 2"	18' 8"	17' 0"	14' 10"
+800S200-54	16 ga	50	19' 4"	17' 6"	15' 4"	21' 8" i	19' 0" i	15' 6" i	17' 6"	15' 11"	13' 11"	19' 8" i	17' 11" i	15' 6" i
+800S200-68	14 ga	50	20' 9"	18' 10"	16' 5"	23' 3" i	21' 2" i	18' 2" i	18' 10"	17' 1"	14' 11"	21' 2"	19' 2" i	16' 9" i
+800S200-97	12 ga	50	23' 1"	20' 11"	18' 4"	25' 11"	23' 6"	20' 6"	20' 11"	19' 0"	16' 7"	23' 6"	21' 4"	18' 8"
+1000S200-54	16 ga	50	22' 9"	20' 8"	17' 4" e	24' 7" i	21' 3" i	17' 4" i	20' 8"	18' 9"	16' 5"	23' 2" i	21' 1" i	17' 4" i
+1000S200-68	14 ga	50	24' 7"	22' 4"	19' 7"	27' 8" i	25' 0" i	20' 5" i	22' 4"	20' 4"	17' 9"	25' 1" i	22' 10" i	19' 11" i
+1000S200-97	12 ga	50	27' 8"	25' 1"	21' 11"	31' 0"	28' 2"	24' 8" i	25' 1"	22' 10"	19' 11"	28' 2"	25' 7"	22' 5"
+1200S200-54	16 ga	50	26' 2" e	23' 1" e	18' 10" e	26' 8" a	23' 1" a	17' 4" a	23' 9" e	21' 7" e	18' 10" e	26' 8" a	23' 1" a	17' 4" a
+1200S200-68	14 ga	50	28' 4"	25' 9"	22' 3"	31' 6" i	27' 3" i	22' 3" i	25' 9"	23' 5"	20' 5"	28' 11" i	26' 3" i	22' 3" i
+1200S200-97	12 ga	50	32' 1"	29' 2"	25' 5"	36' 0"	32' 9" i	28' 7" i	29' 2"	26' 6"	23' 1"	32' 9"	29' 9"	26' 0" i
+1400S200-54	16 ga	50	28' 4" e	24' 6" e	20' 0" e	27' 6" a	22' 5" a	16' 8" a	26' 8" e	24' 3" e	20' 0" e	27' 6" a	22' 5" a	16' 8" a
+1400S200-68	14 ga	50	31' 11"	29' 0"	23' 9"	33' 7" i	29' 1" i	23' 9" i	29' 0"	26' 4"	23' 0"	32' 7" i	29' 1" i	23' 9" i
+1400S200-97	12 ga	50	36' 3"	32' 11"	28' 9"	40' 8" i	37' 0" i	30' 10" i	32' 11"	29' 11"	26' 2"	37' 0"	33' 7" i	29' 4" i
+[1 empty row]
+Web stiffeners: "e" = required at end supports only; "i" = at the interior support only; "a" = at all supports; no letter = not required (3-1/2" bearing assumed).														
+Two equal spans: listed span is from either end to the center support, joist continuous over the center support.														
+All rows published at Fy = 50 ksi. 20 and 18 ga are omitted because ClarkDietrich publishes them at 33 ksi only (see Read Me 2).														
+Spans assume the compression flange is continuously braced and joists are braced against rotation at supports. See Read Me section 4 for the full ClarkDietrich notes.														
+
+## Sheet: 10DL-50LL — 26 rows × 15 columns (A1:O26)
+Floor Joist Span Limitations — 10 psf Dead Load and 50 psf Live Load (Total Load Deflection = L/240)														
+Source: ClarkDietrich CD-STR-TechGuide (eff. 06/01/24), pp. 71–73. Mytikas 7800 line only: 2" flange, 16/14/12 ga, Fy = 50 ksi. Values are allowable spans as published.														
+[1 empty row]
+Member	Gauge	Yield strength in table, Fy (ksi)	Live Load Deflection L/360						Live Load Deflection L/480					
+			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.		
+			12	16	24	12	16	24	12	16	24	12	16	24
+600S200-54	16 ga	50	14' 3"	13' 0"	11' 4"	16' 0" i	14' 7" i	12' 1" i	13' 0"	11' 9"	10' 3"	14' 7" i	13' 3" i	11' 7" i
+600S200-68	14 ga	50	15' 4"	13' 11"	12' 2"	17' 2"	15' 7" i	13' 8" i	13' 11"	12' 8"	11' 0"	15' 7"	14' 2"	12' 5" i
+600S200-97	12 ga	50	17' 0"	15' 5"	13' 6"	19' 1"	17' 4"	15' 2"	15' 5"	14' 0"	12' 3"	17' 4"	15' 9"	13' 9"
+800S200-54	16 ga	50	17' 11"	16' 3"	14' 2"	20' 1" i	17' 4" i	14' 2" i	16' 3"	14' 9"	12' 11"	18' 3" i	16' 7" i	14' 2" i
+800S200-68	14 ga	50	19' 3"	17' 6"	15' 3"	21' 7" i	19' 7" i	16' 7" i	17' 6"	15' 11"	13' 10"	19' 7"	17' 10" i	15' 7" i
+800S200-97	12 ga	50	21' 5"	19' 5"	17' 0"	24' 0"	21' 10"	19' 1" i	19' 5"	17' 8"	15' 5"	21' 10"	19' 10"	17' 4"
+1000S200-54	16 ga	50	21' 1"	19' 2"	15' 10" e	22' 5" i	19' 5" i	15' 8" i	19' 2"	17' 5"	15' 3" e	21' 6" i	19' 5" i	15' 8" i
+1000S200-68	14 ga	50	22' 10"	20' 9"	18' 2"	25' 8" i	22' 10" i	18' 8" i	20' 9"	18' 10"	16' 6"	23' 4" i	21' 2" i	18' 6" i
+1000S200-97	12 ga	50	25' 8"	23' 4"	20' 4"	28' 10"	26' 2" i	22' 10" i	23' 4"	21' 2"	18' 6"	26' 2"	23' 9"	20' 9" i
+1200S200-54	16 ga	50	24' 3" e	21' 1" e	17' 2" e	24' 4" a	20' 4" a	15' 2" a	22' 0" e	20' 0" e	17' 2" e	24' 4" a	20' 4" a	15' 2" a
+1200S200-68	14 ga	50	26' 4"	23' 11"	20' 4"	28' 9" i	24' 11" i	20' 4" i	23' 11"	21' 9"	19' 0"	26' 10" i	24' 5" i	20' 4" i
+1200S200-97	12 ga	50	29' 9"	27' 1"	23' 8"	33' 5"	30' 4" i	26' 1" i	27' 1"	24' 7"	21' 6"	30' 4"	27' 7"	24' 1" i
+1400S200-54	16 ga	50	25' 10" e	22' 5" e	18' 3" e	24' 3" a	19' 8" a	14' 6" a	24' 9" e	22' 5" e	18' 3" e	24' 3" a	19' 8" a	14' 6" a
+1400S200-68	14 ga	50	29' 8"	26' 7"	21' 8" e	30' 8" i	26' 7" i	21' 8" i	26' 11"	24' 6"	21' 5" e	30' 3" i	26' 7" i	21' 8" i
+1400S200-97	12 ga	50	33' 8"	30' 7"	26' 9"	37' 9" i	34' 4" i	28' 1" i	30' 7"	27' 9"	24' 3"	34' 4"	31' 2" i	27' 3" i
+[1 empty row]
+Web stiffeners: "e" = required at end supports only; "i" = at the interior support only; "a" = at all supports; no letter = not required (3-1/2" bearing assumed).														
+Two equal spans: listed span is from either end to the center support, joist continuous over the center support.														
+All rows published at Fy = 50 ksi. 20 and 18 ga are omitted because ClarkDietrich publishes them at 33 ksi only (see Read Me 2).														
+Spans assume the compression flange is continuously braced and joists are braced against rotation at supports. See Read Me section 4 for the full ClarkDietrich notes.														
+
+## Sheet: 10DL-100LL — 26 rows × 15 columns (A1:O26)
+Floor Joist Span Limitations — 10 psf Dead Load and 100 psf Live Load (Total Load Deflection = L/240)														
+Source: ClarkDietrich CD-STR-TechGuide (eff. 06/01/24), pp. 74–76. Mytikas 7800 line only: 2" flange, 16/14/12 ga, Fy = 50 ksi. Values are allowable spans as published.														
+[1 empty row]
+Member	Gauge	Yield strength in table, Fy (ksi)	Live Load Deflection L/360						Live Load Deflection L/480					
+			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.		
+			12	16	24	12	16	24	12	16	24	12	16	24
+600S200-54	16 ga	50	11' 4"	10' 3"	8' 11" e	12' 8" i	11' 0" i	8' 11" i	10' 3"	9' 4"	8' 2"	11' 7" i	10' 6" i	8' 11" i
+600S200-68	14 ga	50	12' 2"	11' 0"	9' 8"	13' 8" i	12' 5" i	10' 5" i	11' 0"	10' 0"	8' 9"	12' 5" i	11' 3" i	9' 10" i
+600S200-97	12 ga	50	13' 6"	12' 3"	10' 8"	15' 2"	13' 9"	12' 0" i	12' 3"	11' 2"	9' 9"	13' 9"	12' 6"	10' 11"
+800S200-54	16 ga	50	14' 3"	12' 10" e	10' 6" e	14' 10" i	12' 10" i	10' 6" a	12' 11"	11' 9"	10' 3" e	14' 6" i	12' 10" i	10' 6" a
+800S200-68	14 ga	50	15' 3"	13' 10"	12' 1" e	17' 2" i	15' 0" i	12' 3" i	13' 10"	12' 7"	11' 0"	15' 7" i	14' 2" i	12' 3" i
+800S200-97	12 ga	50	17' 0"	15' 5"	13' 6"	19' 1"	17' 4" i	15' 2" i	15' 5"	14' 0"	12' 3"	17' 4"	15' 9"	13' 9" i
+1000S200-54	16 ga	50	16' 7" e	14' 4" e	11' 9" e	16' 7" i	13' 8" a	10' 2" a	15' 3"	13' 10" e	11' 9" e	16' 7" i	13' 8" a	10' 2" a
+1000S200-68	14 ga	50	18' 2"	16' 6"	13' 9" e	19' 6" i	16' 10" i	13' 9" a	16' 6"	15' 0"	13' 1" e	18' 6" i	16' 10" i	13' 9" a
+1000S200-97	12 ga	50	20' 4"	18' 6"	16' 2"	22' 10" i	20' 9" i	17' 6" i	18' 6"	16' 10"	14' 8"	20' 9"	18' 11" i	16' 6" i
+1200S200-54	16 ga	50	18' 0" e	15' 7" e	12' 6" e	16' 3" a	13' 1" a	9' 7" a	17' 6" e	15' 7" e	12' 6" e	16' 3" a	13' 1" a	9' 7" a
+1200S200-68	14 ga	50	20' 11"	18' 5" e	15' 0" e	21' 3" i	18' 5" i	14' 8" a	19' 0"	17' 3" e	15' 0" e	21' 3" i	18' 5" i	14' 8" a
+1200S200-97	12 ga	50	23' 8"	21' 6"	18' 9"	26' 6" i	23' 7" i	19' 3" i	21' 6"	19' 6"	17' 0"	24' 1" i	21' 11" i	19' 2" i
+1400S200-54	16 ga	50	19' 1" e	16' 0" e	10' 8" e	15' 6" a	12' 4" a	8' 7" a	19' 1" e	16' 0" e	10' 8" e	15' 6" a	12' 4" a	8' 7" a
+1400S200-68	14 ga	50	22' 8" e	19' 8" e	16' 0" e	22' 8" i	19' 0" a	14' 2" a	21' 5"	19' 5" e	16' 0" e	22' 8" i	19' 0" a	14' 2" a
+1400S200-97	12 ga	50	26' 9"	24' 3"	20' 9"	29' 4" i	25' 5" i	20' 9" i	24' 3"	22' 1"	19' 3"	27' 3" i	24' 9" i	20' 9" i
+[1 empty row]
+Web stiffeners: "e" = required at end supports only; "i" = at the interior support only; "a" = at all supports; no letter = not required (3-1/2" bearing assumed).														
+Two equal spans: listed span is from either end to the center support, joist continuous over the center support.														
+All rows published at Fy = 50 ksi. 20 and 18 ga are omitted because ClarkDietrich publishes them at 33 ksi only (see Read Me 2).														
+Spans assume the compression flange is continuously braced and joists are braced against rotation at supports. See Read Me section 4 for the full ClarkDietrich notes.														
+
+## Sheet: 10DL-125LL — 26 rows × 15 columns (A1:O26)
+Floor Joist Span Limitations — 10 psf Dead Load and 125 psf Live Load (Total Load Deflection = L/240)														
+Source: ClarkDietrich CD-STR-TechGuide (eff. 06/01/24), pp. 77–79. Mytikas 7800 line only: 2" flange, 16/14/12 ga, Fy = 50 ksi. Values are allowable spans as published.														
+[1 empty row]
+Member	Gauge	Yield strength in table, Fy (ksi)	Live Load Deflection L/360						Live Load Deflection L/480					
+			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.		
+			12	16	24	12	16	24	12	16	24	12	16	24
+600S200-54	16 ga	50	10' 6"	9' 7"	8' 1" e	11' 5" i	9' 11" i	8' 1" a	9' 7"	8' 8"	7' 7" e	10' 9" i	9' 9" i	8' 1" a
+600S200-68	14 ga	50	11' 3"	10' 3"	8' 11"	12' 8" i	11' 6" i	9' 5" i	10' 3"	9' 4"	8' 2"	11' 6" i	10' 5" i	9' 2" i
+600S200-97	12 ga	50	12' 6"	11' 4"	9' 11"	14' 1"	12' 9" i	11' 2" i	11' 4"	10' 4"	9' 0"	12' 9"	11' 7"	10' 2" i
+800S200-54	16 ga	50	13' 2" e	11' 7" e	9' 5" e	13' 4" i	11' 7" a	9' 1" a	12' 0"	10' 11" e	9' 5" e	13' 4" i	11' 7" a	9' 1" a
+800S200-68	14 ga	50	14' 2"	12' 11"	11' 1" e	15' 7" i	13' 6" i	11' 1" i	12' 11"	11' 8"	10' 3" e	14' 5" i	13' 2" i	11' 1" i
+800S200-97	12 ga	50	15' 9"	14' 4"	12' 6"	17' 8" i	16' 1" i	13' 11" i	14' 4"	13' 0"	11' 4"	16' 1"	14' 7" i	12' 9" i
+1000S200-54	16 ga	50	14' 11" e	12' 11" e	10' 7" e	14' 5" a	11' 9" a	8' 9" a	14' 2" e	12' 10" e	10' 7" e	14' 5" a	11' 9" a	8' 9" a
+1000S200-68	14 ga	50	16' 10"	15' 3" e	12' 5" e	17' 7" i	15' 3" i	12' 5" a	15' 4"	13' 11"	12' 2" e	17' 2" i	15' 3" i	12' 5" a
+1000S200-97	12 ga	50	18' 11"	17' 2"	15' 0"	21' 3" i	19' 3" i	15' 10" i	17' 2"	15' 7"	13' 8"	19' 3" i	17' 6" i	15' 4" i
+1200S200-54	16 ga	50	16' 3" e	14' 1" e	10' 2" e	13' 11" a	11' 2" a	8' 1" a	16' 3" e	14' 1" e	10' 2" e	13' 11" a	11' 2" a	8' 1" a
+1200S200-68	14 ga	50	19' 2" e	16' 7" e	13' 7" e	19' 2" i	16' 7" a	12' 8" a	17' 7"	16' 0" e	13' 7" e	19' 2" i	16' 7" a	12' 8" a
+1200S200-97	12 ga	50	21' 11"	19' 11"	17' 5"	24' 7" i	21' 4" i	17' 5" i	19' 11"	18' 1"	15' 10"	22' 4" i	20' 4" i	17' 5" i
+1400S200-54	16 ga	50	17' 3" e	13' 1" e	8' 9" e	13' 2" a	10' 5" a	7' 0" a	17' 3" e	13' 1" e	8' 9" e	13' 2" a	10' 5" a	7' 0" a
+1400S200-68	14 ga	50	20' 6" e	17' 9" e	14' 6" e	20' 2" i	16' 5" a	12' 2" a	19' 10" e	17' 9" e	14' 6" e	20' 2" i	16' 5" a	12' 2" a
+1400S200-97	12 ga	50	24' 10"	22' 6"	18' 9" e	26' 6" i	23' 0" i	18' 9" i	22' 6"	20' 6"	17' 11" e	25' 4" i	23' 0" i	18' 9" i
+[1 empty row]
+Web stiffeners: "e" = required at end supports only; "i" = at the interior support only; "a" = at all supports; no letter = not required (3-1/2" bearing assumed).														
+Two equal spans: listed span is from either end to the center support, joist continuous over the center support.														
+All rows published at Fy = 50 ksi. 20 and 18 ga are omitted because ClarkDietrich publishes them at 33 ksi only (see Read Me 2).														
+Spans assume the compression flange is continuously braced and joists are braced against rotation at supports. See Read Me section 4 for the full ClarkDietrich notes.														
+
+## Sheet: 15DL-125LL — 26 rows × 15 columns (A1:O26)
+Floor Joist Span Limitations — 15 psf Dead Load and 125 psf Live Load (Total Load Deflection = L/240)														
+Source: ClarkDietrich CD-STR-TechGuide (eff. 06/01/24), pp. 80–82. Mytikas 7800 line only: 2" flange, 16/14/12 ga, Fy = 50 ksi. Values are allowable spans as published.														
+[1 empty row]
+Member	Gauge	Yield strength in table, Fy (ksi)	Live Load Deflection L/360						Live Load Deflection L/480					
+			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.		
+			12	16	24	12	16	24	12	16	24	12	16	24
+600S200-54	16 ga	50	10' 6"	9' 7"	7' 11" e	11' 3" i	9' 9" i	7' 11" a	9' 7"	8' 8"	7' 7" e	10' 9" i	9' 9" i	7' 11" a
+600S200-68	14 ga	50	11' 3"	10' 3"	8' 11"	12' 8" i	11' 3" i	9' 3" i	10' 3"	9' 4"	8' 2"	11' 6" i	10' 5" i	9' 2" i
+600S200-97	12 ga	50	12' 6"	11' 4"	9' 11"	14' 1"	12' 9" i	11' 2" i	11' 4"	10' 4"	9' 0"	12' 9"	11' 7"	10' 2" i
+800S200-54	16 ga	50	13' 1" e	11' 4" e	9' 3" e	13' 1" i	11' 4" a	8' 11" a	12' 0"	10' 11" e	9' 3" e	13' 1" i	11' 4" a	8' 11" a
+800S200-68	14 ga	50	14' 2"	12' 11"	10' 10" e	15' 4" i	13' 3" i	10' 10" i	12' 11"	11' 8"	10' 3" e	14' 5" i	13' 2" i	10' 10" i
+800S200-97	12 ga	50	15' 9"	14' 4"	12' 6"	17' 8" i	16' 1" i	13' 8" i	14' 4"	13' 0"	11' 4"	16' 1"	14' 7" i	12' 9" i
+1000S200-54	16 ga	50	14' 8" e	12' 9" e	10' 5" e	14' 1" a	11' 6" a	8' 6" a	14' 2" e	12' 9" e	10' 5" e	14' 1" a	11' 6" a	8' 6" a
+1000S200-68	14 ga	50	16' 10"	14' 11" e	12' 2" e	17' 3" i	14' 11" i	12' 2" a	15' 4"	13' 11" e	12' 2" e	17' 2" i	14' 11" i	12' 2" a
+1000S200-97	12 ga	50	18' 11"	17' 2"	15' 0"	21' 3" i	19' 0" i	15' 6" i	17' 2"	15' 7"	13' 8"	19' 3" i	17' 6" i	15' 4" i
+1200S200-54	16 ga	50	15' 11" e	13' 10" e	9' 10" e	13' 7" a	10' 11" a	7' 10" a	15' 11" e	13' 10" e	9' 10" e	13' 7" a	10' 11" a	7' 10" a
+1200S200-68	14 ga	50	18' 10" e	16' 4" e	13' 4" e	18' 10" i	16' 4" a	12' 4" a	17' 7"	16' 0" e	13' 4" e	18' 10" i	16' 4" a	12' 4" a
+1200S200-97	12 ga	50	21' 11"	19' 11"	17' 1" e	24' 2" i	20' 11" i	17' 1" i	19' 11"	18' 1"	15' 10"	22' 4" i	20' 4" i	17' 1" i
+1400S200-54	16 ga	50	16' 10" e	12' 7" e	8' 5" e	12' 10" a	10' 1" a	6' 9" a	16' 10" e	12' 7" e	8' 5" e	12' 10" a	10' 1" a	6' 9" a
+1400S200-68	14 ga	50	20' 1" e	17' 5" e	14' 2" e	19' 8" i	16' 0" a	11' 11" a	19' 10" e	17' 5" e	14' 2" e	19' 8" i	16' 0" a	11' 11" a
+1400S200-97	12 ga	50	24' 10"	22' 6"	18' 5" e	26' 0" i	22' 7" i	18' 5" i	22' 6"	20' 6"	17' 11" e	25' 4" i	22' 7" i	18' 5" i
+[1 empty row]
+Web stiffeners: "e" = required at end supports only; "i" = at the interior support only; "a" = at all supports; no letter = not required (3-1/2" bearing assumed).														
+Two equal spans: listed span is from either end to the center support, joist continuous over the center support.														
+All rows published at Fy = 50 ksi. 20 and 18 ga are omitted because ClarkDietrich publishes them at 33 ksi only (see Read Me 2).														
+Spans assume the compression flange is continuously braced and joists are braced against rotation at supports. See Read Me section 4 for the full ClarkDietrich notes.														
+
+## Sheet: 25DL-125LL — 26 rows × 15 columns (A1:O26)
+Floor Joist Span Limitations — 25 psf Dead Load and 125 psf Live Load (Total Load Deflection = L/240)														
+Source: ClarkDietrich CD-STR-TechGuide (eff. 06/01/24), pp. 83–85. Mytikas 7800 line only: 2" flange, 16/14/12 ga, Fy = 50 ksi. Values are allowable spans as published.														
+[1 empty row]
+Member	Gauge	Yield strength in table, Fy (ksi)	Live Load Deflection L/360						Live Load Deflection L/480					
+			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.		
+			12	16	24	12	16	24	12	16	24	12	16	24
+600S200-54	16 ga	50	10' 6"	9' 5" e	7' 8" e	10' 10" i	9' 5" i	7' 8" a	9' 7"	8' 8"	7' 7" e	10' 9" i	9' 5" i	7' 8" a
+600S200-68	14 ga	50	11' 3"	10' 3"	8' 11"	12' 7" i	10' 11" i	8' 11" i	10' 3"	9' 4"	8' 2"	11' 6" i	10' 5" i	8' 11" i
+600S200-97	12 ga	50	12' 6"	11' 4"	9' 11"	14' 1"	12' 9" i	11' 1" i	11' 4"	10' 4"	9' 0"	12' 9"	11' 7"	10' 2" i
+800S200-54	16 ga	50	12' 8" e	11' 0" e	9' 0" e	12' 8" i	11' 0" a	8' 6" a	12' 0" e	10' 11" e	9' 0" e	12' 8" i	11' 0" a	8' 6" a
+800S200-68	14 ga	50	14' 2"	12' 10"	10' 6" e	14' 10" i	12' 10" i	10' 6" a	12' 11"	11' 8"	10' 3" e	14' 5" i	12' 10" i	10' 6" a
+800S200-97	12 ga	50	15' 9"	14' 4"	12' 6"	17' 8" i	16' 1" i	13' 2" i	14' 4"	13' 0"	11' 4"	16' 1" i	14' 7" i	12' 9" i
+1000S200-54	16 ga	50	14' 2" e	12' 3" e	10' 0" e	13' 5" a	10' 11" a	8' 1" a	14' 2" e	12' 3" e	10' 0" e	13' 5" a	10' 11" a	8' 1" a
+1000S200-68	14 ga	50	16' 8"	14' 5" e	11' 9" e	16' 8" i	14' 5" i	11' 9" a	15' 4"	13' 11" e	11' 9" e	16' 8" i	14' 5" i	11' 9" a
+1000S200-97	12 ga	50	18' 11"	17' 2"	15' 0"	21' 3" i	18' 4" i	15' 0" i	17' 2"	15' 7"	13' 8"	19' 3" i	17' 6" i	15' 0" i
+1200S200-54	16 ga	50	15' 5" e	13' 4" e	9' 2" e	12' 11" a	10' 4" a	7' 4" a	15' 5" e	13' 4" e	9' 2" e	12' 11" a	10' 4" a	7' 4" a
+1200S200-68	14 ga	50	18' 2" e	15' 9" e	12' 10" e	18' 2" i	15' 7" a	11' 9" a	17' 7" e	15' 9" e	12' 10" e	18' 2" i	15' 7" a	11' 9" a
+1200S200-97	12 ga	50	21' 11"	19' 11"	16' 6" e	23' 4" i	20' 3" i	16' 6" i	19' 11"	18' 1"	15' 10" e	22' 4" i	20' 3" i	16' 6" i
+1400S200-54	16 ga	50	15' 8" e	11' 9" e	7' 10" e	12' 2" a	9' 5" a	6' 3" a	15' 8" e	11' 9" e	7' 10" e	12' 2" a	9' 5" a	6' 3" a
+1400S200-68	14 ga	50	19' 5" e	16' 10" e	13' 9" e	18' 8" i	15' 3" a	11' 3" a	19' 5" e	16' 10" e	13' 9" e	18' 8" i	15' 3" a	11' 3" a
+1400S200-97	12 ga	50	24' 10"	21' 9"	17' 9" e	25' 2" i	21' 9" i	17' 9" i	22' 6"	20' 6"	17' 9" e	25' 2" i	21' 9" i	17' 9" i
+[1 empty row]
+Web stiffeners: "e" = required at end supports only; "i" = at the interior support only; "a" = at all supports; no letter = not required (3-1/2" bearing assumed).														
+Two equal spans: listed span is from either end to the center support, joist continuous over the center support.														
+All rows published at Fy = 50 ksi. 20 and 18 ga are omitted because ClarkDietrich publishes them at 33 ksi only (see Read Me 2).														
+Spans assume the compression flange is continuously braced and joists are braced against rotation at supports. See Read Me section 4 for the full ClarkDietrich notes.														
+
+## Sheet: 40DL-125LL — 26 rows × 15 columns (A1:O26)
+Floor Joist Span Limitations — 40 psf Dead Load and 125 psf Live Load (Total Load Deflection = L/240)														
+Source: ClarkDietrich CD-STR-TechGuide (eff. 06/01/24), pp. 86–88. Mytikas 7800 line only: 2" flange, 16/14/12 ga, Fy = 50 ksi. Values are allowable spans as published.														
+[1 empty row]
+Member	Gauge	Yield strength in table, Fy (ksi)	Live Load Deflection L/360						Live Load Deflection L/480					
+			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.			Single span — spacing (in) o.c.			Two equal spans — spacing (in) o.c.		
+			12	16	24	12	16	24	12	16	24	12	16	24
+600S200-54	16 ga	50	10' 4"	8' 11" e	7' 4" e	10' 4" i	8' 11" i	7' 4" a	9' 7"	8' 8" e	7' 4" e	10' 4" i	8' 11" i	7' 4" a
+600S200-68	14 ga	50	11' 3"	10' 3"	8' 6" e	12' 0" i	10' 5" i	8' 6" i	10' 3"	9' 4"	8' 2"	11' 6" i	10' 5" i	8' 6" i
+600S200-97	12 ga	50	12' 6"	11' 4"	9' 11"	14' 1" i	12' 9" i	10' 7" i	11' 4"	10' 4"	9' 0"	12' 9"	11' 7" i	10' 2" i
+800S200-54	16 ga	50	12' 1" e	10' 6" e	8' 7" e	12' 1" i	10' 6" a	7' 11" a	12' 0" e	10' 6" e	8' 7" e	12' 1" i	10' 6" a	7' 11" a
+800S200-68	14 ga	50	14' 2"	12' 3" e	10' 0" e	14' 2" i	12' 3" i	10' 0" a	12' 11"	11' 8"	10' 0" e	14' 2" i	12' 3" i	10' 0" a
+800S200-97	12 ga	50	15' 9"	14' 4"	12' 6"	17' 8" i	15' 5" i	12' 7" i	14' 4"	13' 0"	11' 4"	16' 1" i	14' 7" i	12' 7" i
+1000S200-54	16 ga	50	13' 6" e	11' 9" e	9' 7" e	12' 7" a	10' 2" a	7' 6" a	13' 6" e	11' 9" e	9' 7" e	12' 7" a	10' 2" a	7' 6" a
+1000S200-68	14 ga	50	15' 11" e	13' 9" e	11' 3" e	15' 11" i	13' 9" a	11' 3" a	15' 4"	13' 9" e	11' 3" e	15' 11" i	13' 9" a	11' 3" a
+1000S200-97	12 ga	50	18' 11"	17' 2"	14' 4"	20' 3" i	17' 6" i	14' 4" i	17' 2"	15' 7"	13' 8"	19' 3" i	17' 6" i	14' 4" i
+1200S200-54	16 ga	50	14' 8" e	12' 6" e	8' 4" e	12' 0" a	9' 7" a	6' 8" a	14' 8" e	12' 6" e	8' 4" e	12' 0" a	9' 7" a	6' 8" a
+1200S200-68	14 ga	50	17' 4" e	15' 0" e	12' 3" e	17' 4" i	14' 8" a	11' 0" a	17' 4" e	15' 0" e	12' 3" e	17' 4" i	14' 8" a	11' 0" a
+1200S200-97	12 ga	50	21' 11"	19' 3"	15' 9" e	22' 3" i	19' 3" i	15' 9" i	19' 11"	18' 1"	15' 9" e	22' 3" i	19' 3" i	15' 9" i
+1400S200-54	16 ga	50	14' 3" e	10' 8" e	7' 2" e	11' 3" a	8' 7" a	5' 8" a	14' 3" e	10' 8" e	7' 2" e	11' 3" a	8' 7" a	5' 8" a
+1400S200-68	14 ga	50	18' 6" e	16' 0" e	13' 1" e	17' 6" a	14' 2" a	10' 6" a	18' 6" e	16' 0" e	13' 1" e	17' 6" a	14' 2" a	10' 6" a
+1400S200-97	12 ga	50	24' 0"	20' 9"	17' 0" e	24' 0" i	20' 9" i	17' 0" a	22' 6"	20' 6"	17' 0" e	24' 0" i	20' 9" i	17' 0" a
+[1 empty row]
+Web stiffeners: "e" = required at end supports only; "i" = at the interior support only; "a" = at all supports; no letter = not required (3-1/2" bearing assumed).														
+Two equal spans: listed span is from either end to the center support, joist continuous over the center support.														
+All rows published at Fy = 50 ksi. 20 and 18 ga are omitted because ClarkDietrich publishes them at 33 ksi only (see Read Me 2).														
+Spans assume the compression flange is continuously braced and joists are braced against rotation at supports. See Read Me section 4 for the full ClarkDietrich notes.														
+
+## Sheet: All Data — 1621 rows × 22 columns (A1:V1621)
+Load Case	Dead Load (psf)	Live Load (psf)	Total Load (psf)	Live Load Deflection Limit	Span Condition	Spacing (in o.c.)	Member	Web Depth (in)	Flange Width (in)	Thickness (mil)	Gauge (ga)	Fy Used in Table (ksi)	Span — Feet	Span — Inches	Allowable Span (ft-in)	Allowable Span (total in)	Allowable Span (decimal ft)	Web Stiffener Code	Web Stiffener Requirement	Guide Page	Lookup Key (used by Span Lookup)
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	600S200-54	6.00	2.000	54	16	50	19	4	19' 4"	232	19.33		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Single span|12|600S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	600S200-68	6.00	2.000	68	14	50	20	9	20' 9"	249	20.75		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Single span|12|600S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	600S200-97	6.00	2.000	97	12	50	23	1	23' 1"	277	23.08		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Single span|12|600S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	800S200-54	8.00	2.000	54	16	50	24	4	24' 4"	292	24.33		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|12|800S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	800S200-68	8.00	2.000	68	14	50	26	1	26' 1"	313	26.08		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|12|800S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	800S200-97	8.00	2.000	97	12	50	29	0	29' 0"	348	29.00		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|12|800S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	1000S200-54	10.00	2.000	54	16	50	28	8	28' 8"	344	28.67		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|12|1000S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	1000S200-68	10.00	2.000	68	14	50	31	0	31' 0"	372	31.00		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|12|1000S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	1000S200-97	10.00	2.000	97	12	50	34	10	34' 10"	418	34.83		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|12|1000S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	1200S200-54	12.00	2.000	54	16	50	32	11	32' 11"	395	32.92	e	Required at end supports only	64	10 psf DL / 20 psf LL|L/360|Single span|12|1200S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	1200S200-68	12.00	2.000	68	14	50	35	9	35' 9"	429	35.75		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|12|1200S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	1200S200-97	12.00	2.000	97	12	50	40	5	40' 5"	485	40.42		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|12|1200S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	1400S200-54	14.00	2.000	54	16	50	36	7	36' 7"	439	36.58	e	Required at end supports only	65	10 psf DL / 20 psf LL|L/360|Single span|12|1400S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	1400S200-68	14.00	2.000	68	14	50	40	3	40' 3"	483	40.25		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/360|Single span|12|1400S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	12	1400S200-97	14.00	2.000	97	12	50	45	8	45' 8"	548	45.67		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/360|Single span|12|1400S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	600S200-54	6.00	2.000	54	16	50	17	7	17' 7"	211	17.58		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Single span|16|600S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	600S200-68	6.00	2.000	68	14	50	18	10	18' 10"	226	18.83		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Single span|16|600S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	600S200-97	6.00	2.000	97	12	50	20	11	20' 11"	251	20.92		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Single span|16|600S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	800S200-54	8.00	2.000	54	16	50	22	1	22' 1"	265	22.08		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|16|800S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	800S200-68	8.00	2.000	68	14	50	23	9	23' 9"	285	23.75		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|16|800S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	800S200-97	8.00	2.000	97	12	50	26	5	26' 5"	317	26.42		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|16|800S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	1000S200-54	10.00	2.000	54	16	50	26	0	26' 0"	312	26.00		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|16|1000S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	1000S200-68	10.00	2.000	68	14	50	28	2	28' 2"	338	28.17		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|16|1000S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	1000S200-97	10.00	2.000	97	12	50	31	8	31' 8"	380	31.67		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|16|1000S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	1200S200-54	12.00	2.000	54	16	50	29	10	29' 10"	358	29.83	e	Required at end supports only	64	10 psf DL / 20 psf LL|L/360|Single span|16|1200S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	1200S200-68	12.00	2.000	68	14	50	32	5	32' 5"	389	32.42		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|16|1200S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	1200S200-97	12.00	2.000	97	12	50	36	8	36' 8"	440	36.67		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|16|1200S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	1400S200-54	14.00	2.000	54	16	50	31	8	31' 8"	380	31.67	e	Required at end supports only	65	10 psf DL / 20 psf LL|L/360|Single span|16|1400S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	1400S200-68	14.00	2.000	68	14	50	36	7	36' 7"	439	36.58		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/360|Single span|16|1400S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	16	1400S200-97	14.00	2.000	97	12	50	41	6	41' 6"	498	41.50		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/360|Single span|16|1400S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	600S200-54	6.00	2.000	54	16	50	15	4	15' 4"	184	15.33		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Single span|24|600S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	600S200-68	6.00	2.000	68	14	50	16	6	16' 6"	198	16.50		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Single span|24|600S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	600S200-97	6.00	2.000	97	12	50	18	4	18' 4"	220	18.33		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Single span|24|600S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	800S200-54	8.00	2.000	54	16	50	19	4	19' 4"	232	19.33		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|24|800S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	800S200-68	8.00	2.000	68	14	50	20	9	20' 9"	249	20.75		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|24|800S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	800S200-97	8.00	2.000	97	12	50	23	1	23' 1"	277	23.08		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|24|800S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	1000S200-54	10.00	2.000	54	16	50	22	5	22' 5"	269	22.42		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|24|1000S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	1000S200-68	10.00	2.000	68	14	50	24	7	24' 7"	295	24.58		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|24|1000S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	1000S200-97	10.00	2.000	97	12	50	27	8	27' 8"	332	27.67		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|24|1000S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	1200S200-54	12.00	2.000	54	16	50	24	4	24' 4"	292	24.33	e	Required at end supports only	64	10 psf DL / 20 psf LL|L/360|Single span|24|1200S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	1200S200-68	12.00	2.000	68	14	50	28	4	28' 4"	340	28.33		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|24|1200S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	1200S200-97	12.00	2.000	97	12	50	32	1	32' 1"	385	32.08		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Single span|24|1200S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	1400S200-54	14.00	2.000	54	16	50	25	10	25' 10"	310	25.83	e	Required at end supports only	65	10 psf DL / 20 psf LL|L/360|Single span|24|1400S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	1400S200-68	14.00	2.000	68	14	50	30	8	30' 8"	368	30.67		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/360|Single span|24|1400S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Single span	24	1400S200-97	14.00	2.000	97	12	50	36	3	36' 3"	435	36.25		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/360|Single span|24|1400S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	600S200-54	6.00	2.000	54	16	50	21	9	21' 9"	261	21.75		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Two equal spans|12|600S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	600S200-68	6.00	2.000	68	14	50	23	4	23' 4"	280	23.33		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Two equal spans|12|600S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	600S200-97	6.00	2.000	97	12	50	25	11	25' 11"	311	25.92		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Two equal spans|12|600S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	800S200-54	8.00	2.000	54	16	50	27	3	27' 3"	327	27.25	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|12|800S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	800S200-68	8.00	2.000	68	14	50	29	4	29' 4"	352	29.33		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Two equal spans|12|800S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	800S200-97	8.00	2.000	97	12	50	32	7	32' 7"	391	32.58		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Two equal spans|12|800S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	1000S200-54	10.00	2.000	54	16	50	31	9	31' 9"	381	31.75	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|12|1000S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	1000S200-68	10.00	2.000	68	14	50	34	10	34' 10"	418	34.83	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|12|1000S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	1000S200-97	10.00	2.000	97	12	50	39	1	39' 1"	469	39.08		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Two equal spans|12|1000S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	1200S200-54	12.00	2.000	54	16	50	34	5	34' 5"	413	34.42	a	Required at all supports	64	10 psf DL / 20 psf LL|L/360|Two equal spans|12|1200S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	1200S200-68	12.00	2.000	68	14	50	40	1	40' 1"	481	40.08	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|12|1200S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	1200S200-97	12.00	2.000	97	12	50	45	4	45' 4"	544	45.33		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Two equal spans|12|1200S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	1400S200-54	14.00	2.000	54	16	50	36	7	36' 7"	439	36.58	a	Required at all supports	65	10 psf DL / 20 psf LL|L/360|Two equal spans|12|1400S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	1400S200-68	14.00	2.000	68	14	50	43	5	43' 5"	521	43.42	i	Required at interior support only	65	10 psf DL / 20 psf LL|L/360|Two equal spans|12|1400S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	12	1400S200-97	14.00	2.000	97	12	50	51	3	51' 3"	615	51.25		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/360|Two equal spans|12|1400S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	600S200-54	6.00	2.000	54	16	50	19	9	19' 9"	237	19.75	i	Required at interior support only	63	10 psf DL / 20 psf LL|L/360|Two equal spans|16|600S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	600S200-68	6.00	2.000	68	14	50	21	2	21' 2"	254	21.17		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Two equal spans|16|600S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	600S200-97	6.00	2.000	97	12	50	23	6	23' 6"	282	23.50		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Two equal spans|16|600S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	800S200-54	8.00	2.000	54	16	50	24	7	24' 7"	295	24.58	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|16|800S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	800S200-68	8.00	2.000	68	14	50	26	8	26' 8"	320	26.67	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|16|800S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	800S200-97	8.00	2.000	97	12	50	29	7	29' 7"	355	29.58		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Two equal spans|16|800S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	1000S200-54	10.00	2.000	54	16	50	27	6	27' 6"	330	27.50	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|16|1000S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	1000S200-68	10.00	2.000	68	14	50	31	8	31' 8"	380	31.67	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|16|1000S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	1000S200-97	10.00	2.000	97	12	50	35	6	35' 6"	426	35.50		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Two equal spans|16|1000S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	1200S200-54	12.00	2.000	54	16	50	29	10	29' 10"	358	29.83	a	Required at all supports	64	10 psf DL / 20 psf LL|L/360|Two equal spans|16|1200S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	1200S200-68	12.00	2.000	68	14	50	35	2	35' 2"	422	35.17	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|16|1200S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	1200S200-97	12.00	2.000	97	12	50	41	3	41' 3"	495	41.25		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Two equal spans|16|1200S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	1400S200-54	14.00	2.000	54	16	50	31	8	31' 8"	380	31.67	a	Required at all supports	65	10 psf DL / 20 psf LL|L/360|Two equal spans|16|1400S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	1400S200-68	14.00	2.000	68	14	50	37	7	37' 7"	451	37.58	i	Required at interior support only	65	10 psf DL / 20 psf LL|L/360|Two equal spans|16|1400S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	16	1400S200-97	14.00	2.000	97	12	50	46	7	46' 7"	559	46.58	i	Required at interior support only	65	10 psf DL / 20 psf LL|L/360|Two equal spans|16|1400S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	600S200-54	6.00	2.000	54	16	50	17	2	17' 2"	206	17.17	i	Required at interior support only	63	10 psf DL / 20 psf LL|L/360|Two equal spans|24|600S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	600S200-68	6.00	2.000	68	14	50	18	6	18' 6"	222	18.50	i	Required at interior support only	63	10 psf DL / 20 psf LL|L/360|Two equal spans|24|600S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	600S200-97	6.00	2.000	97	12	50	20	7	20' 7"	247	20.58		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/360|Two equal spans|24|600S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	800S200-54	8.00	2.000	54	16	50	20	1	20' 1"	241	20.08	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|24|800S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	800S200-68	8.00	2.000	68	14	50	23	3	23' 3"	279	23.25	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|24|800S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	800S200-97	8.00	2.000	97	12	50	25	11	25' 11"	311	25.92		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Two equal spans|24|800S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	1000S200-54	10.00	2.000	54	16	50	22	5	22' 5"	269	22.42	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|24|1000S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	1000S200-68	10.00	2.000	68	14	50	26	4	26' 4"	316	26.33	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|24|1000S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	1000S200-97	10.00	2.000	97	12	50	31	0	31' 0"	372	31.00		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/360|Two equal spans|24|1000S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	1200S200-54	12.00	2.000	54	16	50	24	4	24' 4"	292	24.33	a	Required at all supports	64	10 psf DL / 20 psf LL|L/360|Two equal spans|24|1200S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	1200S200-68	12.00	2.000	68	14	50	28	9	28' 9"	345	28.75	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|24|1200S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	1200S200-97	12.00	2.000	97	12	50	36	0	36' 0"	432	36.00	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/360|Two equal spans|24|1200S200-97
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	1400S200-54	14.00	2.000	54	16	50	24	3	24' 3"	291	24.25	a	Required at all supports	65	10 psf DL / 20 psf LL|L/360|Two equal spans|24|1400S200-54
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	1400S200-68	14.00	2.000	68	14	50	30	8	30' 8"	368	30.67	i	Required at interior support only	65	10 psf DL / 20 psf LL|L/360|Two equal spans|24|1400S200-68
+10 psf DL / 20 psf LL	10	20	30	L/360	Two equal spans	24	1400S200-97	14.00	2.000	97	12	50	39	9	39' 9"	477	39.75	i	Required at interior support only	65	10 psf DL / 20 psf LL|L/360|Two equal spans|24|1400S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	600S200-54	6.00	2.000	54	16	50	17	7	17' 7"	211	17.58		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Single span|12|600S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	600S200-68	6.00	2.000	68	14	50	18	10	18' 10"	226	18.83		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Single span|12|600S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	600S200-97	6.00	2.000	97	12	50	20	11	20' 11"	251	20.92		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Single span|12|600S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	800S200-54	8.00	2.000	54	16	50	22	1	22' 1"	265	22.08		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|12|800S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	800S200-68	8.00	2.000	68	14	50	23	9	23' 9"	285	23.75		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|12|800S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	800S200-97	8.00	2.000	97	12	50	26	5	26' 5"	317	26.42		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|12|800S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	1000S200-54	10.00	2.000	54	16	50	26	0	26' 0"	312	26.00		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|12|1000S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	1000S200-68	10.00	2.000	68	14	50	28	2	28' 2"	338	28.17		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|12|1000S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	1000S200-97	10.00	2.000	97	12	50	31	8	31' 8"	380	31.67		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|12|1000S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	1200S200-54	12.00	2.000	54	16	50	29	11	29' 11"	359	29.92	e	Required at end supports only	64	10 psf DL / 20 psf LL|L/480|Single span|12|1200S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	1200S200-68	12.00	2.000	68	14	50	32	5	32' 5"	389	32.42		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|12|1200S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	1200S200-97	12.00	2.000	97	12	50	36	8	36' 8"	440	36.67		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|12|1200S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	1400S200-54	14.00	2.000	54	16	50	33	8	33' 8"	404	33.67	e	Required at end supports only	65	10 psf DL / 20 psf LL|L/480|Single span|12|1400S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	1400S200-68	14.00	2.000	68	14	50	36	7	36' 7"	439	36.58		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/480|Single span|12|1400S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	12	1400S200-97	14.00	2.000	97	12	50	41	6	41' 6"	498	41.50		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/480|Single span|12|1400S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	600S200-54	6.00	2.000	54	16	50	16	0	16' 0"	192	16.00		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Single span|16|600S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	600S200-68	6.00	2.000	68	14	50	17	2	17' 2"	206	17.17		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Single span|16|600S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	600S200-97	6.00	2.000	97	12	50	19	0	19' 0"	228	19.00		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Single span|16|600S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	800S200-54	8.00	2.000	54	16	50	20	1	20' 1"	241	20.08		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|16|800S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	800S200-68	8.00	2.000	68	14	50	21	7	21' 7"	259	21.58		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|16|800S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	800S200-97	8.00	2.000	97	12	50	24	0	24' 0"	288	24.00		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|16|800S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	1000S200-54	10.00	2.000	54	16	50	23	8	23' 8"	284	23.67		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|16|1000S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	1000S200-68	10.00	2.000	68	14	50	25	7	25' 7"	307	25.58		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|16|1000S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	1000S200-97	10.00	2.000	97	12	50	28	9	28' 9"	345	28.75		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|16|1000S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	1200S200-54	12.00	2.000	54	16	50	27	2	27' 2"	326	27.17	e	Required at end supports only	64	10 psf DL / 20 psf LL|L/480|Single span|16|1200S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	1200S200-68	12.00	2.000	68	14	50	29	6	29' 6"	354	29.50		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|16|1200S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	1200S200-97	12.00	2.000	97	12	50	33	4	33' 4"	400	33.33		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|16|1200S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	1400S200-54	14.00	2.000	54	16	50	30	7	30' 7"	367	30.58	e	Required at end supports only	65	10 psf DL / 20 psf LL|L/480|Single span|16|1400S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	1400S200-68	14.00	2.000	68	14	50	33	3	33' 3"	399	33.25		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/480|Single span|16|1400S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	16	1400S200-97	14.00	2.000	97	12	50	37	8	37' 8"	452	37.67		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/480|Single span|16|1400S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	600S200-54	6.00	2.000	54	16	50	14	0	14' 0"	168	14.00		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Single span|24|600S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	600S200-68	6.00	2.000	68	14	50	15	0	15' 0"	180	15.00		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Single span|24|600S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	600S200-97	6.00	2.000	97	12	50	16	8	16' 8"	200	16.67		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Single span|24|600S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	800S200-54	8.00	2.000	54	16	50	17	6	17' 6"	210	17.50		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|24|800S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	800S200-68	8.00	2.000	68	14	50	18	10	18' 10"	226	18.83		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|24|800S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	800S200-97	8.00	2.000	97	12	50	20	11	20' 11"	251	20.92		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|24|800S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	1000S200-54	10.00	2.000	54	16	50	20	8	20' 8"	248	20.67		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|24|1000S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	1000S200-68	10.00	2.000	68	14	50	22	4	22' 4"	268	22.33		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|24|1000S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	1000S200-97	10.00	2.000	97	12	50	25	1	25' 1"	301	25.08		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|24|1000S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	1200S200-54	12.00	2.000	54	16	50	23	9	23' 9"	285	23.75	e	Required at end supports only	64	10 psf DL / 20 psf LL|L/480|Single span|24|1200S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	1200S200-68	12.00	2.000	68	14	50	25	9	25' 9"	309	25.75		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|24|1200S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	1200S200-97	12.00	2.000	97	12	50	29	2	29' 2"	350	29.17		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Single span|24|1200S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	1400S200-54	14.00	2.000	54	16	50	25	10	25' 10"	310	25.83	e	Required at end supports only	65	10 psf DL / 20 psf LL|L/480|Single span|24|1400S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	1400S200-68	14.00	2.000	68	14	50	29	0	29' 0"	348	29.00		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/480|Single span|24|1400S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Single span	24	1400S200-97	14.00	2.000	97	12	50	32	11	32' 11"	395	32.92		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/480|Single span|24|1400S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	600S200-54	6.00	2.000	54	16	50	19	9	19' 9"	237	19.75		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Two equal spans|12|600S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	600S200-68	6.00	2.000	68	14	50	21	2	21' 2"	254	21.17		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Two equal spans|12|600S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	600S200-97	6.00	2.000	97	12	50	23	6	23' 6"	282	23.50		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Two equal spans|12|600S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	800S200-54	8.00	2.000	54	16	50	24	10	24' 10"	298	24.83		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|12|800S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	800S200-68	8.00	2.000	68	14	50	26	8	26' 8"	320	26.67		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|12|800S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	800S200-97	8.00	2.000	97	12	50	29	7	29' 7"	355	29.58		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|12|800S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	1000S200-54	10.00	2.000	54	16	50	29	3	29' 3"	351	29.25	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/480|Two equal spans|12|1000S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	1000S200-68	10.00	2.000	68	14	50	31	8	31' 8"	380	31.67		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|12|1000S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	1000S200-97	10.00	2.000	97	12	50	35	6	35' 6"	426	35.50		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|12|1000S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	1200S200-54	12.00	2.000	54	16	50	33	7	33' 7"	403	33.58	a	Required at all supports	64	10 psf DL / 20 psf LL|L/480|Two equal spans|12|1200S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	1200S200-68	12.00	2.000	68	14	50	36	5	36' 5"	437	36.42	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/480|Two equal spans|12|1200S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	1200S200-97	12.00	2.000	97	12	50	41	3	41' 3"	495	41.25		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|12|1200S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	1400S200-54	14.00	2.000	54	16	50	36	7	36' 7"	439	36.58	a	Required at all supports	65	10 psf DL / 20 psf LL|L/480|Two equal spans|12|1400S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	1400S200-68	14.00	2.000	68	14	50	41	0	41' 0"	492	41.00	i	Required at interior support only	65	10 psf DL / 20 psf LL|L/480|Two equal spans|12|1400S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	12	1400S200-97	14.00	2.000	97	12	50	46	7	46' 7"	559	46.58		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/480|Two equal spans|12|1400S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	600S200-54	6.00	2.000	54	16	50	17	11	17' 11"	215	17.92		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Two equal spans|16|600S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	600S200-68	6.00	2.000	68	14	50	19	3	19' 3"	231	19.25		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Two equal spans|16|600S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	600S200-97	6.00	2.000	97	12	50	21	4	21' 4"	256	21.33		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Two equal spans|16|600S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	800S200-54	8.00	2.000	54	16	50	22	6	22' 6"	270	22.50	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/480|Two equal spans|16|800S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	800S200-68	8.00	2.000	68	14	50	24	2	24' 2"	290	24.17		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|16|800S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	800S200-97	8.00	2.000	97	12	50	26	11	26' 11"	323	26.92		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|16|800S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	1000S200-54	10.00	2.000	54	16	50	26	7	26' 7"	319	26.58	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/480|Two equal spans|16|1000S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	1000S200-68	10.00	2.000	68	14	50	28	9	28' 9"	345	28.75	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/480|Two equal spans|16|1000S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	1000S200-97	10.00	2.000	97	12	50	32	3	32' 3"	387	32.25		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|16|1000S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	1200S200-54	12.00	2.000	54	16	50	29	10	29' 10"	358	29.83	a	Required at all supports	64	10 psf DL / 20 psf LL|L/480|Two equal spans|16|1200S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	1200S200-68	12.00	2.000	68	14	50	33	1	33' 1"	397	33.08	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/480|Two equal spans|16|1200S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	1200S200-97	12.00	2.000	97	12	50	37	5	37' 5"	449	37.42		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|16|1200S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	1400S200-54	14.00	2.000	54	16	50	31	8	31' 8"	380	31.67	a	Required at all supports	65	10 psf DL / 20 psf LL|L/480|Two equal spans|16|1400S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	1400S200-68	14.00	2.000	68	14	50	37	3	37' 3"	447	37.25	i	Required at interior support only	65	10 psf DL / 20 psf LL|L/480|Two equal spans|16|1400S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	16	1400S200-97	14.00	2.000	97	12	50	42	4	42' 4"	508	42.33		Not required (3-1/2" bearing)	65	10 psf DL / 20 psf LL|L/480|Two equal spans|16|1400S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	600S200-54	6.00	2.000	54	16	50	15	8	15' 8"	188	15.67	i	Required at interior support only	63	10 psf DL / 20 psf LL|L/480|Two equal spans|24|600S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	600S200-68	6.00	2.000	68	14	50	16	10	16' 10"	202	16.83		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Two equal spans|24|600S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	600S200-97	6.00	2.000	97	12	50	18	8	18' 8"	224	18.67		Not required (3-1/2" bearing)	63	10 psf DL / 20 psf LL|L/480|Two equal spans|24|600S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	800S200-54	8.00	2.000	54	16	50	19	8	19' 8"	236	19.67	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/480|Two equal spans|24|800S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	800S200-68	8.00	2.000	68	14	50	21	2	21' 2"	254	21.17	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/480|Two equal spans|24|800S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	800S200-97	8.00	2.000	97	12	50	23	6	23' 6"	282	23.50		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|24|800S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	1000S200-54	10.00	2.000	54	16	50	22	5	22' 5"	269	22.42	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/480|Two equal spans|24|1000S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	1000S200-68	10.00	2.000	68	14	50	25	1	25' 1"	301	25.08	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/480|Two equal spans|24|1000S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	1000S200-97	10.00	2.000	97	12	50	28	2	28' 2"	338	28.17		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|24|1000S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	1200S200-54	12.00	2.000	54	16	50	24	4	24' 4"	292	24.33	a	Required at all supports	64	10 psf DL / 20 psf LL|L/480|Two equal spans|24|1200S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	1200S200-68	12.00	2.000	68	14	50	28	9	28' 9"	345	28.75	i	Required at interior support only	64	10 psf DL / 20 psf LL|L/480|Two equal spans|24|1200S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	1200S200-97	12.00	2.000	97	12	50	32	9	32' 9"	393	32.75		Not required (3-1/2" bearing)	64	10 psf DL / 20 psf LL|L/480|Two equal spans|24|1200S200-97
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	1400S200-54	14.00	2.000	54	16	50	24	3	24' 3"	291	24.25	a	Required at all supports	65	10 psf DL / 20 psf LL|L/480|Two equal spans|24|1400S200-54
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	1400S200-68	14.00	2.000	68	14	50	30	8	30' 8"	368	30.67	i	Required at interior support only	65	10 psf DL / 20 psf LL|L/480|Two equal spans|24|1400S200-68
+10 psf DL / 20 psf LL	10	20	30	L/480	Two equal spans	24	1400S200-97	14.00	2.000	97	12	50	37	0	37' 0"	444	37.00	i	Required at interior support only	65	10 psf DL / 20 psf LL|L/480|Two equal spans|24|1400S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	600S200-54	6.00	2.000	54	16	50	16	11	16' 11"	203	16.92		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|12|600S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	600S200-68	6.00	2.000	68	14	50	18	2	18' 2"	218	18.17		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|12|600S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	600S200-97	6.00	2.000	97	12	50	20	2	20' 2"	242	20.17		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|12|600S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	800S200-54	8.00	2.000	54	16	50	21	3	21' 3"	255	21.25		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|12|800S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	800S200-68	8.00	2.000	68	14	50	22	10	22' 10"	274	22.83		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|12|800S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	800S200-97	8.00	2.000	97	12	50	25	4	25' 4"	304	25.33		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|12|800S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	1000S200-54	10.00	2.000	54	16	50	25	0	25' 0"	300	25.00		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|12|1000S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	1000S200-68	10.00	2.000	68	14	50	27	1	27' 1"	325	27.08		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|12|1000S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	1000S200-97	10.00	2.000	97	12	50	30	5	30' 5"	365	30.42		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|12|1000S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	1200S200-54	12.00	2.000	54	16	50	28	9	28' 9"	345	28.75	e	Required at end supports only	67	10 psf DL / 30 psf LL|L/360|Single span|12|1200S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	1200S200-68	12.00	2.000	68	14	50	31	2	31' 2"	374	31.17		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|12|1200S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	1200S200-97	12.00	2.000	97	12	50	35	4	35' 4"	424	35.33		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|12|1200S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	1400S200-54	14.00	2.000	54	16	50	31	8	31' 8"	380	31.67	e	Required at end supports only	67	10 psf DL / 30 psf LL|L/360|Single span|12|1400S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	1400S200-68	14.00	2.000	68	14	50	35	2	35' 2"	422	35.17		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|12|1400S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	12	1400S200-97	14.00	2.000	97	12	50	39	11	39' 11"	479	39.92		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|12|1400S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	600S200-54	6.00	2.000	54	16	50	15	4	15' 4"	184	15.33		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|16|600S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	600S200-68	6.00	2.000	68	14	50	16	6	16' 6"	198	16.50		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|16|600S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	600S200-97	6.00	2.000	97	12	50	18	4	18' 4"	220	18.33		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|16|600S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	800S200-54	8.00	2.000	54	16	50	19	4	19' 4"	232	19.33		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|16|800S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	800S200-68	8.00	2.000	68	14	50	20	9	20' 9"	249	20.75		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|16|800S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	800S200-97	8.00	2.000	97	12	50	23	1	23' 1"	277	23.08		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|16|800S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	1000S200-54	10.00	2.000	54	16	50	22	9	22' 9"	273	22.75		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|16|1000S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	1000S200-68	10.00	2.000	68	14	50	24	7	24' 7"	295	24.58		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|16|1000S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	1000S200-97	10.00	2.000	97	12	50	27	8	27' 8"	332	27.67		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|16|1000S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	1200S200-54	12.00	2.000	54	16	50	25	10	25' 10"	310	25.83	e	Required at end supports only	67	10 psf DL / 30 psf LL|L/360|Single span|16|1200S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	1200S200-68	12.00	2.000	68	14	50	28	4	28' 4"	340	28.33		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|16|1200S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	1200S200-97	12.00	2.000	97	12	50	32	1	32' 1"	385	32.08		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|16|1200S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	1400S200-54	14.00	2.000	54	16	50	27	5	27' 5"	329	27.42	e	Required at end supports only	67	10 psf DL / 30 psf LL|L/360|Single span|16|1400S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	1400S200-68	14.00	2.000	68	14	50	31	11	31' 11"	383	31.92		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|16|1400S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	16	1400S200-97	14.00	2.000	97	12	50	36	3	36' 3"	435	36.25		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|16|1400S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	600S200-54	6.00	2.000	54	16	50	13	5	13' 5"	161	13.42		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|24|600S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	600S200-68	6.00	2.000	68	14	50	14	5	14' 5"	173	14.42		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|24|600S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	600S200-97	6.00	2.000	97	12	50	16	0	16' 0"	192	16.00		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|24|600S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	800S200-54	8.00	2.000	54	16	50	16	10	16' 10"	202	16.83		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|24|800S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	800S200-68	8.00	2.000	68	14	50	18	1	18' 1"	217	18.08		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|24|800S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	800S200-97	8.00	2.000	97	12	50	20	2	20' 2"	242	20.17		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Single span|24|800S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	1000S200-54	10.00	2.000	54	16	50	19	5	19' 5"	233	19.42		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|24|1000S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	1000S200-68	10.00	2.000	68	14	50	21	6	21' 6"	258	21.50		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|24|1000S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	1000S200-97	10.00	2.000	97	12	50	24	2	24' 2"	290	24.17		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|24|1000S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	1200S200-54	12.00	2.000	54	16	50	21	1	21' 1"	253	21.08	e	Required at end supports only	67	10 psf DL / 30 psf LL|L/360|Single span|24|1200S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	1200S200-68	12.00	2.000	68	14	50	24	9	24' 9"	297	24.75		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|24|1200S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	1200S200-97	12.00	2.000	97	12	50	28	0	28' 0"	336	28.00		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|24|1200S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	1400S200-54	14.00	2.000	54	16	50	22	5	22' 5"	269	22.42	e	Required at end supports only	67	10 psf DL / 30 psf LL|L/360|Single span|24|1400S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	1400S200-68	14.00	2.000	68	14	50	26	7	26' 7"	319	26.58		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|24|1400S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Single span	24	1400S200-97	14.00	2.000	97	12	50	31	8	31' 8"	380	31.67		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Single span|24|1400S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	600S200-54	6.00	2.000	54	16	50	19	0	19' 0"	228	19.00	i	Required at interior support only	66	10 psf DL / 30 psf LL|L/360|Two equal spans|12|600S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	600S200-68	6.00	2.000	68	14	50	20	4	20' 4"	244	20.33		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Two equal spans|12|600S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	600S200-97	6.00	2.000	97	12	50	22	7	22' 7"	271	22.58		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Two equal spans|12|600S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	800S200-54	8.00	2.000	54	16	50	23	10	23' 10"	286	23.83	i	Required at interior support only	66	10 psf DL / 30 psf LL|L/360|Two equal spans|12|800S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	800S200-68	8.00	2.000	68	14	50	25	7	25' 7"	307	25.58		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Two equal spans|12|800S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	800S200-97	8.00	2.000	97	12	50	28	6	28' 6"	342	28.50		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Two equal spans|12|800S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	1000S200-54	10.00	2.000	54	16	50	27	6	27' 6"	330	27.50	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|12|1000S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	1000S200-68	10.00	2.000	68	14	50	30	5	30' 5"	365	30.42	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|12|1000S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	1000S200-97	10.00	2.000	97	12	50	34	2	34' 2"	410	34.17		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Two equal spans|12|1000S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	1200S200-54	12.00	2.000	54	16	50	29	10	29' 10"	358	29.83	a	Required at all supports	67	10 psf DL / 30 psf LL|L/360|Two equal spans|12|1200S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	1200S200-68	12.00	2.000	68	14	50	35	0	35' 0"	420	35.00	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|12|1200S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	1200S200-97	12.00	2.000	97	12	50	39	8	39' 8"	476	39.67		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Two equal spans|12|1200S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	1400S200-54	14.00	2.000	54	16	50	31	8	31' 8"	380	31.67	a	Required at all supports	67	10 psf DL / 30 psf LL|L/360|Two equal spans|12|1400S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	1400S200-68	14.00	2.000	68	14	50	37	7	37' 7"	451	37.58	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|12|1400S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	12	1400S200-97	14.00	2.000	97	12	50	44	10	44' 10"	538	44.83		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Two equal spans|12|1400S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	600S200-54	6.00	2.000	54	16	50	17	3	17' 3"	207	17.25	i	Required at interior support only	66	10 psf DL / 30 psf LL|L/360|Two equal spans|16|600S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	600S200-68	6.00	2.000	68	14	50	18	6	18' 6"	222	18.50		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Two equal spans|16|600S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	600S200-97	6.00	2.000	97	12	50	20	7	20' 7"	247	20.58		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Two equal spans|16|600S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	800S200-54	8.00	2.000	54	16	50	21	3	21' 3"	255	21.25	i	Required at interior support only	66	10 psf DL / 30 psf LL|L/360|Two equal spans|16|800S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	800S200-68	8.00	2.000	68	14	50	23	3	23' 3"	279	23.25	i	Required at interior support only	66	10 psf DL / 30 psf LL|L/360|Two equal spans|16|800S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	800S200-97	8.00	2.000	97	12	50	25	11	25' 11"	311	25.92		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Two equal spans|16|800S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	1000S200-54	10.00	2.000	54	16	50	23	9	23' 9"	285	23.75	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|16|1000S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	1000S200-68	10.00	2.000	68	14	50	27	8	27' 8"	332	27.67	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|16|1000S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	1000S200-97	10.00	2.000	97	12	50	31	0	31' 0"	372	31.00		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/360|Two equal spans|16|1000S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	1200S200-54	12.00	2.000	54	16	50	25	10	25' 10"	310	25.83	a	Required at all supports	67	10 psf DL / 30 psf LL|L/360|Two equal spans|16|1200S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	1200S200-68	12.00	2.000	68	14	50	30	6	30' 6"	366	30.50	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|16|1200S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	1200S200-97	12.00	2.000	97	12	50	36	0	36' 0"	432	36.00	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|16|1200S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	1400S200-54	14.00	2.000	54	16	50	26	4	26' 4"	316	26.33	a	Required at all supports	67	10 psf DL / 30 psf LL|L/360|Two equal spans|16|1400S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	1400S200-68	14.00	2.000	68	14	50	32	7	32' 7"	391	32.58	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|16|1400S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	16	1400S200-97	14.00	2.000	97	12	50	40	8	40' 8"	488	40.67	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|16|1400S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	600S200-54	6.00	2.000	54	16	50	14	10	14' 10"	178	14.83	i	Required at interior support only	66	10 psf DL / 30 psf LL|L/360|Two equal spans|24|600S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	600S200-68	6.00	2.000	68	14	50	16	2	16' 2"	194	16.17	i	Required at interior support only	66	10 psf DL / 30 psf LL|L/360|Two equal spans|24|600S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	600S200-97	6.00	2.000	97	12	50	17	11	17' 11"	215	17.92		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Two equal spans|24|600S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	800S200-54	8.00	2.000	54	16	50	17	4	17' 4"	208	17.33	i	Required at interior support only	66	10 psf DL / 30 psf LL|L/360|Two equal spans|24|800S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	800S200-68	8.00	2.000	68	14	50	20	3	20' 3"	243	20.25	i	Required at interior support only	66	10 psf DL / 30 psf LL|L/360|Two equal spans|24|800S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	800S200-97	8.00	2.000	97	12	50	22	7	22' 7"	271	22.58		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/360|Two equal spans|24|800S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	1000S200-54	10.00	2.000	54	16	50	19	5	19' 5"	233	19.42	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|24|1000S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	1000S200-68	10.00	2.000	68	14	50	22	10	22' 10"	274	22.83	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|24|1000S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	1000S200-97	10.00	2.000	97	12	50	27	1	27' 1"	325	27.08	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|24|1000S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	1200S200-54	12.00	2.000	54	16	50	20	4	20' 4"	244	20.33	a	Required at all supports	67	10 psf DL / 30 psf LL|L/360|Two equal spans|24|1200S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	1200S200-68	12.00	2.000	68	14	50	24	11	24' 11"	299	24.92	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|24|1200S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	1200S200-97	12.00	2.000	97	12	50	31	5	31' 5"	377	31.42	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|24|1200S200-97
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	1400S200-54	14.00	2.000	54	16	50	19	8	19' 8"	236	19.67	a	Required at all supports	67	10 psf DL / 30 psf LL|L/360|Two equal spans|24|1400S200-54
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	1400S200-68	14.00	2.000	68	14	50	26	7	26' 7"	319	26.58	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|24|1400S200-68
+10 psf DL / 30 psf LL	10	30	40	L/360	Two equal spans	24	1400S200-97	14.00	2.000	97	12	50	34	5	34' 5"	413	34.42	i	Required at interior support only	67	10 psf DL / 30 psf LL|L/360|Two equal spans|24|1400S200-97
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	600S200-54	6.00	2.000	54	16	50	15	4	15' 4"	184	15.33		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/480|Single span|12|600S200-54
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	600S200-68	6.00	2.000	68	14	50	16	6	16' 6"	198	16.50		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/480|Single span|12|600S200-68
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	600S200-97	6.00	2.000	97	12	50	18	4	18' 4"	220	18.33		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/480|Single span|12|600S200-97
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	800S200-54	8.00	2.000	54	16	50	19	4	19' 4"	232	19.33		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/480|Single span|12|800S200-54
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	800S200-68	8.00	2.000	68	14	50	20	9	20' 9"	249	20.75		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/480|Single span|12|800S200-68
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	800S200-97	8.00	2.000	97	12	50	23	1	23' 1"	277	23.08		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/480|Single span|12|800S200-97
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	1000S200-54	10.00	2.000	54	16	50	22	9	22' 9"	273	22.75		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/480|Single span|12|1000S200-54
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	1000S200-68	10.00	2.000	68	14	50	24	7	24' 7"	295	24.58		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/480|Single span|12|1000S200-68
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	1000S200-97	10.00	2.000	97	12	50	27	8	27' 8"	332	27.67		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/480|Single span|12|1000S200-97
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	1200S200-54	12.00	2.000	54	16	50	26	2	26' 2"	314	26.17	e	Required at end supports only	67	10 psf DL / 30 psf LL|L/480|Single span|12|1200S200-54
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	1200S200-68	12.00	2.000	68	14	50	28	4	28' 4"	340	28.33		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/480|Single span|12|1200S200-68
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	1200S200-97	12.00	2.000	97	12	50	32	1	32' 1"	385	32.08		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/480|Single span|12|1200S200-97
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	1400S200-54	14.00	2.000	54	16	50	29	5	29' 5"	353	29.42	e	Required at end supports only	67	10 psf DL / 30 psf LL|L/480|Single span|12|1400S200-54
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	1400S200-68	14.00	2.000	68	14	50	31	11	31' 11"	383	31.92		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/480|Single span|12|1400S200-68
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	12	1400S200-97	14.00	2.000	97	12	50	36	3	36' 3"	435	36.25		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/480|Single span|12|1400S200-97
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	16	600S200-54	6.00	2.000	54	16	50	14	0	14' 0"	168	14.00		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/480|Single span|16|600S200-54
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	16	600S200-68	6.00	2.000	68	14	50	15	0	15' 0"	180	15.00		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/480|Single span|16|600S200-68
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	16	600S200-97	6.00	2.000	97	12	50	16	8	16' 8"	200	16.67		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/480|Single span|16|600S200-97
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	16	800S200-54	8.00	2.000	54	16	50	17	6	17' 6"	210	17.50		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/480|Single span|16|800S200-54
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	16	800S200-68	8.00	2.000	68	14	50	18	10	18' 10"	226	18.83		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/480|Single span|16|800S200-68
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	16	800S200-97	8.00	2.000	97	12	50	20	11	20' 11"	251	20.92		Not required (3-1/2" bearing)	66	10 psf DL / 30 psf LL|L/480|Single span|16|800S200-97
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	16	1000S200-54	10.00	2.000	54	16	50	20	8	20' 8"	248	20.67		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/480|Single span|16|1000S200-54
+10 psf DL / 30 psf LL	10	30	40	L/480	Single span	16	1000S200-68	10.00	2.000	68	14	50	22	4	22' 4"	268	22.33		Not required (3-1/2" bearing)	67	10 psf DL / 30 psf LL|L/480|Single span|16|1000S200-68
+Formulas (from the rows shown):
+D2: =B2+C2
+P2: =N2&"' "&O2&""""
+Q2: =N2*12+O2
+R2: =Q2/12
+T2: =IF(S2="e","Required at end supports only",IF(S2="i","Required at interior support only",IF(S2="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V2: =A2&"|"&E2&"|"&F2&"|"&G2&"|"&H2
+D3: =B3+C3
+P3: =N3&"' "&O3&""""
+Q3: =N3*12+O3
+R3: =Q3/12
+T3: =IF(S3="e","Required at end supports only",IF(S3="i","Required at interior support only",IF(S3="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V3: =A3&"|"&E3&"|"&F3&"|"&G3&"|"&H3
+D4: =B4+C4
+P4: =N4&"' "&O4&""""
+Q4: =N4*12+O4
+R4: =Q4/12
+T4: =IF(S4="e","Required at end supports only",IF(S4="i","Required at interior support only",IF(S4="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V4: =A4&"|"&E4&"|"&F4&"|"&G4&"|"&H4
+D5: =B5+C5
+P5: =N5&"' "&O5&""""
+Q5: =N5*12+O5
+R5: =Q5/12
+T5: =IF(S5="e","Required at end supports only",IF(S5="i","Required at interior support only",IF(S5="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V5: =A5&"|"&E5&"|"&F5&"|"&G5&"|"&H5
+D6: =B6+C6
+P6: =N6&"' "&O6&""""
+Q6: =N6*12+O6
+R6: =Q6/12
+T6: =IF(S6="e","Required at end supports only",IF(S6="i","Required at interior support only",IF(S6="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V6: =A6&"|"&E6&"|"&F6&"|"&G6&"|"&H6
+D7: =B7+C7
+P7: =N7&"' "&O7&""""
+Q7: =N7*12+O7
+R7: =Q7/12
+T7: =IF(S7="e","Required at end supports only",IF(S7="i","Required at interior support only",IF(S7="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V7: =A7&"|"&E7&"|"&F7&"|"&G7&"|"&H7
+D8: =B8+C8
+P8: =N8&"' "&O8&""""
+Q8: =N8*12+O8
+R8: =Q8/12
+T8: =IF(S8="e","Required at end supports only",IF(S8="i","Required at interior support only",IF(S8="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V8: =A8&"|"&E8&"|"&F8&"|"&G8&"|"&H8
+D9: =B9+C9
+P9: =N9&"' "&O9&""""
+Q9: =N9*12+O9
+R9: =Q9/12
+T9: =IF(S9="e","Required at end supports only",IF(S9="i","Required at interior support only",IF(S9="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V9: =A9&"|"&E9&"|"&F9&"|"&G9&"|"&H9
+D10: =B10+C10
+P10: =N10&"' "&O10&""""
+Q10: =N10*12+O10
+R10: =Q10/12
+T10: =IF(S10="e","Required at end supports only",IF(S10="i","Required at interior support only",IF(S10="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V10: =A10&"|"&E10&"|"&F10&"|"&G10&"|"&H10
+D11: =B11+C11
+P11: =N11&"' "&O11&""""
+Q11: =N11*12+O11
+R11: =Q11/12
+T11: =IF(S11="e","Required at end supports only",IF(S11="i","Required at interior support only",IF(S11="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V11: =A11&"|"&E11&"|"&F11&"|"&G11&"|"&H11
+D12: =B12+C12
+P12: =N12&"' "&O12&""""
+Q12: =N12*12+O12
+R12: =Q12/12
+T12: =IF(S12="e","Required at end supports only",IF(S12="i","Required at interior support only",IF(S12="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V12: =A12&"|"&E12&"|"&F12&"|"&G12&"|"&H12
+D13: =B13+C13
+P13: =N13&"' "&O13&""""
+Q13: =N13*12+O13
+R13: =Q13/12
+T13: =IF(S13="e","Required at end supports only",IF(S13="i","Required at interior support only",IF(S13="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V13: =A13&"|"&E13&"|"&F13&"|"&G13&"|"&H13
+D14: =B14+C14
+P14: =N14&"' "&O14&""""
+Q14: =N14*12+O14
+R14: =Q14/12
+T14: =IF(S14="e","Required at end supports only",IF(S14="i","Required at interior support only",IF(S14="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V14: =A14&"|"&E14&"|"&F14&"|"&G14&"|"&H14
+D15: =B15+C15
+P15: =N15&"' "&O15&""""
+Q15: =N15*12+O15
+R15: =Q15/12
+T15: =IF(S15="e","Required at end supports only",IF(S15="i","Required at interior support only",IF(S15="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V15: =A15&"|"&E15&"|"&F15&"|"&G15&"|"&H15
+D16: =B16+C16
+P16: =N16&"' "&O16&""""
+Q16: =N16*12+O16
+R16: =Q16/12
+T16: =IF(S16="e","Required at end supports only",IF(S16="i","Required at interior support only",IF(S16="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V16: =A16&"|"&E16&"|"&F16&"|"&G16&"|"&H16
+D17: =B17+C17
+P17: =N17&"' "&O17&""""
+Q17: =N17*12+O17
+R17: =Q17/12
+T17: =IF(S17="e","Required at end supports only",IF(S17="i","Required at interior support only",IF(S17="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V17: =A17&"|"&E17&"|"&F17&"|"&G17&"|"&H17
+D18: =B18+C18
+P18: =N18&"' "&O18&""""
+Q18: =N18*12+O18
+R18: =Q18/12
+T18: =IF(S18="e","Required at end supports only",IF(S18="i","Required at interior support only",IF(S18="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V18: =A18&"|"&E18&"|"&F18&"|"&G18&"|"&H18
+D19: =B19+C19
+P19: =N19&"' "&O19&""""
+Q19: =N19*12+O19
+R19: =Q19/12
+T19: =IF(S19="e","Required at end supports only",IF(S19="i","Required at interior support only",IF(S19="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V19: =A19&"|"&E19&"|"&F19&"|"&G19&"|"&H19
+D20: =B20+C20
+P20: =N20&"' "&O20&""""
+Q20: =N20*12+O20
+R20: =Q20/12
+T20: =IF(S20="e","Required at end supports only",IF(S20="i","Required at interior support only",IF(S20="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V20: =A20&"|"&E20&"|"&F20&"|"&G20&"|"&H20
+D21: =B21+C21
+P21: =N21&"' "&O21&""""
+Q21: =N21*12+O21
+R21: =Q21/12
+T21: =IF(S21="e","Required at end supports only",IF(S21="i","Required at interior support only",IF(S21="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V21: =A21&"|"&E21&"|"&F21&"|"&G21&"|"&H21
+D22: =B22+C22
+P22: =N22&"' "&O22&""""
+Q22: =N22*12+O22
+R22: =Q22/12
+T22: =IF(S22="e","Required at end supports only",IF(S22="i","Required at interior support only",IF(S22="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V22: =A22&"|"&E22&"|"&F22&"|"&G22&"|"&H22
+D23: =B23+C23
+P23: =N23&"' "&O23&""""
+Q23: =N23*12+O23
+R23: =Q23/12
+T23: =IF(S23="e","Required at end supports only",IF(S23="i","Required at interior support only",IF(S23="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V23: =A23&"|"&E23&"|"&F23&"|"&G23&"|"&H23
+D24: =B24+C24
+P24: =N24&"' "&O24&""""
+Q24: =N24*12+O24
+R24: =Q24/12
+T24: =IF(S24="e","Required at end supports only",IF(S24="i","Required at interior support only",IF(S24="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V24: =A24&"|"&E24&"|"&F24&"|"&G24&"|"&H24
+D25: =B25+C25
+P25: =N25&"' "&O25&""""
+Q25: =N25*12+O25
+R25: =Q25/12
+T25: =IF(S25="e","Required at end supports only",IF(S25="i","Required at interior support only",IF(S25="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V25: =A25&"|"&E25&"|"&F25&"|"&G25&"|"&H25
+D26: =B26+C26
+P26: =N26&"' "&O26&""""
+Q26: =N26*12+O26
+R26: =Q26/12
+T26: =IF(S26="e","Required at end supports only",IF(S26="i","Required at interior support only",IF(S26="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V26: =A26&"|"&E26&"|"&F26&"|"&G26&"|"&H26
+D27: =B27+C27
+P27: =N27&"' "&O27&""""
+Q27: =N27*12+O27
+R27: =Q27/12
+T27: =IF(S27="e","Required at end supports only",IF(S27="i","Required at interior support only",IF(S27="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V27: =A27&"|"&E27&"|"&F27&"|"&G27&"|"&H27
+D28: =B28+C28
+P28: =N28&"' "&O28&""""
+Q28: =N28*12+O28
+R28: =Q28/12
+T28: =IF(S28="e","Required at end supports only",IF(S28="i","Required at interior support only",IF(S28="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V28: =A28&"|"&E28&"|"&F28&"|"&G28&"|"&H28
+D29: =B29+C29
+P29: =N29&"' "&O29&""""
+Q29: =N29*12+O29
+R29: =Q29/12
+T29: =IF(S29="e","Required at end supports only",IF(S29="i","Required at interior support only",IF(S29="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V29: =A29&"|"&E29&"|"&F29&"|"&G29&"|"&H29
+D30: =B30+C30
+P30: =N30&"' "&O30&""""
+Q30: =N30*12+O30
+R30: =Q30/12
+T30: =IF(S30="e","Required at end supports only",IF(S30="i","Required at interior support only",IF(S30="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V30: =A30&"|"&E30&"|"&F30&"|"&G30&"|"&H30
+D31: =B31+C31
+P31: =N31&"' "&O31&""""
+Q31: =N31*12+O31
+R31: =Q31/12
+T31: =IF(S31="e","Required at end supports only",IF(S31="i","Required at interior support only",IF(S31="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V31: =A31&"|"&E31&"|"&F31&"|"&G31&"|"&H31
+D32: =B32+C32
+P32: =N32&"' "&O32&""""
+Q32: =N32*12+O32
+R32: =Q32/12
+T32: =IF(S32="e","Required at end supports only",IF(S32="i","Required at interior support only",IF(S32="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V32: =A32&"|"&E32&"|"&F32&"|"&G32&"|"&H32
+D33: =B33+C33
+P33: =N33&"' "&O33&""""
+Q33: =N33*12+O33
+R33: =Q33/12
+T33: =IF(S33="e","Required at end supports only",IF(S33="i","Required at interior support only",IF(S33="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V33: =A33&"|"&E33&"|"&F33&"|"&G33&"|"&H33
+D34: =B34+C34
+P34: =N34&"' "&O34&""""
+Q34: =N34*12+O34
+R34: =Q34/12
+T34: =IF(S34="e","Required at end supports only",IF(S34="i","Required at interior support only",IF(S34="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V34: =A34&"|"&E34&"|"&F34&"|"&G34&"|"&H34
+D35: =B35+C35
+P35: =N35&"' "&O35&""""
+Q35: =N35*12+O35
+R35: =Q35/12
+T35: =IF(S35="e","Required at end supports only",IF(S35="i","Required at interior support only",IF(S35="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V35: =A35&"|"&E35&"|"&F35&"|"&G35&"|"&H35
+D36: =B36+C36
+P36: =N36&"' "&O36&""""
+Q36: =N36*12+O36
+R36: =Q36/12
+T36: =IF(S36="e","Required at end supports only",IF(S36="i","Required at interior support only",IF(S36="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V36: =A36&"|"&E36&"|"&F36&"|"&G36&"|"&H36
+D37: =B37+C37
+P37: =N37&"' "&O37&""""
+Q37: =N37*12+O37
+R37: =Q37/12
+T37: =IF(S37="e","Required at end supports only",IF(S37="i","Required at interior support only",IF(S37="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V37: =A37&"|"&E37&"|"&F37&"|"&G37&"|"&H37
+D38: =B38+C38
+P38: =N38&"' "&O38&""""
+Q38: =N38*12+O38
+R38: =Q38/12
+T38: =IF(S38="e","Required at end supports only",IF(S38="i","Required at interior support only",IF(S38="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V38: =A38&"|"&E38&"|"&F38&"|"&G38&"|"&H38
+D39: =B39+C39
+P39: =N39&"' "&O39&""""
+Q39: =N39*12+O39
+R39: =Q39/12
+T39: =IF(S39="e","Required at end supports only",IF(S39="i","Required at interior support only",IF(S39="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V39: =A39&"|"&E39&"|"&F39&"|"&G39&"|"&H39
+D40: =B40+C40
+P40: =N40&"' "&O40&""""
+Q40: =N40*12+O40
+R40: =Q40/12
+T40: =IF(S40="e","Required at end supports only",IF(S40="i","Required at interior support only",IF(S40="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V40: =A40&"|"&E40&"|"&F40&"|"&G40&"|"&H40
+D41: =B41+C41
+P41: =N41&"' "&O41&""""
+Q41: =N41*12+O41
+R41: =Q41/12
+T41: =IF(S41="e","Required at end supports only",IF(S41="i","Required at interior support only",IF(S41="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V41: =A41&"|"&E41&"|"&F41&"|"&G41&"|"&H41
+D42: =B42+C42
+P42: =N42&"' "&O42&""""
+Q42: =N42*12+O42
+R42: =Q42/12
+T42: =IF(S42="e","Required at end supports only",IF(S42="i","Required at interior support only",IF(S42="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V42: =A42&"|"&E42&"|"&F42&"|"&G42&"|"&H42
+D43: =B43+C43
+P43: =N43&"' "&O43&""""
+Q43: =N43*12+O43
+R43: =Q43/12
+T43: =IF(S43="e","Required at end supports only",IF(S43="i","Required at interior support only",IF(S43="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V43: =A43&"|"&E43&"|"&F43&"|"&G43&"|"&H43
+D44: =B44+C44
+P44: =N44&"' "&O44&""""
+Q44: =N44*12+O44
+R44: =Q44/12
+T44: =IF(S44="e","Required at end supports only",IF(S44="i","Required at interior support only",IF(S44="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V44: =A44&"|"&E44&"|"&F44&"|"&G44&"|"&H44
+D45: =B45+C45
+P45: =N45&"' "&O45&""""
+Q45: =N45*12+O45
+R45: =Q45/12
+T45: =IF(S45="e","Required at end supports only",IF(S45="i","Required at interior support only",IF(S45="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V45: =A45&"|"&E45&"|"&F45&"|"&G45&"|"&H45
+D46: =B46+C46
+P46: =N46&"' "&O46&""""
+Q46: =N46*12+O46
+R46: =Q46/12
+T46: =IF(S46="e","Required at end supports only",IF(S46="i","Required at interior support only",IF(S46="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V46: =A46&"|"&E46&"|"&F46&"|"&G46&"|"&H46
+D47: =B47+C47
+P47: =N47&"' "&O47&""""
+Q47: =N47*12+O47
+R47: =Q47/12
+T47: =IF(S47="e","Required at end supports only",IF(S47="i","Required at interior support only",IF(S47="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V47: =A47&"|"&E47&"|"&F47&"|"&G47&"|"&H47
+D48: =B48+C48
+P48: =N48&"' "&O48&""""
+Q48: =N48*12+O48
+R48: =Q48/12
+T48: =IF(S48="e","Required at end supports only",IF(S48="i","Required at interior support only",IF(S48="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V48: =A48&"|"&E48&"|"&F48&"|"&G48&"|"&H48
+D49: =B49+C49
+P49: =N49&"' "&O49&""""
+Q49: =N49*12+O49
+R49: =Q49/12
+T49: =IF(S49="e","Required at end supports only",IF(S49="i","Required at interior support only",IF(S49="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V49: =A49&"|"&E49&"|"&F49&"|"&G49&"|"&H49
+D50: =B50+C50
+P50: =N50&"' "&O50&""""
+Q50: =N50*12+O50
+R50: =Q50/12
+T50: =IF(S50="e","Required at end supports only",IF(S50="i","Required at interior support only",IF(S50="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V50: =A50&"|"&E50&"|"&F50&"|"&G50&"|"&H50
+D51: =B51+C51
+P51: =N51&"' "&O51&""""
+Q51: =N51*12+O51
+R51: =Q51/12
+T51: =IF(S51="e","Required at end supports only",IF(S51="i","Required at interior support only",IF(S51="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V51: =A51&"|"&E51&"|"&F51&"|"&G51&"|"&H51
+D52: =B52+C52
+P52: =N52&"' "&O52&""""
+Q52: =N52*12+O52
+R52: =Q52/12
+T52: =IF(S52="e","Required at end supports only",IF(S52="i","Required at interior support only",IF(S52="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V52: =A52&"|"&E52&"|"&F52&"|"&G52&"|"&H52
+D53: =B53+C53
+P53: =N53&"' "&O53&""""
+Q53: =N53*12+O53
+R53: =Q53/12
+T53: =IF(S53="e","Required at end supports only",IF(S53="i","Required at interior support only",IF(S53="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V53: =A53&"|"&E53&"|"&F53&"|"&G53&"|"&H53
+D54: =B54+C54
+P54: =N54&"' "&O54&""""
+Q54: =N54*12+O54
+R54: =Q54/12
+T54: =IF(S54="e","Required at end supports only",IF(S54="i","Required at interior support only",IF(S54="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V54: =A54&"|"&E54&"|"&F54&"|"&G54&"|"&H54
+D55: =B55+C55
+P55: =N55&"' "&O55&""""
+Q55: =N55*12+O55
+R55: =Q55/12
+T55: =IF(S55="e","Required at end supports only",IF(S55="i","Required at interior support only",IF(S55="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V55: =A55&"|"&E55&"|"&F55&"|"&G55&"|"&H55
+D56: =B56+C56
+P56: =N56&"' "&O56&""""
+Q56: =N56*12+O56
+R56: =Q56/12
+T56: =IF(S56="e","Required at end supports only",IF(S56="i","Required at interior support only",IF(S56="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V56: =A56&"|"&E56&"|"&F56&"|"&G56&"|"&H56
+D57: =B57+C57
+P57: =N57&"' "&O57&""""
+Q57: =N57*12+O57
+R57: =Q57/12
+T57: =IF(S57="e","Required at end supports only",IF(S57="i","Required at interior support only",IF(S57="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V57: =A57&"|"&E57&"|"&F57&"|"&G57&"|"&H57
+D58: =B58+C58
+P58: =N58&"' "&O58&""""
+Q58: =N58*12+O58
+R58: =Q58/12
+T58: =IF(S58="e","Required at end supports only",IF(S58="i","Required at interior support only",IF(S58="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V58: =A58&"|"&E58&"|"&F58&"|"&G58&"|"&H58
+D59: =B59+C59
+P59: =N59&"' "&O59&""""
+Q59: =N59*12+O59
+R59: =Q59/12
+T59: =IF(S59="e","Required at end supports only",IF(S59="i","Required at interior support only",IF(S59="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V59: =A59&"|"&E59&"|"&F59&"|"&G59&"|"&H59
+D60: =B60+C60
+P60: =N60&"' "&O60&""""
+Q60: =N60*12+O60
+R60: =Q60/12
+T60: =IF(S60="e","Required at end supports only",IF(S60="i","Required at interior support only",IF(S60="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V60: =A60&"|"&E60&"|"&F60&"|"&G60&"|"&H60
+D61: =B61+C61
+P61: =N61&"' "&O61&""""
+Q61: =N61*12+O61
+R61: =Q61/12
+T61: =IF(S61="e","Required at end supports only",IF(S61="i","Required at interior support only",IF(S61="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V61: =A61&"|"&E61&"|"&F61&"|"&G61&"|"&H61
+D62: =B62+C62
+P62: =N62&"' "&O62&""""
+Q62: =N62*12+O62
+R62: =Q62/12
+T62: =IF(S62="e","Required at end supports only",IF(S62="i","Required at interior support only",IF(S62="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V62: =A62&"|"&E62&"|"&F62&"|"&G62&"|"&H62
+D63: =B63+C63
+P63: =N63&"' "&O63&""""
+Q63: =N63*12+O63
+R63: =Q63/12
+T63: =IF(S63="e","Required at end supports only",IF(S63="i","Required at interior support only",IF(S63="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V63: =A63&"|"&E63&"|"&F63&"|"&G63&"|"&H63
+D64: =B64+C64
+P64: =N64&"' "&O64&""""
+Q64: =N64*12+O64
+R64: =Q64/12
+T64: =IF(S64="e","Required at end supports only",IF(S64="i","Required at interior support only",IF(S64="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V64: =A64&"|"&E64&"|"&F64&"|"&G64&"|"&H64
+D65: =B65+C65
+P65: =N65&"' "&O65&""""
+Q65: =N65*12+O65
+R65: =Q65/12
+T65: =IF(S65="e","Required at end supports only",IF(S65="i","Required at interior support only",IF(S65="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V65: =A65&"|"&E65&"|"&F65&"|"&G65&"|"&H65
+D66: =B66+C66
+P66: =N66&"' "&O66&""""
+Q66: =N66*12+O66
+R66: =Q66/12
+T66: =IF(S66="e","Required at end supports only",IF(S66="i","Required at interior support only",IF(S66="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V66: =A66&"|"&E66&"|"&F66&"|"&G66&"|"&H66
+D67: =B67+C67
+P67: =N67&"' "&O67&""""
+Q67: =N67*12+O67
+R67: =Q67/12
+T67: =IF(S67="e","Required at end supports only",IF(S67="i","Required at interior support only",IF(S67="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V67: =A67&"|"&E67&"|"&F67&"|"&G67&"|"&H67
+D68: =B68+C68
+P68: =N68&"' "&O68&""""
+Q68: =N68*12+O68
+R68: =Q68/12
+T68: =IF(S68="e","Required at end supports only",IF(S68="i","Required at interior support only",IF(S68="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V68: =A68&"|"&E68&"|"&F68&"|"&G68&"|"&H68
+D69: =B69+C69
+P69: =N69&"' "&O69&""""
+Q69: =N69*12+O69
+R69: =Q69/12
+T69: =IF(S69="e","Required at end supports only",IF(S69="i","Required at interior support only",IF(S69="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V69: =A69&"|"&E69&"|"&F69&"|"&G69&"|"&H69
+D70: =B70+C70
+P70: =N70&"' "&O70&""""
+Q70: =N70*12+O70
+R70: =Q70/12
+T70: =IF(S70="e","Required at end supports only",IF(S70="i","Required at interior support only",IF(S70="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V70: =A70&"|"&E70&"|"&F70&"|"&G70&"|"&H70
+D71: =B71+C71
+P71: =N71&"' "&O71&""""
+Q71: =N71*12+O71
+R71: =Q71/12
+T71: =IF(S71="e","Required at end supports only",IF(S71="i","Required at interior support only",IF(S71="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V71: =A71&"|"&E71&"|"&F71&"|"&G71&"|"&H71
+D72: =B72+C72
+P72: =N72&"' "&O72&""""
+Q72: =N72*12+O72
+R72: =Q72/12
+T72: =IF(S72="e","Required at end supports only",IF(S72="i","Required at interior support only",IF(S72="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V72: =A72&"|"&E72&"|"&F72&"|"&G72&"|"&H72
+D73: =B73+C73
+P73: =N73&"' "&O73&""""
+Q73: =N73*12+O73
+R73: =Q73/12
+T73: =IF(S73="e","Required at end supports only",IF(S73="i","Required at interior support only",IF(S73="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V73: =A73&"|"&E73&"|"&F73&"|"&G73&"|"&H73
+D74: =B74+C74
+P74: =N74&"' "&O74&""""
+Q74: =N74*12+O74
+R74: =Q74/12
+T74: =IF(S74="e","Required at end supports only",IF(S74="i","Required at interior support only",IF(S74="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V74: =A74&"|"&E74&"|"&F74&"|"&G74&"|"&H74
+D75: =B75+C75
+P75: =N75&"' "&O75&""""
+Q75: =N75*12+O75
+R75: =Q75/12
+T75: =IF(S75="e","Required at end supports only",IF(S75="i","Required at interior support only",IF(S75="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V75: =A75&"|"&E75&"|"&F75&"|"&G75&"|"&H75
+D76: =B76+C76
+P76: =N76&"' "&O76&""""
+Q76: =N76*12+O76
+R76: =Q76/12
+T76: =IF(S76="e","Required at end supports only",IF(S76="i","Required at interior support only",IF(S76="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V76: =A76&"|"&E76&"|"&F76&"|"&G76&"|"&H76
+D77: =B77+C77
+P77: =N77&"' "&O77&""""
+Q77: =N77*12+O77
+R77: =Q77/12
+T77: =IF(S77="e","Required at end supports only",IF(S77="i","Required at interior support only",IF(S77="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V77: =A77&"|"&E77&"|"&F77&"|"&G77&"|"&H77
+D78: =B78+C78
+P78: =N78&"' "&O78&""""
+Q78: =N78*12+O78
+R78: =Q78/12
+T78: =IF(S78="e","Required at end supports only",IF(S78="i","Required at interior support only",IF(S78="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V78: =A78&"|"&E78&"|"&F78&"|"&G78&"|"&H78
+D79: =B79+C79
+P79: =N79&"' "&O79&""""
+Q79: =N79*12+O79
+R79: =Q79/12
+T79: =IF(S79="e","Required at end supports only",IF(S79="i","Required at interior support only",IF(S79="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V79: =A79&"|"&E79&"|"&F79&"|"&G79&"|"&H79
+D80: =B80+C80
+P80: =N80&"' "&O80&""""
+Q80: =N80*12+O80
+R80: =Q80/12
+T80: =IF(S80="e","Required at end supports only",IF(S80="i","Required at interior support only",IF(S80="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V80: =A80&"|"&E80&"|"&F80&"|"&G80&"|"&H80
+D81: =B81+C81
+P81: =N81&"' "&O81&""""
+Q81: =N81*12+O81
+R81: =Q81/12
+T81: =IF(S81="e","Required at end supports only",IF(S81="i","Required at interior support only",IF(S81="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V81: =A81&"|"&E81&"|"&F81&"|"&G81&"|"&H81
+D82: =B82+C82
+P82: =N82&"' "&O82&""""
+Q82: =N82*12+O82
+R82: =Q82/12
+T82: =IF(S82="e","Required at end supports only",IF(S82="i","Required at interior support only",IF(S82="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V82: =A82&"|"&E82&"|"&F82&"|"&G82&"|"&H82
+D83: =B83+C83
+P83: =N83&"' "&O83&""""
+Q83: =N83*12+O83
+R83: =Q83/12
+T83: =IF(S83="e","Required at end supports only",IF(S83="i","Required at interior support only",IF(S83="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V83: =A83&"|"&E83&"|"&F83&"|"&G83&"|"&H83
+D84: =B84+C84
+P84: =N84&"' "&O84&""""
+Q84: =N84*12+O84
+R84: =Q84/12
+T84: =IF(S84="e","Required at end supports only",IF(S84="i","Required at interior support only",IF(S84="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V84: =A84&"|"&E84&"|"&F84&"|"&G84&"|"&H84
+D85: =B85+C85
+P85: =N85&"' "&O85&""""
+Q85: =N85*12+O85
+R85: =Q85/12
+T85: =IF(S85="e","Required at end supports only",IF(S85="i","Required at interior support only",IF(S85="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V85: =A85&"|"&E85&"|"&F85&"|"&G85&"|"&H85
+D86: =B86+C86
+P86: =N86&"' "&O86&""""
+Q86: =N86*12+O86
+R86: =Q86/12
+T86: =IF(S86="e","Required at end supports only",IF(S86="i","Required at interior support only",IF(S86="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V86: =A86&"|"&E86&"|"&F86&"|"&G86&"|"&H86
+D87: =B87+C87
+P87: =N87&"' "&O87&""""
+Q87: =N87*12+O87
+R87: =Q87/12
+T87: =IF(S87="e","Required at end supports only",IF(S87="i","Required at interior support only",IF(S87="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V87: =A87&"|"&E87&"|"&F87&"|"&G87&"|"&H87
+D88: =B88+C88
+P88: =N88&"' "&O88&""""
+Q88: =N88*12+O88
+R88: =Q88/12
+T88: =IF(S88="e","Required at end supports only",IF(S88="i","Required at interior support only",IF(S88="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V88: =A88&"|"&E88&"|"&F88&"|"&G88&"|"&H88
+D89: =B89+C89
+P89: =N89&"' "&O89&""""
+Q89: =N89*12+O89
+R89: =Q89/12
+T89: =IF(S89="e","Required at end supports only",IF(S89="i","Required at interior support only",IF(S89="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V89: =A89&"|"&E89&"|"&F89&"|"&G89&"|"&H89
+D90: =B90+C90
+P90: =N90&"' "&O90&""""
+Q90: =N90*12+O90
+R90: =Q90/12
+T90: =IF(S90="e","Required at end supports only",IF(S90="i","Required at interior support only",IF(S90="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V90: =A90&"|"&E90&"|"&F90&"|"&G90&"|"&H90
+D91: =B91+C91
+P91: =N91&"' "&O91&""""
+Q91: =N91*12+O91
+R91: =Q91/12
+T91: =IF(S91="e","Required at end supports only",IF(S91="i","Required at interior support only",IF(S91="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V91: =A91&"|"&E91&"|"&F91&"|"&G91&"|"&H91
+D92: =B92+C92
+P92: =N92&"' "&O92&""""
+Q92: =N92*12+O92
+R92: =Q92/12
+T92: =IF(S92="e","Required at end supports only",IF(S92="i","Required at interior support only",IF(S92="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V92: =A92&"|"&E92&"|"&F92&"|"&G92&"|"&H92
+D93: =B93+C93
+P93: =N93&"' "&O93&""""
+Q93: =N93*12+O93
+R93: =Q93/12
+T93: =IF(S93="e","Required at end supports only",IF(S93="i","Required at interior support only",IF(S93="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V93: =A93&"|"&E93&"|"&F93&"|"&G93&"|"&H93
+D94: =B94+C94
+P94: =N94&"' "&O94&""""
+Q94: =N94*12+O94
+R94: =Q94/12
+T94: =IF(S94="e","Required at end supports only",IF(S94="i","Required at interior support only",IF(S94="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V94: =A94&"|"&E94&"|"&F94&"|"&G94&"|"&H94
+D95: =B95+C95
+P95: =N95&"' "&O95&""""
+Q95: =N95*12+O95
+R95: =Q95/12
+T95: =IF(S95="e","Required at end supports only",IF(S95="i","Required at interior support only",IF(S95="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V95: =A95&"|"&E95&"|"&F95&"|"&G95&"|"&H95
+D96: =B96+C96
+P96: =N96&"' "&O96&""""
+Q96: =N96*12+O96
+R96: =Q96/12
+T96: =IF(S96="e","Required at end supports only",IF(S96="i","Required at interior support only",IF(S96="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V96: =A96&"|"&E96&"|"&F96&"|"&G96&"|"&H96
+D97: =B97+C97
+P97: =N97&"' "&O97&""""
+Q97: =N97*12+O97
+R97: =Q97/12
+T97: =IF(S97="e","Required at end supports only",IF(S97="i","Required at interior support only",IF(S97="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V97: =A97&"|"&E97&"|"&F97&"|"&G97&"|"&H97
+D98: =B98+C98
+P98: =N98&"' "&O98&""""
+Q98: =N98*12+O98
+R98: =Q98/12
+T98: =IF(S98="e","Required at end supports only",IF(S98="i","Required at interior support only",IF(S98="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V98: =A98&"|"&E98&"|"&F98&"|"&G98&"|"&H98
+D99: =B99+C99
+P99: =N99&"' "&O99&""""
+Q99: =N99*12+O99
+R99: =Q99/12
+T99: =IF(S99="e","Required at end supports only",IF(S99="i","Required at interior support only",IF(S99="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V99: =A99&"|"&E99&"|"&F99&"|"&G99&"|"&H99
+D100: =B100+C100
+P100: =N100&"' "&O100&""""
+Q100: =N100*12+O100
+R100: =Q100/12
+T100: =IF(S100="e","Required at end supports only",IF(S100="i","Required at interior support only",IF(S100="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V100: =A100&"|"&E100&"|"&F100&"|"&G100&"|"&H100
+D101: =B101+C101
+P101: =N101&"' "&O101&""""
+Q101: =N101*12+O101
+R101: =Q101/12
+T101: =IF(S101="e","Required at end supports only",IF(S101="i","Required at interior support only",IF(S101="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V101: =A101&"|"&E101&"|"&F101&"|"&G101&"|"&H101
+D102: =B102+C102
+P102: =N102&"' "&O102&""""
+Q102: =N102*12+O102
+R102: =Q102/12
+T102: =IF(S102="e","Required at end supports only",IF(S102="i","Required at interior support only",IF(S102="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V102: =A102&"|"&E102&"|"&F102&"|"&G102&"|"&H102
+D103: =B103+C103
+P103: =N103&"' "&O103&""""
+Q103: =N103*12+O103
+R103: =Q103/12
+T103: =IF(S103="e","Required at end supports only",IF(S103="i","Required at interior support only",IF(S103="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V103: =A103&"|"&E103&"|"&F103&"|"&G103&"|"&H103
+D104: =B104+C104
+P104: =N104&"' "&O104&""""
+Q104: =N104*12+O104
+R104: =Q104/12
+T104: =IF(S104="e","Required at end supports only",IF(S104="i","Required at interior support only",IF(S104="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V104: =A104&"|"&E104&"|"&F104&"|"&G104&"|"&H104
+D105: =B105+C105
+P105: =N105&"' "&O105&""""
+Q105: =N105*12+O105
+R105: =Q105/12
+T105: =IF(S105="e","Required at end supports only",IF(S105="i","Required at interior support only",IF(S105="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V105: =A105&"|"&E105&"|"&F105&"|"&G105&"|"&H105
+D106: =B106+C106
+P106: =N106&"' "&O106&""""
+Q106: =N106*12+O106
+R106: =Q106/12
+T106: =IF(S106="e","Required at end supports only",IF(S106="i","Required at interior support only",IF(S106="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V106: =A106&"|"&E106&"|"&F106&"|"&G106&"|"&H106
+D107: =B107+C107
+P107: =N107&"' "&O107&""""
+Q107: =N107*12+O107
+R107: =Q107/12
+T107: =IF(S107="e","Required at end supports only",IF(S107="i","Required at interior support only",IF(S107="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V107: =A107&"|"&E107&"|"&F107&"|"&G107&"|"&H107
+D108: =B108+C108
+P108: =N108&"' "&O108&""""
+Q108: =N108*12+O108
+R108: =Q108/12
+T108: =IF(S108="e","Required at end supports only",IF(S108="i","Required at interior support only",IF(S108="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V108: =A108&"|"&E108&"|"&F108&"|"&G108&"|"&H108
+D109: =B109+C109
+P109: =N109&"' "&O109&""""
+Q109: =N109*12+O109
+R109: =Q109/12
+T109: =IF(S109="e","Required at end supports only",IF(S109="i","Required at interior support only",IF(S109="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V109: =A109&"|"&E109&"|"&F109&"|"&G109&"|"&H109
+D110: =B110+C110
+P110: =N110&"' "&O110&""""
+Q110: =N110*12+O110
+R110: =Q110/12
+T110: =IF(S110="e","Required at end supports only",IF(S110="i","Required at interior support only",IF(S110="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V110: =A110&"|"&E110&"|"&F110&"|"&G110&"|"&H110
+D111: =B111+C111
+P111: =N111&"' "&O111&""""
+Q111: =N111*12+O111
+R111: =Q111/12
+T111: =IF(S111="e","Required at end supports only",IF(S111="i","Required at interior support only",IF(S111="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V111: =A111&"|"&E111&"|"&F111&"|"&G111&"|"&H111
+D112: =B112+C112
+P112: =N112&"' "&O112&""""
+Q112: =N112*12+O112
+R112: =Q112/12
+T112: =IF(S112="e","Required at end supports only",IF(S112="i","Required at interior support only",IF(S112="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V112: =A112&"|"&E112&"|"&F112&"|"&G112&"|"&H112
+D113: =B113+C113
+P113: =N113&"' "&O113&""""
+Q113: =N113*12+O113
+R113: =Q113/12
+T113: =IF(S113="e","Required at end supports only",IF(S113="i","Required at interior support only",IF(S113="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V113: =A113&"|"&E113&"|"&F113&"|"&G113&"|"&H113
+D114: =B114+C114
+P114: =N114&"' "&O114&""""
+Q114: =N114*12+O114
+R114: =Q114/12
+T114: =IF(S114="e","Required at end supports only",IF(S114="i","Required at interior support only",IF(S114="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V114: =A114&"|"&E114&"|"&F114&"|"&G114&"|"&H114
+D115: =B115+C115
+P115: =N115&"' "&O115&""""
+Q115: =N115*12+O115
+R115: =Q115/12
+T115: =IF(S115="e","Required at end supports only",IF(S115="i","Required at interior support only",IF(S115="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V115: =A115&"|"&E115&"|"&F115&"|"&G115&"|"&H115
+D116: =B116+C116
+P116: =N116&"' "&O116&""""
+Q116: =N116*12+O116
+R116: =Q116/12
+T116: =IF(S116="e","Required at end supports only",IF(S116="i","Required at interior support only",IF(S116="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V116: =A116&"|"&E116&"|"&F116&"|"&G116&"|"&H116
+D117: =B117+C117
+P117: =N117&"' "&O117&""""
+Q117: =N117*12+O117
+R117: =Q117/12
+T117: =IF(S117="e","Required at end supports only",IF(S117="i","Required at interior support only",IF(S117="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V117: =A117&"|"&E117&"|"&F117&"|"&G117&"|"&H117
+D118: =B118+C118
+P118: =N118&"' "&O118&""""
+Q118: =N118*12+O118
+R118: =Q118/12
+T118: =IF(S118="e","Required at end supports only",IF(S118="i","Required at interior support only",IF(S118="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V118: =A118&"|"&E118&"|"&F118&"|"&G118&"|"&H118
+D119: =B119+C119
+P119: =N119&"' "&O119&""""
+Q119: =N119*12+O119
+R119: =Q119/12
+T119: =IF(S119="e","Required at end supports only",IF(S119="i","Required at interior support only",IF(S119="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V119: =A119&"|"&E119&"|"&F119&"|"&G119&"|"&H119
+D120: =B120+C120
+P120: =N120&"' "&O120&""""
+Q120: =N120*12+O120
+R120: =Q120/12
+T120: =IF(S120="e","Required at end supports only",IF(S120="i","Required at interior support only",IF(S120="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V120: =A120&"|"&E120&"|"&F120&"|"&G120&"|"&H120
+D121: =B121+C121
+P121: =N121&"' "&O121&""""
+Q121: =N121*12+O121
+R121: =Q121/12
+T121: =IF(S121="e","Required at end supports only",IF(S121="i","Required at interior support only",IF(S121="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V121: =A121&"|"&E121&"|"&F121&"|"&G121&"|"&H121
+D122: =B122+C122
+P122: =N122&"' "&O122&""""
+Q122: =N122*12+O122
+R122: =Q122/12
+T122: =IF(S122="e","Required at end supports only",IF(S122="i","Required at interior support only",IF(S122="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V122: =A122&"|"&E122&"|"&F122&"|"&G122&"|"&H122
+D123: =B123+C123
+P123: =N123&"' "&O123&""""
+Q123: =N123*12+O123
+R123: =Q123/12
+T123: =IF(S123="e","Required at end supports only",IF(S123="i","Required at interior support only",IF(S123="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V123: =A123&"|"&E123&"|"&F123&"|"&G123&"|"&H123
+D124: =B124+C124
+P124: =N124&"' "&O124&""""
+Q124: =N124*12+O124
+R124: =Q124/12
+T124: =IF(S124="e","Required at end supports only",IF(S124="i","Required at interior support only",IF(S124="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V124: =A124&"|"&E124&"|"&F124&"|"&G124&"|"&H124
+D125: =B125+C125
+P125: =N125&"' "&O125&""""
+Q125: =N125*12+O125
+R125: =Q125/12
+T125: =IF(S125="e","Required at end supports only",IF(S125="i","Required at interior support only",IF(S125="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V125: =A125&"|"&E125&"|"&F125&"|"&G125&"|"&H125
+D126: =B126+C126
+P126: =N126&"' "&O126&""""
+Q126: =N126*12+O126
+R126: =Q126/12
+T126: =IF(S126="e","Required at end supports only",IF(S126="i","Required at interior support only",IF(S126="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V126: =A126&"|"&E126&"|"&F126&"|"&G126&"|"&H126
+D127: =B127+C127
+P127: =N127&"' "&O127&""""
+Q127: =N127*12+O127
+R127: =Q127/12
+T127: =IF(S127="e","Required at end supports only",IF(S127="i","Required at interior support only",IF(S127="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V127: =A127&"|"&E127&"|"&F127&"|"&G127&"|"&H127
+D128: =B128+C128
+P128: =N128&"' "&O128&""""
+Q128: =N128*12+O128
+R128: =Q128/12
+T128: =IF(S128="e","Required at end supports only",IF(S128="i","Required at interior support only",IF(S128="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V128: =A128&"|"&E128&"|"&F128&"|"&G128&"|"&H128
+D129: =B129+C129
+P129: =N129&"' "&O129&""""
+Q129: =N129*12+O129
+R129: =Q129/12
+T129: =IF(S129="e","Required at end supports only",IF(S129="i","Required at interior support only",IF(S129="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V129: =A129&"|"&E129&"|"&F129&"|"&G129&"|"&H129
+D130: =B130+C130
+P130: =N130&"' "&O130&""""
+Q130: =N130*12+O130
+R130: =Q130/12
+T130: =IF(S130="e","Required at end supports only",IF(S130="i","Required at interior support only",IF(S130="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V130: =A130&"|"&E130&"|"&F130&"|"&G130&"|"&H130
+D131: =B131+C131
+P131: =N131&"' "&O131&""""
+Q131: =N131*12+O131
+R131: =Q131/12
+T131: =IF(S131="e","Required at end supports only",IF(S131="i","Required at interior support only",IF(S131="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V131: =A131&"|"&E131&"|"&F131&"|"&G131&"|"&H131
+D132: =B132+C132
+P132: =N132&"' "&O132&""""
+Q132: =N132*12+O132
+R132: =Q132/12
+T132: =IF(S132="e","Required at end supports only",IF(S132="i","Required at interior support only",IF(S132="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V132: =A132&"|"&E132&"|"&F132&"|"&G132&"|"&H132
+D133: =B133+C133
+P133: =N133&"' "&O133&""""
+Q133: =N133*12+O133
+R133: =Q133/12
+T133: =IF(S133="e","Required at end supports only",IF(S133="i","Required at interior support only",IF(S133="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V133: =A133&"|"&E133&"|"&F133&"|"&G133&"|"&H133
+D134: =B134+C134
+P134: =N134&"' "&O134&""""
+Q134: =N134*12+O134
+R134: =Q134/12
+T134: =IF(S134="e","Required at end supports only",IF(S134="i","Required at interior support only",IF(S134="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V134: =A134&"|"&E134&"|"&F134&"|"&G134&"|"&H134
+D135: =B135+C135
+P135: =N135&"' "&O135&""""
+Q135: =N135*12+O135
+R135: =Q135/12
+T135: =IF(S135="e","Required at end supports only",IF(S135="i","Required at interior support only",IF(S135="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V135: =A135&"|"&E135&"|"&F135&"|"&G135&"|"&H135
+D136: =B136+C136
+P136: =N136&"' "&O136&""""
+Q136: =N136*12+O136
+R136: =Q136/12
+T136: =IF(S136="e","Required at end supports only",IF(S136="i","Required at interior support only",IF(S136="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V136: =A136&"|"&E136&"|"&F136&"|"&G136&"|"&H136
+D137: =B137+C137
+P137: =N137&"' "&O137&""""
+Q137: =N137*12+O137
+R137: =Q137/12
+T137: =IF(S137="e","Required at end supports only",IF(S137="i","Required at interior support only",IF(S137="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V137: =A137&"|"&E137&"|"&F137&"|"&G137&"|"&H137
+D138: =B138+C138
+P138: =N138&"' "&O138&""""
+Q138: =N138*12+O138
+R138: =Q138/12
+T138: =IF(S138="e","Required at end supports only",IF(S138="i","Required at interior support only",IF(S138="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V138: =A138&"|"&E138&"|"&F138&"|"&G138&"|"&H138
+D139: =B139+C139
+P139: =N139&"' "&O139&""""
+Q139: =N139*12+O139
+R139: =Q139/12
+T139: =IF(S139="e","Required at end supports only",IF(S139="i","Required at interior support only",IF(S139="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V139: =A139&"|"&E139&"|"&F139&"|"&G139&"|"&H139
+D140: =B140+C140
+P140: =N140&"' "&O140&""""
+Q140: =N140*12+O140
+R140: =Q140/12
+T140: =IF(S140="e","Required at end supports only",IF(S140="i","Required at interior support only",IF(S140="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V140: =A140&"|"&E140&"|"&F140&"|"&G140&"|"&H140
+D141: =B141+C141
+P141: =N141&"' "&O141&""""
+Q141: =N141*12+O141
+R141: =Q141/12
+T141: =IF(S141="e","Required at end supports only",IF(S141="i","Required at interior support only",IF(S141="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V141: =A141&"|"&E141&"|"&F141&"|"&G141&"|"&H141
+D142: =B142+C142
+P142: =N142&"' "&O142&""""
+Q142: =N142*12+O142
+R142: =Q142/12
+T142: =IF(S142="e","Required at end supports only",IF(S142="i","Required at interior support only",IF(S142="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V142: =A142&"|"&E142&"|"&F142&"|"&G142&"|"&H142
+D143: =B143+C143
+P143: =N143&"' "&O143&""""
+Q143: =N143*12+O143
+R143: =Q143/12
+T143: =IF(S143="e","Required at end supports only",IF(S143="i","Required at interior support only",IF(S143="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V143: =A143&"|"&E143&"|"&F143&"|"&G143&"|"&H143
+D144: =B144+C144
+P144: =N144&"' "&O144&""""
+Q144: =N144*12+O144
+R144: =Q144/12
+T144: =IF(S144="e","Required at end supports only",IF(S144="i","Required at interior support only",IF(S144="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V144: =A144&"|"&E144&"|"&F144&"|"&G144&"|"&H144
+D145: =B145+C145
+P145: =N145&"' "&O145&""""
+Q145: =N145*12+O145
+R145: =Q145/12
+T145: =IF(S145="e","Required at end supports only",IF(S145="i","Required at interior support only",IF(S145="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V145: =A145&"|"&E145&"|"&F145&"|"&G145&"|"&H145
+D146: =B146+C146
+P146: =N146&"' "&O146&""""
+Q146: =N146*12+O146
+R146: =Q146/12
+T146: =IF(S146="e","Required at end supports only",IF(S146="i","Required at interior support only",IF(S146="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V146: =A146&"|"&E146&"|"&F146&"|"&G146&"|"&H146
+D147: =B147+C147
+P147: =N147&"' "&O147&""""
+Q147: =N147*12+O147
+R147: =Q147/12
+T147: =IF(S147="e","Required at end supports only",IF(S147="i","Required at interior support only",IF(S147="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V147: =A147&"|"&E147&"|"&F147&"|"&G147&"|"&H147
+D148: =B148+C148
+P148: =N148&"' "&O148&""""
+Q148: =N148*12+O148
+R148: =Q148/12
+T148: =IF(S148="e","Required at end supports only",IF(S148="i","Required at interior support only",IF(S148="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V148: =A148&"|"&E148&"|"&F148&"|"&G148&"|"&H148
+D149: =B149+C149
+P149: =N149&"' "&O149&""""
+Q149: =N149*12+O149
+R149: =Q149/12
+T149: =IF(S149="e","Required at end supports only",IF(S149="i","Required at interior support only",IF(S149="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V149: =A149&"|"&E149&"|"&F149&"|"&G149&"|"&H149
+D150: =B150+C150
+P150: =N150&"' "&O150&""""
+Q150: =N150*12+O150
+R150: =Q150/12
+T150: =IF(S150="e","Required at end supports only",IF(S150="i","Required at interior support only",IF(S150="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V150: =A150&"|"&E150&"|"&F150&"|"&G150&"|"&H150
+D151: =B151+C151
+P151: =N151&"' "&O151&""""
+Q151: =N151*12+O151
+R151: =Q151/12
+T151: =IF(S151="e","Required at end supports only",IF(S151="i","Required at interior support only",IF(S151="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V151: =A151&"|"&E151&"|"&F151&"|"&G151&"|"&H151
+D152: =B152+C152
+P152: =N152&"' "&O152&""""
+Q152: =N152*12+O152
+R152: =Q152/12
+T152: =IF(S152="e","Required at end supports only",IF(S152="i","Required at interior support only",IF(S152="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V152: =A152&"|"&E152&"|"&F152&"|"&G152&"|"&H152
+D153: =B153+C153
+P153: =N153&"' "&O153&""""
+Q153: =N153*12+O153
+R153: =Q153/12
+T153: =IF(S153="e","Required at end supports only",IF(S153="i","Required at interior support only",IF(S153="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V153: =A153&"|"&E153&"|"&F153&"|"&G153&"|"&H153
+D154: =B154+C154
+P154: =N154&"' "&O154&""""
+Q154: =N154*12+O154
+R154: =Q154/12
+T154: =IF(S154="e","Required at end supports only",IF(S154="i","Required at interior support only",IF(S154="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V154: =A154&"|"&E154&"|"&F154&"|"&G154&"|"&H154
+D155: =B155+C155
+P155: =N155&"' "&O155&""""
+Q155: =N155*12+O155
+R155: =Q155/12
+T155: =IF(S155="e","Required at end supports only",IF(S155="i","Required at interior support only",IF(S155="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V155: =A155&"|"&E155&"|"&F155&"|"&G155&"|"&H155
+D156: =B156+C156
+P156: =N156&"' "&O156&""""
+Q156: =N156*12+O156
+R156: =Q156/12
+T156: =IF(S156="e","Required at end supports only",IF(S156="i","Required at interior support only",IF(S156="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V156: =A156&"|"&E156&"|"&F156&"|"&G156&"|"&H156
+D157: =B157+C157
+P157: =N157&"' "&O157&""""
+Q157: =N157*12+O157
+R157: =Q157/12
+T157: =IF(S157="e","Required at end supports only",IF(S157="i","Required at interior support only",IF(S157="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V157: =A157&"|"&E157&"|"&F157&"|"&G157&"|"&H157
+D158: =B158+C158
+P158: =N158&"' "&O158&""""
+Q158: =N158*12+O158
+R158: =Q158/12
+T158: =IF(S158="e","Required at end supports only",IF(S158="i","Required at interior support only",IF(S158="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V158: =A158&"|"&E158&"|"&F158&"|"&G158&"|"&H158
+D159: =B159+C159
+P159: =N159&"' "&O159&""""
+Q159: =N159*12+O159
+R159: =Q159/12
+T159: =IF(S159="e","Required at end supports only",IF(S159="i","Required at interior support only",IF(S159="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V159: =A159&"|"&E159&"|"&F159&"|"&G159&"|"&H159
+D160: =B160+C160
+P160: =N160&"' "&O160&""""
+Q160: =N160*12+O160
+R160: =Q160/12
+T160: =IF(S160="e","Required at end supports only",IF(S160="i","Required at interior support only",IF(S160="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V160: =A160&"|"&E160&"|"&F160&"|"&G160&"|"&H160
+D161: =B161+C161
+P161: =N161&"' "&O161&""""
+Q161: =N161*12+O161
+R161: =Q161/12
+T161: =IF(S161="e","Required at end supports only",IF(S161="i","Required at interior support only",IF(S161="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V161: =A161&"|"&E161&"|"&F161&"|"&G161&"|"&H161
+D162: =B162+C162
+P162: =N162&"' "&O162&""""
+Q162: =N162*12+O162
+R162: =Q162/12
+T162: =IF(S162="e","Required at end supports only",IF(S162="i","Required at interior support only",IF(S162="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V162: =A162&"|"&E162&"|"&F162&"|"&G162&"|"&H162
+D163: =B163+C163
+P163: =N163&"' "&O163&""""
+Q163: =N163*12+O163
+R163: =Q163/12
+T163: =IF(S163="e","Required at end supports only",IF(S163="i","Required at interior support only",IF(S163="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V163: =A163&"|"&E163&"|"&F163&"|"&G163&"|"&H163
+D164: =B164+C164
+P164: =N164&"' "&O164&""""
+Q164: =N164*12+O164
+R164: =Q164/12
+T164: =IF(S164="e","Required at end supports only",IF(S164="i","Required at interior support only",IF(S164="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V164: =A164&"|"&E164&"|"&F164&"|"&G164&"|"&H164
+D165: =B165+C165
+P165: =N165&"' "&O165&""""
+Q165: =N165*12+O165
+R165: =Q165/12
+T165: =IF(S165="e","Required at end supports only",IF(S165="i","Required at interior support only",IF(S165="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V165: =A165&"|"&E165&"|"&F165&"|"&G165&"|"&H165
+D166: =B166+C166
+P166: =N166&"' "&O166&""""
+Q166: =N166*12+O166
+R166: =Q166/12
+T166: =IF(S166="e","Required at end supports only",IF(S166="i","Required at interior support only",IF(S166="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V166: =A166&"|"&E166&"|"&F166&"|"&G166&"|"&H166
+D167: =B167+C167
+P167: =N167&"' "&O167&""""
+Q167: =N167*12+O167
+R167: =Q167/12
+T167: =IF(S167="e","Required at end supports only",IF(S167="i","Required at interior support only",IF(S167="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V167: =A167&"|"&E167&"|"&F167&"|"&G167&"|"&H167
+D168: =B168+C168
+P168: =N168&"' "&O168&""""
+Q168: =N168*12+O168
+R168: =Q168/12
+T168: =IF(S168="e","Required at end supports only",IF(S168="i","Required at interior support only",IF(S168="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V168: =A168&"|"&E168&"|"&F168&"|"&G168&"|"&H168
+D169: =B169+C169
+P169: =N169&"' "&O169&""""
+Q169: =N169*12+O169
+R169: =Q169/12
+T169: =IF(S169="e","Required at end supports only",IF(S169="i","Required at interior support only",IF(S169="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V169: =A169&"|"&E169&"|"&F169&"|"&G169&"|"&H169
+D170: =B170+C170
+P170: =N170&"' "&O170&""""
+Q170: =N170*12+O170
+R170: =Q170/12
+T170: =IF(S170="e","Required at end supports only",IF(S170="i","Required at interior support only",IF(S170="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V170: =A170&"|"&E170&"|"&F170&"|"&G170&"|"&H170
+D171: =B171+C171
+P171: =N171&"' "&O171&""""
+Q171: =N171*12+O171
+R171: =Q171/12
+T171: =IF(S171="e","Required at end supports only",IF(S171="i","Required at interior support only",IF(S171="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V171: =A171&"|"&E171&"|"&F171&"|"&G171&"|"&H171
+D172: =B172+C172
+P172: =N172&"' "&O172&""""
+Q172: =N172*12+O172
+R172: =Q172/12
+T172: =IF(S172="e","Required at end supports only",IF(S172="i","Required at interior support only",IF(S172="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V172: =A172&"|"&E172&"|"&F172&"|"&G172&"|"&H172
+D173: =B173+C173
+P173: =N173&"' "&O173&""""
+Q173: =N173*12+O173
+R173: =Q173/12
+T173: =IF(S173="e","Required at end supports only",IF(S173="i","Required at interior support only",IF(S173="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V173: =A173&"|"&E173&"|"&F173&"|"&G173&"|"&H173
+D174: =B174+C174
+P174: =N174&"' "&O174&""""
+Q174: =N174*12+O174
+R174: =Q174/12
+T174: =IF(S174="e","Required at end supports only",IF(S174="i","Required at interior support only",IF(S174="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V174: =A174&"|"&E174&"|"&F174&"|"&G174&"|"&H174
+D175: =B175+C175
+P175: =N175&"' "&O175&""""
+Q175: =N175*12+O175
+R175: =Q175/12
+T175: =IF(S175="e","Required at end supports only",IF(S175="i","Required at interior support only",IF(S175="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V175: =A175&"|"&E175&"|"&F175&"|"&G175&"|"&H175
+D176: =B176+C176
+P176: =N176&"' "&O176&""""
+Q176: =N176*12+O176
+R176: =Q176/12
+T176: =IF(S176="e","Required at end supports only",IF(S176="i","Required at interior support only",IF(S176="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V176: =A176&"|"&E176&"|"&F176&"|"&G176&"|"&H176
+D177: =B177+C177
+P177: =N177&"' "&O177&""""
+Q177: =N177*12+O177
+R177: =Q177/12
+T177: =IF(S177="e","Required at end supports only",IF(S177="i","Required at interior support only",IF(S177="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V177: =A177&"|"&E177&"|"&F177&"|"&G177&"|"&H177
+D178: =B178+C178
+P178: =N178&"' "&O178&""""
+Q178: =N178*12+O178
+R178: =Q178/12
+T178: =IF(S178="e","Required at end supports only",IF(S178="i","Required at interior support only",IF(S178="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V178: =A178&"|"&E178&"|"&F178&"|"&G178&"|"&H178
+D179: =B179+C179
+P179: =N179&"' "&O179&""""
+Q179: =N179*12+O179
+R179: =Q179/12
+T179: =IF(S179="e","Required at end supports only",IF(S179="i","Required at interior support only",IF(S179="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V179: =A179&"|"&E179&"|"&F179&"|"&G179&"|"&H179
+D180: =B180+C180
+P180: =N180&"' "&O180&""""
+Q180: =N180*12+O180
+R180: =Q180/12
+T180: =IF(S180="e","Required at end supports only",IF(S180="i","Required at interior support only",IF(S180="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V180: =A180&"|"&E180&"|"&F180&"|"&G180&"|"&H180
+D181: =B181+C181
+P181: =N181&"' "&O181&""""
+Q181: =N181*12+O181
+R181: =Q181/12
+T181: =IF(S181="e","Required at end supports only",IF(S181="i","Required at interior support only",IF(S181="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V181: =A181&"|"&E181&"|"&F181&"|"&G181&"|"&H181
+D182: =B182+C182
+P182: =N182&"' "&O182&""""
+Q182: =N182*12+O182
+R182: =Q182/12
+T182: =IF(S182="e","Required at end supports only",IF(S182="i","Required at interior support only",IF(S182="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V182: =A182&"|"&E182&"|"&F182&"|"&G182&"|"&H182
+D183: =B183+C183
+P183: =N183&"' "&O183&""""
+Q183: =N183*12+O183
+R183: =Q183/12
+T183: =IF(S183="e","Required at end supports only",IF(S183="i","Required at interior support only",IF(S183="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V183: =A183&"|"&E183&"|"&F183&"|"&G183&"|"&H183
+D184: =B184+C184
+P184: =N184&"' "&O184&""""
+Q184: =N184*12+O184
+R184: =Q184/12
+T184: =IF(S184="e","Required at end supports only",IF(S184="i","Required at interior support only",IF(S184="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V184: =A184&"|"&E184&"|"&F184&"|"&G184&"|"&H184
+D185: =B185+C185
+P185: =N185&"' "&O185&""""
+Q185: =N185*12+O185
+R185: =Q185/12
+T185: =IF(S185="e","Required at end supports only",IF(S185="i","Required at interior support only",IF(S185="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V185: =A185&"|"&E185&"|"&F185&"|"&G185&"|"&H185
+D186: =B186+C186
+P186: =N186&"' "&O186&""""
+Q186: =N186*12+O186
+R186: =Q186/12
+T186: =IF(S186="e","Required at end supports only",IF(S186="i","Required at interior support only",IF(S186="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V186: =A186&"|"&E186&"|"&F186&"|"&G186&"|"&H186
+D187: =B187+C187
+P187: =N187&"' "&O187&""""
+Q187: =N187*12+O187
+R187: =Q187/12
+T187: =IF(S187="e","Required at end supports only",IF(S187="i","Required at interior support only",IF(S187="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V187: =A187&"|"&E187&"|"&F187&"|"&G187&"|"&H187
+D188: =B188+C188
+P188: =N188&"' "&O188&""""
+Q188: =N188*12+O188
+R188: =Q188/12
+T188: =IF(S188="e","Required at end supports only",IF(S188="i","Required at interior support only",IF(S188="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V188: =A188&"|"&E188&"|"&F188&"|"&G188&"|"&H188
+D189: =B189+C189
+P189: =N189&"' "&O189&""""
+Q189: =N189*12+O189
+R189: =Q189/12
+T189: =IF(S189="e","Required at end supports only",IF(S189="i","Required at interior support only",IF(S189="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V189: =A189&"|"&E189&"|"&F189&"|"&G189&"|"&H189
+D190: =B190+C190
+P190: =N190&"' "&O190&""""
+Q190: =N190*12+O190
+R190: =Q190/12
+T190: =IF(S190="e","Required at end supports only",IF(S190="i","Required at interior support only",IF(S190="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V190: =A190&"|"&E190&"|"&F190&"|"&G190&"|"&H190
+D191: =B191+C191
+P191: =N191&"' "&O191&""""
+Q191: =N191*12+O191
+R191: =Q191/12
+T191: =IF(S191="e","Required at end supports only",IF(S191="i","Required at interior support only",IF(S191="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V191: =A191&"|"&E191&"|"&F191&"|"&G191&"|"&H191
+D192: =B192+C192
+P192: =N192&"' "&O192&""""
+Q192: =N192*12+O192
+R192: =Q192/12
+T192: =IF(S192="e","Required at end supports only",IF(S192="i","Required at interior support only",IF(S192="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V192: =A192&"|"&E192&"|"&F192&"|"&G192&"|"&H192
+D193: =B193+C193
+P193: =N193&"' "&O193&""""
+Q193: =N193*12+O193
+R193: =Q193/12
+T193: =IF(S193="e","Required at end supports only",IF(S193="i","Required at interior support only",IF(S193="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V193: =A193&"|"&E193&"|"&F193&"|"&G193&"|"&H193
+D194: =B194+C194
+P194: =N194&"' "&O194&""""
+Q194: =N194*12+O194
+R194: =Q194/12
+T194: =IF(S194="e","Required at end supports only",IF(S194="i","Required at interior support only",IF(S194="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V194: =A194&"|"&E194&"|"&F194&"|"&G194&"|"&H194
+D195: =B195+C195
+P195: =N195&"' "&O195&""""
+Q195: =N195*12+O195
+R195: =Q195/12
+T195: =IF(S195="e","Required at end supports only",IF(S195="i","Required at interior support only",IF(S195="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V195: =A195&"|"&E195&"|"&F195&"|"&G195&"|"&H195
+D196: =B196+C196
+P196: =N196&"' "&O196&""""
+Q196: =N196*12+O196
+R196: =Q196/12
+T196: =IF(S196="e","Required at end supports only",IF(S196="i","Required at interior support only",IF(S196="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V196: =A196&"|"&E196&"|"&F196&"|"&G196&"|"&H196
+D197: =B197+C197
+P197: =N197&"' "&O197&""""
+Q197: =N197*12+O197
+R197: =Q197/12
+T197: =IF(S197="e","Required at end supports only",IF(S197="i","Required at interior support only",IF(S197="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V197: =A197&"|"&E197&"|"&F197&"|"&G197&"|"&H197
+D198: =B198+C198
+P198: =N198&"' "&O198&""""
+Q198: =N198*12+O198
+R198: =Q198/12
+T198: =IF(S198="e","Required at end supports only",IF(S198="i","Required at interior support only",IF(S198="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V198: =A198&"|"&E198&"|"&F198&"|"&G198&"|"&H198
+D199: =B199+C199
+P199: =N199&"' "&O199&""""
+Q199: =N199*12+O199
+R199: =Q199/12
+T199: =IF(S199="e","Required at end supports only",IF(S199="i","Required at interior support only",IF(S199="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V199: =A199&"|"&E199&"|"&F199&"|"&G199&"|"&H199
+D200: =B200+C200
+P200: =N200&"' "&O200&""""
+Q200: =N200*12+O200
+R200: =Q200/12
+T200: =IF(S200="e","Required at end supports only",IF(S200="i","Required at interior support only",IF(S200="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V200: =A200&"|"&E200&"|"&F200&"|"&G200&"|"&H200
+D201: =B201+C201
+P201: =N201&"' "&O201&""""
+Q201: =N201*12+O201
+R201: =Q201/12
+T201: =IF(S201="e","Required at end supports only",IF(S201="i","Required at interior support only",IF(S201="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V201: =A201&"|"&E201&"|"&F201&"|"&G201&"|"&H201
+D202: =B202+C202
+P202: =N202&"' "&O202&""""
+Q202: =N202*12+O202
+R202: =Q202/12
+T202: =IF(S202="e","Required at end supports only",IF(S202="i","Required at interior support only",IF(S202="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V202: =A202&"|"&E202&"|"&F202&"|"&G202&"|"&H202
+D203: =B203+C203
+P203: =N203&"' "&O203&""""
+Q203: =N203*12+O203
+R203: =Q203/12
+T203: =IF(S203="e","Required at end supports only",IF(S203="i","Required at interior support only",IF(S203="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V203: =A203&"|"&E203&"|"&F203&"|"&G203&"|"&H203
+D204: =B204+C204
+P204: =N204&"' "&O204&""""
+Q204: =N204*12+O204
+R204: =Q204/12
+T204: =IF(S204="e","Required at end supports only",IF(S204="i","Required at interior support only",IF(S204="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V204: =A204&"|"&E204&"|"&F204&"|"&G204&"|"&H204
+D205: =B205+C205
+P205: =N205&"' "&O205&""""
+Q205: =N205*12+O205
+R205: =Q205/12
+T205: =IF(S205="e","Required at end supports only",IF(S205="i","Required at interior support only",IF(S205="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V205: =A205&"|"&E205&"|"&F205&"|"&G205&"|"&H205
+D206: =B206+C206
+P206: =N206&"' "&O206&""""
+Q206: =N206*12+O206
+R206: =Q206/12
+T206: =IF(S206="e","Required at end supports only",IF(S206="i","Required at interior support only",IF(S206="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V206: =A206&"|"&E206&"|"&F206&"|"&G206&"|"&H206
+D207: =B207+C207
+P207: =N207&"' "&O207&""""
+Q207: =N207*12+O207
+R207: =Q207/12
+T207: =IF(S207="e","Required at end supports only",IF(S207="i","Required at interior support only",IF(S207="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V207: =A207&"|"&E207&"|"&F207&"|"&G207&"|"&H207
+D208: =B208+C208
+P208: =N208&"' "&O208&""""
+Q208: =N208*12+O208
+R208: =Q208/12
+T208: =IF(S208="e","Required at end supports only",IF(S208="i","Required at interior support only",IF(S208="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V208: =A208&"|"&E208&"|"&F208&"|"&G208&"|"&H208
+D209: =B209+C209
+P209: =N209&"' "&O209&""""
+Q209: =N209*12+O209
+R209: =Q209/12
+T209: =IF(S209="e","Required at end supports only",IF(S209="i","Required at interior support only",IF(S209="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V209: =A209&"|"&E209&"|"&F209&"|"&G209&"|"&H209
+D210: =B210+C210
+P210: =N210&"' "&O210&""""
+Q210: =N210*12+O210
+R210: =Q210/12
+T210: =IF(S210="e","Required at end supports only",IF(S210="i","Required at interior support only",IF(S210="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V210: =A210&"|"&E210&"|"&F210&"|"&G210&"|"&H210
+D211: =B211+C211
+P211: =N211&"' "&O211&""""
+Q211: =N211*12+O211
+R211: =Q211/12
+T211: =IF(S211="e","Required at end supports only",IF(S211="i","Required at interior support only",IF(S211="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V211: =A211&"|"&E211&"|"&F211&"|"&G211&"|"&H211
+D212: =B212+C212
+P212: =N212&"' "&O212&""""
+Q212: =N212*12+O212
+R212: =Q212/12
+T212: =IF(S212="e","Required at end supports only",IF(S212="i","Required at interior support only",IF(S212="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V212: =A212&"|"&E212&"|"&F212&"|"&G212&"|"&H212
+D213: =B213+C213
+P213: =N213&"' "&O213&""""
+Q213: =N213*12+O213
+R213: =Q213/12
+T213: =IF(S213="e","Required at end supports only",IF(S213="i","Required at interior support only",IF(S213="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V213: =A213&"|"&E213&"|"&F213&"|"&G213&"|"&H213
+D214: =B214+C214
+P214: =N214&"' "&O214&""""
+Q214: =N214*12+O214
+R214: =Q214/12
+T214: =IF(S214="e","Required at end supports only",IF(S214="i","Required at interior support only",IF(S214="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V214: =A214&"|"&E214&"|"&F214&"|"&G214&"|"&H214
+D215: =B215+C215
+P215: =N215&"' "&O215&""""
+Q215: =N215*12+O215
+R215: =Q215/12
+T215: =IF(S215="e","Required at end supports only",IF(S215="i","Required at interior support only",IF(S215="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V215: =A215&"|"&E215&"|"&F215&"|"&G215&"|"&H215
+D216: =B216+C216
+P216: =N216&"' "&O216&""""
+Q216: =N216*12+O216
+R216: =Q216/12
+T216: =IF(S216="e","Required at end supports only",IF(S216="i","Required at interior support only",IF(S216="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V216: =A216&"|"&E216&"|"&F216&"|"&G216&"|"&H216
+D217: =B217+C217
+P217: =N217&"' "&O217&""""
+Q217: =N217*12+O217
+R217: =Q217/12
+T217: =IF(S217="e","Required at end supports only",IF(S217="i","Required at interior support only",IF(S217="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V217: =A217&"|"&E217&"|"&F217&"|"&G217&"|"&H217
+D218: =B218+C218
+P218: =N218&"' "&O218&""""
+Q218: =N218*12+O218
+R218: =Q218/12
+T218: =IF(S218="e","Required at end supports only",IF(S218="i","Required at interior support only",IF(S218="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V218: =A218&"|"&E218&"|"&F218&"|"&G218&"|"&H218
+D219: =B219+C219
+P219: =N219&"' "&O219&""""
+Q219: =N219*12+O219
+R219: =Q219/12
+T219: =IF(S219="e","Required at end supports only",IF(S219="i","Required at interior support only",IF(S219="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V219: =A219&"|"&E219&"|"&F219&"|"&G219&"|"&H219
+D220: =B220+C220
+P220: =N220&"' "&O220&""""
+Q220: =N220*12+O220
+R220: =Q220/12
+T220: =IF(S220="e","Required at end supports only",IF(S220="i","Required at interior support only",IF(S220="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V220: =A220&"|"&E220&"|"&F220&"|"&G220&"|"&H220
+D221: =B221+C221
+P221: =N221&"' "&O221&""""
+Q221: =N221*12+O221
+R221: =Q221/12
+T221: =IF(S221="e","Required at end supports only",IF(S221="i","Required at interior support only",IF(S221="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V221: =A221&"|"&E221&"|"&F221&"|"&G221&"|"&H221
+D222: =B222+C222
+P222: =N222&"' "&O222&""""
+Q222: =N222*12+O222
+R222: =Q222/12
+T222: =IF(S222="e","Required at end supports only",IF(S222="i","Required at interior support only",IF(S222="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V222: =A222&"|"&E222&"|"&F222&"|"&G222&"|"&H222
+D223: =B223+C223
+P223: =N223&"' "&O223&""""
+Q223: =N223*12+O223
+R223: =Q223/12
+T223: =IF(S223="e","Required at end supports only",IF(S223="i","Required at interior support only",IF(S223="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V223: =A223&"|"&E223&"|"&F223&"|"&G223&"|"&H223
+D224: =B224+C224
+P224: =N224&"' "&O224&""""
+Q224: =N224*12+O224
+R224: =Q224/12
+T224: =IF(S224="e","Required at end supports only",IF(S224="i","Required at interior support only",IF(S224="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V224: =A224&"|"&E224&"|"&F224&"|"&G224&"|"&H224
+D225: =B225+C225
+P225: =N225&"' "&O225&""""
+Q225: =N225*12+O225
+R225: =Q225/12
+T225: =IF(S225="e","Required at end supports only",IF(S225="i","Required at interior support only",IF(S225="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V225: =A225&"|"&E225&"|"&F225&"|"&G225&"|"&H225
+D226: =B226+C226
+P226: =N226&"' "&O226&""""
+Q226: =N226*12+O226
+R226: =Q226/12
+T226: =IF(S226="e","Required at end supports only",IF(S226="i","Required at interior support only",IF(S226="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V226: =A226&"|"&E226&"|"&F226&"|"&G226&"|"&H226
+D227: =B227+C227
+P227: =N227&"' "&O227&""""
+Q227: =N227*12+O227
+R227: =Q227/12
+T227: =IF(S227="e","Required at end supports only",IF(S227="i","Required at interior support only",IF(S227="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V227: =A227&"|"&E227&"|"&F227&"|"&G227&"|"&H227
+D228: =B228+C228
+P228: =N228&"' "&O228&""""
+Q228: =N228*12+O228
+R228: =Q228/12
+T228: =IF(S228="e","Required at end supports only",IF(S228="i","Required at interior support only",IF(S228="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V228: =A228&"|"&E228&"|"&F228&"|"&G228&"|"&H228
+D229: =B229+C229
+P229: =N229&"' "&O229&""""
+Q229: =N229*12+O229
+R229: =Q229/12
+T229: =IF(S229="e","Required at end supports only",IF(S229="i","Required at interior support only",IF(S229="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V229: =A229&"|"&E229&"|"&F229&"|"&G229&"|"&H229
+D230: =B230+C230
+P230: =N230&"' "&O230&""""
+Q230: =N230*12+O230
+R230: =Q230/12
+T230: =IF(S230="e","Required at end supports only",IF(S230="i","Required at interior support only",IF(S230="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V230: =A230&"|"&E230&"|"&F230&"|"&G230&"|"&H230
+D231: =B231+C231
+P231: =N231&"' "&O231&""""
+Q231: =N231*12+O231
+R231: =Q231/12
+T231: =IF(S231="e","Required at end supports only",IF(S231="i","Required at interior support only",IF(S231="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V231: =A231&"|"&E231&"|"&F231&"|"&G231&"|"&H231
+D232: =B232+C232
+P232: =N232&"' "&O232&""""
+Q232: =N232*12+O232
+R232: =Q232/12
+T232: =IF(S232="e","Required at end supports only",IF(S232="i","Required at interior support only",IF(S232="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V232: =A232&"|"&E232&"|"&F232&"|"&G232&"|"&H232
+D233: =B233+C233
+P233: =N233&"' "&O233&""""
+Q233: =N233*12+O233
+R233: =Q233/12
+T233: =IF(S233="e","Required at end supports only",IF(S233="i","Required at interior support only",IF(S233="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V233: =A233&"|"&E233&"|"&F233&"|"&G233&"|"&H233
+D234: =B234+C234
+P234: =N234&"' "&O234&""""
+Q234: =N234*12+O234
+R234: =Q234/12
+T234: =IF(S234="e","Required at end supports only",IF(S234="i","Required at interior support only",IF(S234="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V234: =A234&"|"&E234&"|"&F234&"|"&G234&"|"&H234
+D235: =B235+C235
+P235: =N235&"' "&O235&""""
+Q235: =N235*12+O235
+R235: =Q235/12
+T235: =IF(S235="e","Required at end supports only",IF(S235="i","Required at interior support only",IF(S235="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V235: =A235&"|"&E235&"|"&F235&"|"&G235&"|"&H235
+D236: =B236+C236
+P236: =N236&"' "&O236&""""
+Q236: =N236*12+O236
+R236: =Q236/12
+T236: =IF(S236="e","Required at end supports only",IF(S236="i","Required at interior support only",IF(S236="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V236: =A236&"|"&E236&"|"&F236&"|"&G236&"|"&H236
+D237: =B237+C237
+P237: =N237&"' "&O237&""""
+Q237: =N237*12+O237
+R237: =Q237/12
+T237: =IF(S237="e","Required at end supports only",IF(S237="i","Required at interior support only",IF(S237="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V237: =A237&"|"&E237&"|"&F237&"|"&G237&"|"&H237
+D238: =B238+C238
+P238: =N238&"' "&O238&""""
+Q238: =N238*12+O238
+R238: =Q238/12
+T238: =IF(S238="e","Required at end supports only",IF(S238="i","Required at interior support only",IF(S238="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V238: =A238&"|"&E238&"|"&F238&"|"&G238&"|"&H238
+D239: =B239+C239
+P239: =N239&"' "&O239&""""
+Q239: =N239*12+O239
+R239: =Q239/12
+T239: =IF(S239="e","Required at end supports only",IF(S239="i","Required at interior support only",IF(S239="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V239: =A239&"|"&E239&"|"&F239&"|"&G239&"|"&H239
+D240: =B240+C240
+P240: =N240&"' "&O240&""""
+Q240: =N240*12+O240
+R240: =Q240/12
+T240: =IF(S240="e","Required at end supports only",IF(S240="i","Required at interior support only",IF(S240="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V240: =A240&"|"&E240&"|"&F240&"|"&G240&"|"&H240
+D241: =B241+C241
+P241: =N241&"' "&O241&""""
+Q241: =N241*12+O241
+R241: =Q241/12
+T241: =IF(S241="e","Required at end supports only",IF(S241="i","Required at interior support only",IF(S241="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V241: =A241&"|"&E241&"|"&F241&"|"&G241&"|"&H241
+D242: =B242+C242
+P242: =N242&"' "&O242&""""
+Q242: =N242*12+O242
+R242: =Q242/12
+T242: =IF(S242="e","Required at end supports only",IF(S242="i","Required at interior support only",IF(S242="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V242: =A242&"|"&E242&"|"&F242&"|"&G242&"|"&H242
+D243: =B243+C243
+P243: =N243&"' "&O243&""""
+Q243: =N243*12+O243
+R243: =Q243/12
+T243: =IF(S243="e","Required at end supports only",IF(S243="i","Required at interior support only",IF(S243="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V243: =A243&"|"&E243&"|"&F243&"|"&G243&"|"&H243
+D244: =B244+C244
+P244: =N244&"' "&O244&""""
+Q244: =N244*12+O244
+R244: =Q244/12
+T244: =IF(S244="e","Required at end supports only",IF(S244="i","Required at interior support only",IF(S244="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V244: =A244&"|"&E244&"|"&F244&"|"&G244&"|"&H244
+D245: =B245+C245
+P245: =N245&"' "&O245&""""
+Q245: =N245*12+O245
+R245: =Q245/12
+T245: =IF(S245="e","Required at end supports only",IF(S245="i","Required at interior support only",IF(S245="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V245: =A245&"|"&E245&"|"&F245&"|"&G245&"|"&H245
+D246: =B246+C246
+P246: =N246&"' "&O246&""""
+Q246: =N246*12+O246
+R246: =Q246/12
+T246: =IF(S246="e","Required at end supports only",IF(S246="i","Required at interior support only",IF(S246="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V246: =A246&"|"&E246&"|"&F246&"|"&G246&"|"&H246
+D247: =B247+C247
+P247: =N247&"' "&O247&""""
+Q247: =N247*12+O247
+R247: =Q247/12
+T247: =IF(S247="e","Required at end supports only",IF(S247="i","Required at interior support only",IF(S247="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V247: =A247&"|"&E247&"|"&F247&"|"&G247&"|"&H247
+D248: =B248+C248
+P248: =N248&"' "&O248&""""
+Q248: =N248*12+O248
+R248: =Q248/12
+T248: =IF(S248="e","Required at end supports only",IF(S248="i","Required at interior support only",IF(S248="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V248: =A248&"|"&E248&"|"&F248&"|"&G248&"|"&H248
+D249: =B249+C249
+P249: =N249&"' "&O249&""""
+Q249: =N249*12+O249
+R249: =Q249/12
+T249: =IF(S249="e","Required at end supports only",IF(S249="i","Required at interior support only",IF(S249="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V249: =A249&"|"&E249&"|"&F249&"|"&G249&"|"&H249
+D250: =B250+C250
+P250: =N250&"' "&O250&""""
+Q250: =N250*12+O250
+R250: =Q250/12
+T250: =IF(S250="e","Required at end supports only",IF(S250="i","Required at interior support only",IF(S250="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V250: =A250&"|"&E250&"|"&F250&"|"&G250&"|"&H250
+D251: =B251+C251
+P251: =N251&"' "&O251&""""
+Q251: =N251*12+O251
+R251: =Q251/12
+T251: =IF(S251="e","Required at end supports only",IF(S251="i","Required at interior support only",IF(S251="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V251: =A251&"|"&E251&"|"&F251&"|"&G251&"|"&H251
+D252: =B252+C252
+P252: =N252&"' "&O252&""""
+Q252: =N252*12+O252
+R252: =Q252/12
+T252: =IF(S252="e","Required at end supports only",IF(S252="i","Required at interior support only",IF(S252="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V252: =A252&"|"&E252&"|"&F252&"|"&G252&"|"&H252
+D253: =B253+C253
+P253: =N253&"' "&O253&""""
+Q253: =N253*12+O253
+R253: =Q253/12
+T253: =IF(S253="e","Required at end supports only",IF(S253="i","Required at interior support only",IF(S253="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V253: =A253&"|"&E253&"|"&F253&"|"&G253&"|"&H253
+D254: =B254+C254
+P254: =N254&"' "&O254&""""
+Q254: =N254*12+O254
+R254: =Q254/12
+T254: =IF(S254="e","Required at end supports only",IF(S254="i","Required at interior support only",IF(S254="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V254: =A254&"|"&E254&"|"&F254&"|"&G254&"|"&H254
+D255: =B255+C255
+P255: =N255&"' "&O255&""""
+Q255: =N255*12+O255
+R255: =Q255/12
+T255: =IF(S255="e","Required at end supports only",IF(S255="i","Required at interior support only",IF(S255="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V255: =A255&"|"&E255&"|"&F255&"|"&G255&"|"&H255
+D256: =B256+C256
+P256: =N256&"' "&O256&""""
+Q256: =N256*12+O256
+R256: =Q256/12
+T256: =IF(S256="e","Required at end supports only",IF(S256="i","Required at interior support only",IF(S256="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V256: =A256&"|"&E256&"|"&F256&"|"&G256&"|"&H256
+D257: =B257+C257
+P257: =N257&"' "&O257&""""
+Q257: =N257*12+O257
+R257: =Q257/12
+T257: =IF(S257="e","Required at end supports only",IF(S257="i","Required at interior support only",IF(S257="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V257: =A257&"|"&E257&"|"&F257&"|"&G257&"|"&H257
+D258: =B258+C258
+P258: =N258&"' "&O258&""""
+Q258: =N258*12+O258
+R258: =Q258/12
+T258: =IF(S258="e","Required at end supports only",IF(S258="i","Required at interior support only",IF(S258="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V258: =A258&"|"&E258&"|"&F258&"|"&G258&"|"&H258
+D259: =B259+C259
+P259: =N259&"' "&O259&""""
+Q259: =N259*12+O259
+R259: =Q259/12
+T259: =IF(S259="e","Required at end supports only",IF(S259="i","Required at interior support only",IF(S259="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V259: =A259&"|"&E259&"|"&F259&"|"&G259&"|"&H259
+D260: =B260+C260
+P260: =N260&"' "&O260&""""
+Q260: =N260*12+O260
+R260: =Q260/12
+T260: =IF(S260="e","Required at end supports only",IF(S260="i","Required at interior support only",IF(S260="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V260: =A260&"|"&E260&"|"&F260&"|"&G260&"|"&H260
+D261: =B261+C261
+P261: =N261&"' "&O261&""""
+Q261: =N261*12+O261
+R261: =Q261/12
+T261: =IF(S261="e","Required at end supports only",IF(S261="i","Required at interior support only",IF(S261="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V261: =A261&"|"&E261&"|"&F261&"|"&G261&"|"&H261
+D262: =B262+C262
+P262: =N262&"' "&O262&""""
+Q262: =N262*12+O262
+R262: =Q262/12
+T262: =IF(S262="e","Required at end supports only",IF(S262="i","Required at interior support only",IF(S262="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V262: =A262&"|"&E262&"|"&F262&"|"&G262&"|"&H262
+D263: =B263+C263
+P263: =N263&"' "&O263&""""
+Q263: =N263*12+O263
+R263: =Q263/12
+T263: =IF(S263="e","Required at end supports only",IF(S263="i","Required at interior support only",IF(S263="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V263: =A263&"|"&E263&"|"&F263&"|"&G263&"|"&H263
+D264: =B264+C264
+P264: =N264&"' "&O264&""""
+Q264: =N264*12+O264
+R264: =Q264/12
+T264: =IF(S264="e","Required at end supports only",IF(S264="i","Required at interior support only",IF(S264="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V264: =A264&"|"&E264&"|"&F264&"|"&G264&"|"&H264
+D265: =B265+C265
+P265: =N265&"' "&O265&""""
+Q265: =N265*12+O265
+R265: =Q265/12
+T265: =IF(S265="e","Required at end supports only",IF(S265="i","Required at interior support only",IF(S265="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V265: =A265&"|"&E265&"|"&F265&"|"&G265&"|"&H265
+D266: =B266+C266
+P266: =N266&"' "&O266&""""
+Q266: =N266*12+O266
+R266: =Q266/12
+T266: =IF(S266="e","Required at end supports only",IF(S266="i","Required at interior support only",IF(S266="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V266: =A266&"|"&E266&"|"&F266&"|"&G266&"|"&H266
+D267: =B267+C267
+P267: =N267&"' "&O267&""""
+Q267: =N267*12+O267
+R267: =Q267/12
+T267: =IF(S267="e","Required at end supports only",IF(S267="i","Required at interior support only",IF(S267="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V267: =A267&"|"&E267&"|"&F267&"|"&G267&"|"&H267
+D268: =B268+C268
+P268: =N268&"' "&O268&""""
+Q268: =N268*12+O268
+R268: =Q268/12
+T268: =IF(S268="e","Required at end supports only",IF(S268="i","Required at interior support only",IF(S268="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V268: =A268&"|"&E268&"|"&F268&"|"&G268&"|"&H268
+D269: =B269+C269
+P269: =N269&"' "&O269&""""
+Q269: =N269*12+O269
+R269: =Q269/12
+T269: =IF(S269="e","Required at end supports only",IF(S269="i","Required at interior support only",IF(S269="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V269: =A269&"|"&E269&"|"&F269&"|"&G269&"|"&H269
+D270: =B270+C270
+P270: =N270&"' "&O270&""""
+Q270: =N270*12+O270
+R270: =Q270/12
+T270: =IF(S270="e","Required at end supports only",IF(S270="i","Required at interior support only",IF(S270="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V270: =A270&"|"&E270&"|"&F270&"|"&G270&"|"&H270
+D271: =B271+C271
+P271: =N271&"' "&O271&""""
+Q271: =N271*12+O271
+R271: =Q271/12
+T271: =IF(S271="e","Required at end supports only",IF(S271="i","Required at interior support only",IF(S271="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V271: =A271&"|"&E271&"|"&F271&"|"&G271&"|"&H271
+D272: =B272+C272
+P272: =N272&"' "&O272&""""
+Q272: =N272*12+O272
+R272: =Q272/12
+T272: =IF(S272="e","Required at end supports only",IF(S272="i","Required at interior support only",IF(S272="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V272: =A272&"|"&E272&"|"&F272&"|"&G272&"|"&H272
+D273: =B273+C273
+P273: =N273&"' "&O273&""""
+Q273: =N273*12+O273
+R273: =Q273/12
+T273: =IF(S273="e","Required at end supports only",IF(S273="i","Required at interior support only",IF(S273="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V273: =A273&"|"&E273&"|"&F273&"|"&G273&"|"&H273
+D274: =B274+C274
+P274: =N274&"' "&O274&""""
+Q274: =N274*12+O274
+R274: =Q274/12
+T274: =IF(S274="e","Required at end supports only",IF(S274="i","Required at interior support only",IF(S274="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V274: =A274&"|"&E274&"|"&F274&"|"&G274&"|"&H274
+D275: =B275+C275
+P275: =N275&"' "&O275&""""
+Q275: =N275*12+O275
+R275: =Q275/12
+T275: =IF(S275="e","Required at end supports only",IF(S275="i","Required at interior support only",IF(S275="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V275: =A275&"|"&E275&"|"&F275&"|"&G275&"|"&H275
+D276: =B276+C276
+P276: =N276&"' "&O276&""""
+Q276: =N276*12+O276
+R276: =Q276/12
+T276: =IF(S276="e","Required at end supports only",IF(S276="i","Required at interior support only",IF(S276="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V276: =A276&"|"&E276&"|"&F276&"|"&G276&"|"&H276
+D277: =B277+C277
+P277: =N277&"' "&O277&""""
+Q277: =N277*12+O277
+R277: =Q277/12
+T277: =IF(S277="e","Required at end supports only",IF(S277="i","Required at interior support only",IF(S277="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V277: =A277&"|"&E277&"|"&F277&"|"&G277&"|"&H277
+D278: =B278+C278
+P278: =N278&"' "&O278&""""
+Q278: =N278*12+O278
+R278: =Q278/12
+T278: =IF(S278="e","Required at end supports only",IF(S278="i","Required at interior support only",IF(S278="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V278: =A278&"|"&E278&"|"&F278&"|"&G278&"|"&H278
+D279: =B279+C279
+P279: =N279&"' "&O279&""""
+Q279: =N279*12+O279
+R279: =Q279/12
+T279: =IF(S279="e","Required at end supports only",IF(S279="i","Required at interior support only",IF(S279="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V279: =A279&"|"&E279&"|"&F279&"|"&G279&"|"&H279
+D280: =B280+C280
+P280: =N280&"' "&O280&""""
+Q280: =N280*12+O280
+R280: =Q280/12
+T280: =IF(S280="e","Required at end supports only",IF(S280="i","Required at interior support only",IF(S280="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V280: =A280&"|"&E280&"|"&F280&"|"&G280&"|"&H280
+D281: =B281+C281
+P281: =N281&"' "&O281&""""
+Q281: =N281*12+O281
+R281: =Q281/12
+T281: =IF(S281="e","Required at end supports only",IF(S281="i","Required at interior support only",IF(S281="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V281: =A281&"|"&E281&"|"&F281&"|"&G281&"|"&H281
+D282: =B282+C282
+P282: =N282&"' "&O282&""""
+Q282: =N282*12+O282
+R282: =Q282/12
+T282: =IF(S282="e","Required at end supports only",IF(S282="i","Required at interior support only",IF(S282="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V282: =A282&"|"&E282&"|"&F282&"|"&G282&"|"&H282
+D283: =B283+C283
+P283: =N283&"' "&O283&""""
+Q283: =N283*12+O283
+R283: =Q283/12
+T283: =IF(S283="e","Required at end supports only",IF(S283="i","Required at interior support only",IF(S283="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V283: =A283&"|"&E283&"|"&F283&"|"&G283&"|"&H283
+D284: =B284+C284
+P284: =N284&"' "&O284&""""
+Q284: =N284*12+O284
+R284: =Q284/12
+T284: =IF(S284="e","Required at end supports only",IF(S284="i","Required at interior support only",IF(S284="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V284: =A284&"|"&E284&"|"&F284&"|"&G284&"|"&H284
+D285: =B285+C285
+P285: =N285&"' "&O285&""""
+Q285: =N285*12+O285
+R285: =Q285/12
+T285: =IF(S285="e","Required at end supports only",IF(S285="i","Required at interior support only",IF(S285="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V285: =A285&"|"&E285&"|"&F285&"|"&G285&"|"&H285
+D286: =B286+C286
+P286: =N286&"' "&O286&""""
+Q286: =N286*12+O286
+R286: =Q286/12
+T286: =IF(S286="e","Required at end supports only",IF(S286="i","Required at interior support only",IF(S286="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V286: =A286&"|"&E286&"|"&F286&"|"&G286&"|"&H286
+D287: =B287+C287
+P287: =N287&"' "&O287&""""
+Q287: =N287*12+O287
+R287: =Q287/12
+T287: =IF(S287="e","Required at end supports only",IF(S287="i","Required at interior support only",IF(S287="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V287: =A287&"|"&E287&"|"&F287&"|"&G287&"|"&H287
+D288: =B288+C288
+P288: =N288&"' "&O288&""""
+Q288: =N288*12+O288
+R288: =Q288/12
+T288: =IF(S288="e","Required at end supports only",IF(S288="i","Required at interior support only",IF(S288="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V288: =A288&"|"&E288&"|"&F288&"|"&G288&"|"&H288
+D289: =B289+C289
+P289: =N289&"' "&O289&""""
+Q289: =N289*12+O289
+R289: =Q289/12
+T289: =IF(S289="e","Required at end supports only",IF(S289="i","Required at interior support only",IF(S289="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V289: =A289&"|"&E289&"|"&F289&"|"&G289&"|"&H289
+D290: =B290+C290
+P290: =N290&"' "&O290&""""
+Q290: =N290*12+O290
+R290: =Q290/12
+T290: =IF(S290="e","Required at end supports only",IF(S290="i","Required at interior support only",IF(S290="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V290: =A290&"|"&E290&"|"&F290&"|"&G290&"|"&H290
+D291: =B291+C291
+P291: =N291&"' "&O291&""""
+Q291: =N291*12+O291
+R291: =Q291/12
+T291: =IF(S291="e","Required at end supports only",IF(S291="i","Required at interior support only",IF(S291="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V291: =A291&"|"&E291&"|"&F291&"|"&G291&"|"&H291
+D292: =B292+C292
+P292: =N292&"' "&O292&""""
+Q292: =N292*12+O292
+R292: =Q292/12
+T292: =IF(S292="e","Required at end supports only",IF(S292="i","Required at interior support only",IF(S292="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V292: =A292&"|"&E292&"|"&F292&"|"&G292&"|"&H292
+D293: =B293+C293
+P293: =N293&"' "&O293&""""
+Q293: =N293*12+O293
+R293: =Q293/12
+T293: =IF(S293="e","Required at end supports only",IF(S293="i","Required at interior support only",IF(S293="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V293: =A293&"|"&E293&"|"&F293&"|"&G293&"|"&H293
+D294: =B294+C294
+P294: =N294&"' "&O294&""""
+Q294: =N294*12+O294
+R294: =Q294/12
+T294: =IF(S294="e","Required at end supports only",IF(S294="i","Required at interior support only",IF(S294="a","Required at all supports","Not required (3-1/2"" bearing)")))
+V294: =A294&"|"&E294&"|"&F294&"|"&G294&"|"&H294
+
+[Sheet 12 ("All Data") was cut partway and sheet 13 was not read; call again with startPage=12 to read from the start of sheet 12.]
