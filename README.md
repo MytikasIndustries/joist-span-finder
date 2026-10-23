@@ -31,6 +31,8 @@ test proves that every heavier table allows equal or shorter spans.
 | `src/logic.js` | Picks the table, ranks the joists, formats spans |
 | `src/app.js`, `src/body.html`, `src/styles.css` | The page |
 | `scripts/extract-workbook.mjs` | Rebuilds the data from the workbook exports |
+| `src/quote.js` | Checks quote requests and writes the note for sales |
+| `functions/api/quote.js` | Sends quote requests to Go High Level (runs on Cloudflare) |
 | `scripts/build.mjs` | Builds `dist/index.html`, one self-contained file |
 
 No packages to install. Node 20 or later.
@@ -46,6 +48,24 @@ npm run build   # writes dist/index.html
    replace the two files in `data/source/`.
 2. `npm run extract`, then `npm test`. The tests must pass before publishing.
 3. `npm run build`.
+
+## Quote requests → Go High Level
+
+The "Request a quote" form posts to `/api/quote`, a Cloudflare Pages Function.
+It re-checks the selection, creates or updates the contact in Go High Level
+(source "Joist span finder", tags `joist span finder` and `role: …`) and adds a
+note with the joist, span, loads, job, rough quantity and a link that reopens
+their exact selection. A GHL workflow triggered by the `joist span finder` tag
+can notify sales or open an opportunity.
+
+It needs two secrets in Cloudflare Pages → mytikas-spans → Settings →
+Variables and secrets (Production):
+
+- `GHL_API_TOKEN`: a Go High Level private integration token with
+  contacts write access (Settings → Private Integrations)
+- `GHL_LOCATION_ID`: the Mytikas sub-account's location ID
+
+Until both are set the form tells visitors to email or call instead.
 
 ## Hosting
 

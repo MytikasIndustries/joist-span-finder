@@ -79,10 +79,71 @@
       </div>
       <p class="hint" id="defl-hint"></p>
     </fieldset>
+
+    <fieldset>
+      <legend>Job details <span class="optional">optional</span></legend>
+      <div class="field">
+        <label for="job">Job name</label>
+        <div class="box"><input id="job" name="job" type="text" maxlength="80" autocomplete="off" placeholder="Smith residence"></div>
+      </div>
+      <div class="field">
+        <label for="loc">Location</label>
+        <div class="box"><input id="loc" name="loc" type="text" maxlength="80" autocomplete="off" placeholder="Cañon City, CO"></div>
+      </div>
+      <div class="field">
+        <label for="area">Floor area</label>
+        <div class="box"><input id="area" name="area" type="number" inputmode="numeric" min="0" step="10" placeholder="0"><span class="unit">sq ft</span></div>
+      </div>
+      <p class="hint">Shown on the spec sheet and sent with a quote request. Floor area gives a rough joist quantity.</p>
+    </fieldset>
   </form>
 
   <section class="results" id="results" aria-live="polite"></section>
 </main>
+
+<section class="quote-band" id="quote" aria-labelledby="quote-title">
+  <div class="wrap quote">
+    <div class="stack">
+      <p class="eyebrow">Mytikas Steel</p>
+      <h2 id="quote-title">Request a quote.</h2>
+      <p>Send us your selection and our team will price the joists, delivered from our factory in Florence, Colorado.</p>
+      <div class="sending" id="quote-summary"></div>
+    </div>
+    <form id="quote-form" novalidate>
+      <div class="pair">
+        <div class="field"><label for="q-name">Name</label><div class="box"><input id="q-name" name="name" type="text" autocomplete="name" maxlength="100" required></div><p class="error" id="q-name-error"></p></div>
+        <div class="field"><label for="q-company">Company</label><div class="box"><input id="q-company" name="company" type="text" autocomplete="organization" maxlength="120"></div></div>
+      </div>
+      <div class="pair">
+        <div class="field"><label for="q-email">Email</label><div class="box"><input id="q-email" name="email" type="email" autocomplete="email" maxlength="160" required></div><p class="error" id="q-email-error"></p></div>
+        <div class="field"><label for="q-phone">Phone</label><div class="box"><input id="q-phone" name="phone" type="tel" autocomplete="tel" maxlength="30"></div><p class="error" id="q-phone-error"></p></div>
+      </div>
+      <div class="field">
+        <label for="q-role">You are a</label>
+        <div class="box"><select id="q-role" name="role"></select><span class="unit" aria-hidden="true">▾</span></div>
+      </div>
+      <div class="field">
+        <label for="q-notes">Anything else we should know</label>
+        <div class="box"><textarea id="q-notes" name="notes" rows="3" maxlength="2000" placeholder="Schedule, delivery address, openings, other members you need"></textarea></div>
+      </div>
+      <div class="trap" aria-hidden="true"><label for="q-website">Website</label><input id="q-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+      <div class="actions">
+        <button class="button" type="submit" id="q-send">Send quote request</button>
+        <span class="status" id="q-status" role="status"></span>
+      </div>
+    </form>
+  </div>
+</section>
+
+<div class="sheet-overlay" id="sheet-overlay" role="dialog" aria-modal="true" aria-label="Spec sheet" hidden>
+  <div class="sheet-bar">
+    <span class="sheet-bar-title">Spec sheet</span>
+    <span class="status" id="print-status"></span>
+    <button type="button" class="button" id="print-sheet">Print or save as PDF</button>
+    <button type="button" class="button quiet" id="close-sheet">Close</button>
+  </div>
+  <div class="sheet-scroll"><article class="paper" id="paper"></article></div>
+</div>
 
 <a class="jump" id="jump" href="#results"><span id="jump-text"></span><span class="go">See joists ↓</span></a>
 

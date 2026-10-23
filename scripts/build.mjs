@@ -2,7 +2,7 @@
 // hosted anywhere: Cloudflare Pages, GitHub Pages, or dropped into a website.
 //   dist/index.html     the full page for the real address
 //   dist/preview.html   the same page as a fragment for the private preview link
-//                       (share links are switched off there)
+//                       (share links, printing and quote requests are off there)
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
@@ -10,7 +10,7 @@ const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 // Join the ES modules into one script: drop imports, keep the code.
 const stripModule = (src) =>
   src.replace(/^import[\s\S]*?from\s+['"][^'"]+['"];\s*$/gm, '').replace(/^export\s+/gm, '');
-const script = ['src/data.js', 'src/logic.js', 'src/app.js'].map((p) => stripModule(read(p))).join('\n');
+const script = ['src/data.js', 'src/logic.js', 'src/quote.js', 'src/app.js'].map((p) => stripModule(read(p))).join('\n');
 
 const title = 'Mytikas Joist Span Finder';
 const description =
@@ -18,6 +18,10 @@ const description =
 const head = `<title>${title}</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="${description.replace(/"/g, '&quot;')}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${title}">
+<meta property="og:description" content="${description.replace(/"/g, '&quot;')}">
+<meta property="og:site_name" content="Mytikas Steel">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600&display=swap">
@@ -25,7 +29,7 @@ const head = `<title>${title}</title>
 ${read('src/styles.css')}
 </style>`;
 const body = read('src/body.html');
-const run = (share) => `${share ? '' : '<script>window.SPAN_FINDER_SHARE = false;</script>\n'}<script>
+const run = (live) => `${live ? '' : '<script>window.SPAN_FINDER_PREVIEW = true;</script>\n'}<script>
 (() => {
 'use strict';
 ${script}

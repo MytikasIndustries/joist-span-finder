@@ -129,7 +129,7 @@ test('formats spans the way framers write them', () => {
 });
 
 test('share links round-trip and reject junk', () => {
-  const s = { use: 'custom', dl: 25, ll: 80, ft: 18, in: 6, oc: 24, span: 'two', defl: 'L/480' };
+  const s = { use: 'custom', dl: 25, ll: 80, ft: 18, in: 6, oc: 24, span: 'two', defl: 'L/480', sel: '', area: 0, job: '', loc: '' };
   assert.deepEqual(fromQuery(toQuery(s)), s);
   const office = fromQuery('?use=office&ll=999&oc=19&span=x&defl=240');
   assert.equal(office.ll, 50);

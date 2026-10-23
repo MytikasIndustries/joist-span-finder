@@ -126,6 +126,26 @@ export function evaluate({ dl, ll, deflection, condition, spacing, required }) {
   return { loadCase, exact, rows, passing, failing, pick: passing[0] ?? null };
 }
 
+// Rough joist quantity for a floor area: joist steel only, no rim track,
+// blocking, bridging or waste. Lineal feet = area / spacing in feet.
+export function roughQuantity(row, areaSqFt, spacing) {
+  if (!(areaSqFt > 0)) return null;
+  return {
+    linealFt: Math.round(areaSqFt / (spacing / 12)),
+    lb: Math.round(row.perSqFt * areaSqFt),
+  };
+}
+
+// The joist a person chose, if it still makes the span; otherwise our pick.
+export function selectedRow(result, member) {
+  return result.passing.find((r) => r.member === member) ?? result.pick;
+}
+
+export function useLabel(s) {
+  if (s.use === 'custom') return 'Engineer-entered loads';
+  return USES.find((u) => u.id === s.use)?.label ?? '';
+}
+
 // Inputs <-> URL query, so a result can be shared as a link.
 export const DEFAULTS = {
   use: 'living',
@@ -136,7 +156,22 @@ export const DEFAULTS = {
   oc: 16,
   span: 'single',
   defl: 'L/360',
+  sel: '',
+  area: 0,
+  job: '',
+  loc: '',
 };
+
+const TEXT_LIMIT = 80;
+const cleanText = (v) =>
+  String(v ?? '')
+    .replace(/[\u0000-\u001f\u007f]/g, ' ')
+    .trim()
+    .slice(0, TEXT_LIMIT);
+
+export function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+}
 
 export function fromQuery(search) {
   const q = new URLSearchParams(search);
@@ -157,6 +192,10 @@ export function fromQuery(search) {
   if (CONDITIONS.includes(q.get('span'))) s.span = q.get('span');
   const defl = q.get('defl');
   if (defl === '360' || defl === '480') s.defl = `L/${defl}`;
+  if (PROFILES.some((p) => p.member === q.get('sel'))) s.sel = q.get('sel');
+  s.area = Math.round(num('area', 0, 1000000) ?? 0);
+  s.job = cleanText(q.get('job'));
+  s.loc = cleanText(q.get('loc'));
   return s;
 }
 
@@ -170,5 +209,9 @@ export function toQuery(s) {
   q.set('oc', String(s.oc));
   q.set('span', s.span);
   q.set('defl', s.defl.slice(2));
+  if (s.sel) q.set('sel', s.sel);
+  if (s.area > 0) q.set('area', String(s.area));
+  if (s.job) q.set('job', s.job);
+  if (s.loc) q.set('loc', s.loc);
   return `?${q}`;
 }
