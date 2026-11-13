@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { validateQuote, quoteSummary, ghlContact } from '../src/quote.js';
+import { validateQuote, quoteSummary, ghlContact, ghlTags, productInterest } from '../src/quote.js';
 import { onRequestPost } from '../functions/api/quote.js';
 import { evaluate, fromQuery, toQuery, roughQuantity, selectedRow, escapeHtml } from '../src/logic.js';
 
@@ -58,13 +58,22 @@ test('the sales note describes exactly what they selected', () => {
   assert.match(note, /Open their selection: https:\/\/mytikas-spans\.pages\.dev\/\?use=living/);
 });
 
-test('the Go High Level contact carries name, company and tags', () => {
-  const c = ghlContact(validateQuote(GOOD).value, 'LOC123');
+test('the Go High Level contact carries name, company and the website fields, but no tags', () => {
+  const v = validateQuote(GOOD).value;
+  const c = ghlContact(v, 'LOC123', 'SUMMARY');
   assert.deepEqual(
     { locationId: c.locationId, firstName: c.firstName, lastName: c.lastName, companyName: c.companyName, email: c.email },
     { locationId: 'LOC123', firstName: 'Dana', lastName: 'Ruiz', companyName: 'Ruiz Builders', email: 'dana@example.com' },
   );
-  assert.deepEqual(c.tags, ['joist span finder', 'role: gc']);
+  // An upsert replaces a returning contact's tags, so it must never carry any.
+  assert.equal(c.tags, undefined);
+  assert.deepEqual(c.customFields, [
+    { id: 'CCSAphpOyklZePnmX6lz', field_value: 'Joist span finder' },
+    { id: 'h7pI7eRmEMcdAtKPtggG', field_value: '800S200-54 floor joists' },
+    { id: 'DK4ut46iQGDQVjmnIERz', field_value: 'SUMMARY' },
+  ]);
+  assert.deepEqual(ghlTags(v), ['web-lead', 'web-joist', 'joist span finder', 'role: gc']);
+  assert.equal(productInterest(validateQuote({ ...GOOD, query: '?ft=0' }).value), 'Mytikas Steel floor joists');
 });
 
 // ---- the /api/quote endpoint, with Go High Level stubbed out ----
@@ -96,19 +105,38 @@ async function withFetch(responses, fn) {
   }
 }
 
-test('endpoint: creates the contact, then adds the note', async () => {
+test('endpoint: creates the contact, adds the note, then re-adds the trigger tags', async () => {
   const { result, calls } = await withFetch(
-    [{ status: 200, body: { contact: { id: 'abc' } } }, { status: 201, body: {} }],
+    [{ status: 200, body: { contact: { id: 'abc' } } }, { status: 201, body: {} }, { status: 200, body: {} }, { status: 201, body: {} }],
     () => onRequestPost({ request: post(GOOD), env: ENV }),
   );
   assert.equal(result.status, 200);
   assert.deepEqual(await result.json(), { ok: true });
+  assert.equal(calls.length, 4);
   assert.equal(calls[0].url, 'https://services.leadconnectorhq.com/contacts/upsert');
   assert.equal(calls[0].init.headers.Authorization, 'Bearer test-token');
   assert.equal(calls[0].init.headers.Version, '2021-07-28');
-  assert.equal(JSON.parse(calls[0].init.body).locationId, 'LOC123');
+  const upsert = JSON.parse(calls[0].init.body);
+  assert.equal(upsert.locationId, 'LOC123');
+  assert.equal(upsert.tags, undefined);
+  assert.match(upsert.customFields[2].field_value, /800S200-54/);
   assert.equal(calls[1].url, 'https://services.leadconnectorhq.com/contacts/abc/notes');
   assert.match(JSON.parse(calls[1].init.body).body, /800S200-54/);
+  assert.equal(calls[2].url, 'https://services.leadconnectorhq.com/contacts/abc/tags');
+  assert.equal(calls[2].init.method, 'DELETE');
+  assert.deepEqual(JSON.parse(calls[2].init.body).tags, ['web-lead', 'web-joist']);
+  assert.equal(calls[3].url, 'https://services.leadconnectorhq.com/contacts/abc/tags');
+  assert.equal(calls[3].init.method, 'POST');
+  assert.deepEqual(JSON.parse(calls[3].init.body).tags, ['web-lead', 'web-joist', 'joist span finder', 'role: gc']);
+});
+
+test('endpoint: tags are still added when the note fails', async () => {
+  const { result, calls } = await withFetch(
+    [{ status: 200, body: { contact: { id: 'abc' } } }, { status: 500, body: {} }, { status: 200, body: {} }, { status: 201, body: {} }],
+    () => onRequestPost({ request: post(GOOD), env: ENV }),
+  );
+  assert.equal(result.status, 200);
+  assert.equal(calls[3].init.method, 'POST');
 });
 
 test('endpoint: a failed note still counts as sent', async () => {

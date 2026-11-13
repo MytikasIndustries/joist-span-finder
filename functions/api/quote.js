@@ -4,7 +4,7 @@
 // → mytikas-spans → Settings → Variables and secrets:
 //   GHL_API_TOKEN    Go High Level private integration token (contacts write)
 //   GHL_LOCATION_ID  the Mytikas sub-account (location) ID
-import { validateQuote, quoteSummary, ghlContact } from '../../src/quote.js';
+import { validateQuote, quoteSummary, ghlContact, ghlTags, GHL_TRIGGER_TAGS } from '../../src/quote.js';
 
 const GHL = 'https://services.leadconnectorhq.com';
 
@@ -37,24 +37,29 @@ export async function onRequestPost({ request, env }) {
     'Content-Type': 'application/json',
     Accept: 'application/json',
   };
+  const summary = quoteSummary(checked.value, origin);
   const upsert = await fetch(`${GHL}/contacts/upsert`, {
     method: 'POST',
     headers,
-    body: JSON.stringify(ghlContact(checked.value, env.GHL_LOCATION_ID)),
+    body: JSON.stringify(ghlContact(checked.value, env.GHL_LOCATION_ID, summary)),
   });
   if (!upsert.ok) {
     console.error('GHL upsert failed', upsert.status, (await upsert.text()).slice(0, 500));
     return json({ error: 'crm' }, 502);
   }
   const contactId = (await upsert.json())?.contact?.id;
-  if (contactId) {
-    const note = await fetch(`${GHL}/contacts/${contactId}/notes`, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify({ body: quoteSummary(checked.value, origin) }),
-    });
-    // The contact exists either way; a missing note is logged, not shown to the visitor.
-    if (!note.ok) console.error('GHL note failed', note.status, (await note.text()).slice(0, 500));
+  if (!contactId) {
+    console.error('GHL upsert returned no contact id');
+    return json({ ok: true });
   }
+  // The contact exists from here on; later failures are logged, not shown to the visitor.
+  const call = async (label, path, method, body) => {
+    const r = await fetch(`${GHL}${path}`, { method, headers, body: JSON.stringify(body) });
+    if (!r.ok) console.error(`GHL ${label} failed`, r.status, (await r.text()).slice(0, 500));
+  };
+  // Note first, so it is on the contact when the sales alert goes out.
+  await call('note', `/contacts/${contactId}/notes`, 'POST', { body: summary });
+  await call('remove trigger tags', `/contacts/${contactId}/tags`, 'DELETE', { tags: GHL_TRIGGER_TAGS });
+  await call('add tags', `/contacts/${contactId}/tags`, 'POST', { tags: ghlTags(checked.value) });
   return json({ ok: true });
 }

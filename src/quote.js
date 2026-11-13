@@ -85,8 +85,38 @@ export function quoteSummary(v, origin) {
   return lines.join('\n');
 }
 
-// Go High Level contact upsert body (API v2).
-export function ghlContact(v, locationId) {
+// Go High Level custom fields the website hand-off already fills (same ids).
+export const GHL_FIELDS = {
+  inquiryType: 'CCSAphpOyklZePnmX6lz', // contact.web_inquiry_type
+  productInterest: 'h7pI7eRmEMcdAtKPtggG', // contact.web_product_interest
+  submissionDetails: 'DK4ut46iQGDQVjmnIERz', // contact.web_submission_details
+};
+
+// Tags that start the CRM workflows. `web-lead` starts the 60-minute response
+// clock (owner Adam, card in Sales / New, alerts) and the source tag;
+// `web-joist` starts the span finder's own reply. They are removed and added
+// again on every request so a returning contact runs the workflows again,
+// the same way the website hand-off does it.
+export const GHL_TRIGGER_TAGS = ['web-lead', 'web-joist'];
+
+// Every tag the contact should carry after a quote request.
+export function ghlTags(v) {
+  return [...GHL_TRIGGER_TAGS, 'joist span finder', `role: ${v.role}`];
+}
+
+// What they selected, in a few words, for the "Web product interest" field.
+export function productInterest(v) {
+  const s = v.state;
+  const required = requiredInches(s.ft, s.in);
+  if (required <= 0) return 'Mytikas Steel floor joists';
+  const result = evaluate({ dl: s.dl, ll: s.ll, deflection: s.defl, condition: s.span, spacing: s.oc, required });
+  const row = result.loadCase ? selectedRow(result, s.sel) : null;
+  return row ? `${row.member} floor joists` : 'Mytikas Steel floor joists';
+}
+
+// Go High Level contact upsert body (API v2). No tags here: an upsert replaces
+// the tags a returning contact already has, so tags are added in a separate call.
+export function ghlContact(v, locationId, summary = '') {
   const [firstName, ...rest] = v.name.split(/\s+/);
   return {
     locationId,
@@ -97,6 +127,10 @@ export function ghlContact(v, locationId) {
     ...(v.phone ? { phone: v.phone } : {}),
     ...(v.company ? { companyName: v.company } : {}),
     source: 'Joist span finder',
-    tags: ['joist span finder', `role: ${v.role}`],
+    customFields: [
+      { id: GHL_FIELDS.inquiryType, field_value: 'Joist span finder' },
+      { id: GHL_FIELDS.productInterest, field_value: productInterest(v) },
+      ...(summary ? [{ id: GHL_FIELDS.submissionDetails, field_value: summary }] : []),
+    ],
   };
 }
