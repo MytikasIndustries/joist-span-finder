@@ -1,4 +1,4 @@
-import { evaluate, governingCase, ftIn } from './logic.js';
+import { evaluate, governingCase, ftIn, NOT_FOR_CONSTRUCTION } from './logic.js';
 
 // Project mode: a GC describes each area (a deck, a floor, a ceiling) by its
 // size and supports; we lay out the joists, offer three ways to frame it and
@@ -252,7 +252,7 @@ export function projectCsv(areas, project, job = '') {
       lines.push([...head, r.item, r.profile, r.qty, r.unit, r.length, `${p.chosen.spacing}" o.c.`, r.item === 'Floor joists' ? Math.round(p.chosen.lb) : '']);
     }
   });
-  return lines.map((l) => l.map(csvCell).join(',')).join('\r\n');
+  return [csvCell(NOT_FOR_CONSTRUCTION.join(' ')), '', ...lines.map((l) => l.map(csvCell).join(','))].join('\r\n');
 }
 
 // ---- Share links ------------------------------------------------------------

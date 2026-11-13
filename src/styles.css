@@ -671,3 +671,10 @@ strong { font-weight: 500; }
 .file-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .file-size { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
 .closing { margin-top: -6px; }
+
+/* Not-for-construction warning: page masthead and printed sheets */
+.masthead .warning { color: var(--head-fg); font-size: var(--step--1); line-height: 1.5; max-width: 66ch; border-left: 3px solid var(--head-fg); padding: 2px 0 2px 14px; margin-top: 4px; }
+.masthead .warning strong { font-weight: 600; letter-spacing: 0.01em; }
+.paper .warning { border: 1.5px solid var(--paper-ink); padding: 8px 12px; font-size: 9.5pt; line-height: 1.45; margin: 0; }
+.paper .warning strong { font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+@media print { .paper .warning { font-size: 9pt; padding: 6px 10px; } }

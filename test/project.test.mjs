@@ -98,7 +98,8 @@ test('takeoff rows and project totals add up', () => {
   assert.equal(rows[0].item, 'Floor joists');
   assert.equal(rows[0].qty, pr.plans[0].chosen.pieces);
   const csv = projectCsv(areas, pr, 'Smith, "Lot 4"');
-  assert.match(csv, /^Job,Area,Type/);
+  assert.match(csv, /^Not for construction\. This tool gives rough estimates/);
+  assert.match(csv, /\r\n\r\nJob,Area,Type/);
   assert.match(csv, /"Smith, ""Lot 4""",Back deck,Deck/);
 });
 

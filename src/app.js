@@ -331,6 +331,7 @@ function sheetHtml() {
       </div>
       <p class="paper-date">${today}</p>
     </header>
+    ${warningHtml()}
     <section class="paper-pick">
       <p class="eyebrow">Specified joist</p>
       <div class="paper-pick-top">

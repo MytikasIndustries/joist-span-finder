@@ -46,6 +46,10 @@ export const USES = [
   { id: 'heavy', label: 'Heavy storage or equipment', detail: 'Beyond our published tables', ll: 250 },
 ];
 
+// Shown on the page, on every printed sheet and at the top of the CSV.
+export const NOT_FOR_CONSTRUCTION = ['Not for construction.', 'This tool gives rough estimates for information only. It is not an engineering design. A licensed engineer must review and approve all framing before it is built.'];
+export const warningHtml = () => `<p class="warning"><strong>${NOT_FOR_CONSTRUCTION[0]}</strong> ${NOT_FOR_CONSTRUCTION[1]}</p>`;
+
 // Older share links used these ids.
 export const LEGACY_USES = { living: 'house', sleeping: 'house', attic: 'ceiling', assembly: 'office', storage: 'industrial' };
 
