@@ -16,17 +16,22 @@ import {
   useLabel,
   escapeHtml,
 } from './logic.js';
-import { ROLES } from './quote.js';
+import { ROLES, STAGES, TIMING, EOR, SUPPLY } from './quote.js';
+import { isProjectQuery, projectToQuery } from './project.js';
 
 // The private preview build sets this: it has no real address, so share
 // links, printing and quote requests are shown but not live.
 const PREVIEW = globalThis.SPAN_FINDER_PREVIEW === true;
+// Branch previews on Cloudflare (name.mytikas-spans.pages.dev) work fully,
+// except that quote requests are not sent to the sales team.
+const QUOTES_OFF = PREVIEW || /\.mytikas-spans\.pages\.dev$/.test(location.hostname);
 
 const $ = (id) => document.getElementById(id);
 const form = $('inputs');
 const out = $('results');
 
-let state = fromQuery(location.search);
+let mode = isProjectQuery(location.search) ? 'project' : 'span';
+let state = fromQuery(mode === 'span' ? location.search : '');
 let current = null; // { result, required, row } from the last render
 
 const fmt = (n) => n.toLocaleString('en-US');
@@ -48,6 +53,11 @@ function renderChoices() {
     choiceHtml('dl', w.dl, w.label, w.detail, `${w.dl} psf dead`, state.dl === w.dl),
   ).join('');
   $('q-role').innerHTML = ROLES.map(([id, label]) => `<option value="${id}">${label}</option>`).join('');
+  const opts = (list) => `<option value="">Choose</option>${list.map(([id, label]) => `<option value="${id}">${label}</option>`).join('')}`;
+  $('q-stage').innerHTML = opts(STAGES);
+  $('q-timing').innerHTML = opts(TIMING);
+  $('q-eor').innerHTML = opts(EOR);
+  $('q-supply').innerHTML = opts(SUPPLY);
 }
 
 function syncVisibility() {
@@ -272,6 +282,7 @@ function render() {
   }
 
   out.innerHTML = body;
+  if (mode !== 'span') return;
   $('jump-text').textContent = out.querySelector('.headline').textContent;
   renderQuoteSummary();
   if (!$('sheet-overlay').hidden) renderSheet();
@@ -368,6 +379,10 @@ function sheetHtml() {
 }
 
 function renderSheet() {
+  if (mode === 'project') {
+    $('paper').innerHTML = projectSheetHtml();
+    return;
+  }
   if (!current?.row) {
     closeSheet();
     return;
@@ -400,6 +415,10 @@ document.addEventListener('keydown', (e) => {
 // ---- Quote request ----------------------------------------------------------
 
 function renderQuoteSummary() {
+  if (mode === 'project') {
+    $('quote-summary').innerHTML = projectQuoteSummaryHtml();
+    return;
+  }
   const { result, required, row } = current;
   const bits = [];
   if (row) bits.push(`<strong>${row.member}</strong> at ${ftIn(required)}, ${supportsText().toLowerCase()}, ${state.oc}" o.c.`);
@@ -428,7 +447,7 @@ $('quote-form').addEventListener('submit', async (e) => {
     $(fields.name ? 'q-name' : 'q-email').focus();
     return;
   }
-  if (PREVIEW) {
+  if (QUOTES_OFF) {
     status.textContent = 'Preview only. Quote requests go to our sales team on the live address.';
     return;
   }
@@ -439,7 +458,7 @@ $('quote-form').addEventListener('submit', async (e) => {
     const res = await fetch('/api/quote', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...data, query: toQuery(state) }),
+      body: JSON.stringify({ ...data, query: mode === 'project' ? projectToQuery(proj) : toQuery(state) }),
     });
     const reply = await res.json().catch(() => ({}));
     if (res.ok) {
@@ -503,11 +522,42 @@ form.addEventListener('change', onChange);
 form.addEventListener('submit', (e) => e.preventDefault());
 
 // Hide the phone answer bar once the results themselves are on screen.
-if ('IntersectionObserver' in window) {
-  new IntersectionObserver(([entry]) => $('jump').classList.toggle('away', entry.isIntersecting)).observe(out);
+const jumpWatch =
+  'IntersectionObserver' in window
+    ? new IntersectionObserver((entries) => {
+        const target = mode === 'project' ? $('project-summary') : out;
+        for (const e of entries) if (e.target === target) $('jump').classList.toggle('away', e.isIntersecting);
+      })
+    : null;
+
+function setMode(next, push) {
+  mode = next;
+  $('project-view').hidden = mode !== 'project';
+  $('span-view').hidden = mode !== 'span';
+  for (const b of document.querySelectorAll('.mode')) b.setAttribute('aria-current', String(b.dataset.mode === mode));
+  $('jump').setAttribute('href', mode === 'project' ? '#project-summary' : '#results');
+  $('jump').querySelector('.go').textContent = mode === 'project' ? 'See totals ↓' : 'See joists ↓';
+  document.querySelector('.sheet-bar-title').textContent = mode === 'project' ? 'Project summary' : 'Spec sheet';
+  $('sheet-overlay').setAttribute('aria-label', mode === 'project' ? 'Project summary' : 'Spec sheet');
+  $('jump').classList.remove('away');
+  if (mode === 'project') renderProjectResults();
+  else render();
+  if (push && !PREVIEW) {
+    try {
+      history.replaceState(null, '', mode === 'project' ? projectToQuery(proj) : toQuery(state));
+    } catch {
+      // The page works without URL changes.
+    }
+  }
 }
+
+for (const b of document.querySelectorAll('.mode')) b.addEventListener('click', () => setMode(b.dataset.mode, true));
 
 renderChoices();
 $('q-role').value = 'gc';
 syncForm();
 render();
+initProject();
+jumpWatch?.observe(out);
+jumpWatch?.observe($('project-summary'));
+setMode(mode, false);

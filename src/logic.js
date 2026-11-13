@@ -34,15 +34,20 @@ export const LOAD_CASES = SPAN_TABLES.map((t) => ({
   pages: t.pages,
 }));
 
-// Typical minimum live loads, IBC Table 1607.1.
+// What people build, with the live load we size it for. IRC Table R301.5
+// (decks, homes, attics) and IBC Table 1607.1 (offices, storage). Offices are
+// sized at 100 psf so partitions and upper-floor corridors are covered.
 export const USES = [
-  { id: 'living', label: 'Living areas', detail: 'Homes, cabins, apartments', ll: 40 },
-  { id: 'sleeping', label: 'Bedrooms and sleeping lofts', detail: 'Sleeping areas only', ll: 30 },
-  { id: 'attic', label: 'Attic storage', detail: 'No living space', ll: 20 },
-  { id: 'office', label: 'Offices', detail: 'Office floors', ll: 50 },
-  { id: 'assembly', label: 'Lobbies, corridors and gathering spaces', detail: 'Restaurants, assembly, public corridors', ll: 100 },
-  { id: 'storage', label: 'Light storage and light manufacturing', detail: 'Warehouse and shop floors', ll: 125 },
+  { id: 'deck', label: 'Deck', detail: 'Residential decks', ll: 40 },
+  { id: 'house', label: 'House floor', detail: 'First and second floors of homes and cabins', ll: 40 },
+  { id: 'ceiling', label: 'Ceiling or attic', detail: 'Attic with limited storage', ll: 20 },
+  { id: 'office', label: 'Office floor', detail: 'Multi-story offices, with partitions and corridors', ll: 100 },
+  { id: 'industrial', label: 'Light industrial or mezzanine', detail: 'Light storage and light manufacturing', ll: 125 },
+  { id: 'heavy', label: 'Heavy storage or equipment', detail: 'Beyond our published tables', ll: 250 },
 ];
+
+// Older share links used these ids.
+export const LEGACY_USES = { living: 'house', sleeping: 'house', attic: 'ceiling', assembly: 'office', storage: 'industrial' };
 
 export const FLOOR_WEIGHTS = [
   { dl: 10, label: 'Standard', detail: 'Sheathing, flooring and a ceiling below' },
@@ -148,7 +153,7 @@ export function useLabel(s) {
 
 // Inputs <-> URL query, so a result can be shared as a link.
 export const DEFAULTS = {
-  use: 'living',
+  use: 'house',
   dl: 10,
   ll: 40,
   ft: 14,
@@ -176,7 +181,7 @@ export function escapeHtml(s) {
 export function fromQuery(search) {
   const q = new URLSearchParams(search);
   const s = { ...DEFAULTS };
-  const use = q.get('use');
+  const use = LEGACY_USES[q.get('use')] ?? q.get('use');
   if (use === 'custom' || USES.some((u) => u.id === use)) s.use = use;
   const num = (k, lo, hi) => {
     const v = Number(q.get(k));
@@ -201,6 +206,7 @@ export function fromQuery(search) {
 
 export function toQuery(s) {
   const q = new URLSearchParams();
+  q.set('mode', 'span');
   q.set('use', s.use);
   if (s.use === 'custom') q.set('ll', String(s.ll));
   q.set('dl', String(s.dl));

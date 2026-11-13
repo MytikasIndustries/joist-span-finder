@@ -9,6 +9,43 @@ import {
   useLabel,
   ftIn,
 } from './logic.js';
+import {
+  planProject,
+  projectFromQuery,
+  projectToQuery,
+  isProjectQuery,
+  areaTitle,
+  sizeLabel,
+  areaNotes,
+  takeoffRows,
+  projectType,
+} from './project.js';
+
+// What the sales team asks on the first call, asked up front.
+export const STAGES = [
+  ['budget', 'Budgeting'],
+  ['bid', 'Bidding'],
+  ['awarded', 'Awarded'],
+  ['order', 'Ready to order'],
+];
+export const TIMING = [
+  ['30', 'Within 30 days'],
+  ['90', '1 to 3 months'],
+  ['later', 'More than 3 months out'],
+  ['unsure', 'Not sure yet'],
+];
+export const EOR = [
+  ['yes', 'Yes'],
+  ['notyet', 'Not yet'],
+];
+export const SUPPLY = [
+  ['cut', 'Joists cut to length'],
+  ['panels', 'Panelized, ready to erect'],
+  ['unsure', 'Not sure'],
+];
+const pickFrom = (list, v) => (list.some(([id]) => id === v) ? v : '');
+const labelOf = (list, v) => list.find(([id]) => id === v)?.[1] ?? '';
+const n0 = (n) => Math.round(n).toLocaleString('en-US');
 
 export const ROLES = [
   ['gc', 'General contractor'],
@@ -42,8 +79,15 @@ export function validateQuote(input) {
     phone: text(input?.phone, LIMITS.phone),
     role: ROLES.some(([id]) => id === input?.role) ? input.role : 'other',
     notes: text(input?.notes, LIMITS.notes),
-    state: fromQuery(typeof input?.query === 'string' ? input.query.slice(0, 600) : ''),
+    stage: pickFrom(STAGES, input?.stage),
+    timing: pickFrom(TIMING, input?.timing),
+    eor: pickFrom(EOR, input?.eor),
+    supply: pickFrom(SUPPLY, input?.supply),
   };
+  const query = typeof input?.query === 'string' ? input.query.slice(0, 3000) : '';
+  v.mode = isProjectQuery(query) ? 'project' : 'span';
+  if (v.mode === 'project') v.project = projectFromQuery(query);
+  else v.state = fromQuery(query);
   if (!v.name) errors.name = 'Enter your name.';
   if (!EMAIL.test(v.email)) errors.email = 'Enter an email address we can reply to.';
   if (v.phone && !/^[0-9+().\-\s x]{7,}$/i.test(v.phone)) errors.phone = 'Enter a phone number, or leave it blank.';
@@ -51,16 +95,62 @@ export function validateQuote(input) {
 }
 
 // Plain-text summary for the sales team, built from the checked selection.
+function headerLines(v, job, loc) {
+  const role = ROLES.find(([id]) => id === v.role)[1];
+  const lines = [`Quote request from the joist span finder${v.mode === 'project' ? ' (project)' : ''}`, ''];
+  lines.push(`Contact: ${v.name}${v.company ? `, ${v.company}` : ''} (${role})`);
+  lines.push(`Email: ${v.email}${v.phone ? ` · Phone: ${v.phone}` : ''}`);
+  if (job || loc) lines.push(`Job: ${[job, loc].filter(Boolean).join(', ')}`);
+  const about = [
+    v.stage && `Stage: ${labelOf(STAGES, v.stage)}`,
+    v.timing && `Material needed: ${labelOf(TIMING, v.timing)}`,
+    v.eor && `Engineer of record: ${labelOf(EOR, v.eor)}`,
+    v.supply && `Supply: ${labelOf(SUPPLY, v.supply)}`,
+  ].filter(Boolean);
+  if (about.length) lines.push(about.join(' · '));
+  lines.push('');
+  return lines;
+}
+
+function projectSummary(v, origin) {
+  const pr = v.project;
+  const { plans, totals } = planProject(pr.areas);
+  const lines = headerLines(v, pr.job, pr.loc);
+  plans.forEach((p, i) => {
+    const a = pr.areas[i];
+    const t = projectType(a.type);
+    lines.push(`${i + 1}. ${a.name ? `${a.name}: ` : ''}${t.label}${p.lengthFt ? `, ${sizeLabel(a)}, ${n0(p.sqft)} sq ft` : ''}`);
+    if (p.status === 'incomplete') lines.push('   Size not given.');
+    else if (p.status === 'beyond') lines.push(`   ${p.loads.dl} psf dead + ${p.loads.ll} psf live: beyond the published tables. Needs engineering.`);
+    else if (p.status === 'nofit') lines.push('   No 2" flange joist makes this with up to three beam lines. Needs engineering.');
+    else {
+      const c = p.chosen;
+      lines.push(`   Loads: ${p.loads.dl} + ${p.loads.ll} psf, ${p.defl}; table ${p.loadCase.dl}/${p.loadCase.ll}${p.exact ? '' : ' (next heavier)'}`);
+      lines.push(
+        `   Layout: ${p.bays === 1 ? `one ${ftIn(c.spanIn)} span` : p.continuous ? `two ${ftIn(c.spanIn)} spans, continuous over a mid-span support` : `${p.bays} spans of ${ftIn(c.spanIn)} on ${p.bays - 1} beam lines`}`,
+      );
+      lines.push(`   Joists: ${c.pieces} × ${c.member} at ${c.spacing}" o.c., cut ${ftIn(Math.round(c.cutFt * 12))} (${n0(c.joistLf)} lineal ft, ${n0(c.lb)} lb)`);
+      const rest = takeoffRows(p)
+        .slice(1)
+        .map((r) => `${r.item} ${n0(r.qty)} ${r.unit === 'pcs' ? 'pcs' : 'lf'}`);
+      if (rest.length) lines.push(`   ${rest.join(' · ')}`);
+      if (a.type === 'deck') lines.push(`   Deck: ${a.attach === 'house' ? 'attached to the house' : 'freestanding'}, snow ${a.snow === 'unsure' ? 'not known (sized at 70)' : `${a.snow === '70' ? '60 to 70' : a.snow} psf`}`);
+      if (p.bays > 1) lines.push(`   Needs ${p.bays - 1} beam line${p.bays > 2 ? 's' : ''} (not in takeoff)${p.added ? ', added by the tool' : ''}`);
+    }
+  });
+  lines.push('', `Total: ${totals.areas} area${totals.areas > 1 ? 's' : ''}, ${n0(totals.sqft)} sq ft, about ${n0(totals.joistLf)} lineal ft and ${n0(totals.lb)} lb of joists`);
+  if (totals.needsUs) lines.push(`${totals.needsUs} area${totals.needsUs > 1 ? 's need' : ' needs'} our engineering team.`);
+  if (v.notes) lines.push('', `Notes: ${v.notes}`);
+  lines.push('', `Open their project: ${origin}/${projectToQuery(pr)}`);
+  return lines.join('\n');
+}
+
 export function quoteSummary(v, origin) {
+  if (v.mode === 'project') return projectSummary(v, origin);
   const s = v.state;
   const required = requiredInches(s.ft, s.in);
   const result = evaluate({ dl: s.dl, ll: s.ll, deflection: s.defl, condition: s.span, spacing: s.oc, required });
-  const role = ROLES.find(([id]) => id === v.role)[1];
-  const lines = ['Quote request from the joist span finder', ''];
-  lines.push(`Contact: ${v.name}${v.company ? `, ${v.company}` : ''} (${role})`);
-  lines.push(`Email: ${v.email}${v.phone ? ` · Phone: ${v.phone}` : ''}`);
-  if (s.job || s.loc) lines.push(`Job: ${[s.job, s.loc].filter(Boolean).join(', ')}`);
-  lines.push('');
+  const lines = headerLines(v, s.job, s.loc);
   if (!result.loadCase) {
     lines.push(`Loads: ${s.dl} psf dead + ${s.ll} psf live, beyond the published tables. Needs engineering.`);
   } else {
@@ -105,7 +195,18 @@ export function ghlTags(v) {
 }
 
 // What they selected, in a few words, for the "Web product interest" field.
+// Written as a plural noun so it reads right in the reply's subject and body:
+// "Your deck joists (50 × 20 ft) request reached us".
 export function productInterest(v) {
+  if (v.mode === 'project') {
+    const areas = v.project.areas;
+    const sqft = areas.reduce((n, a) => n + a.len * a.wid, 0);
+    if (areas.length === 1) {
+      const a = areas[0];
+      return a.len > 0 && a.wid > 0 ? `${projectType(a.type).noun} (${sizeLabel(a)})` : projectType(a.type).noun;
+    }
+    return `joists (${areas.length} areas${sqft > 0 ? `, ${n0(sqft)} sq ft` : ''})`;
+  }
   const s = v.state;
   const required = requiredInches(s.ft, s.in);
   if (required <= 0) return 'Mytikas Steel floor joists';

@@ -473,3 +473,96 @@ strong { font-weight: 500; }
 .paper-tables { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0 24px; }
 @media print { .paper-tables { grid-template-columns: 1fr 1fr; } }
 .paper-table thead tr:first-child th { border-bottom: 1px solid var(--paper-ink); padding-bottom: 3px; }
+
+/* ---- Project mode: tabs, areas, plan, options, takeoff, totals ---- */
+.modes { display: flex; gap: 28px; margin-top: 16px; border-bottom: 1px solid rgba(243, 244, 245, 0.18); }
+.mode {
+  appearance: none;
+  border: 0;
+  background: none;
+  color: var(--head-muted);
+  font: 500 var(--step-0) / 1 var(--font);
+  padding: 12px 0 14px;
+  margin-bottom: -1px;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+}
+.mode:hover { color: var(--head-fg); }
+.mode[aria-current='true'] { color: var(--head-fg); border-bottom-color: var(--head-fg); }
+
+.project { padding-block: 40px 56px; display: grid; gap: 40px; }
+.job-row { display: grid; grid-template-columns: repeat(2, minmax(0, 360px)); gap: 24px; }
+.job-row .field input { font-size: var(--step-1); font-weight: 400; padding: 8px 0; }
+.areas { display: grid; gap: 0; }
+.area {
+  display: grid;
+  grid-template-columns: minmax(0, 360px) minmax(0, 1fr);
+  gap: 48px;
+  align-items: start;
+  border-top: 1px solid var(--ink);
+  padding-block: 32px 40px;
+}
+.area-form, .area-inputs { display: grid; gap: 28px; }
+.area-result { display: grid; gap: 22px; min-width: 0; }
+.area-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px 16px; flex-wrap: wrap; }
+.area-head .eyebrow { color: var(--ink-muted); }
+.area-headline { font-size: var(--step-3); font-variant-numeric: tabular-nums; }
+.add-row { display: flex; gap: 12px 20px; align-items: center; flex-wrap: wrap; margin-top: -8px; }
+.add-row .hint { max-width: 44ch; }
+
+.plan { width: 100%; height: auto; display: block; }
+.plan .out { fill: var(--band); stroke: var(--hairline); stroke-width: 1; }
+.plan .j { stroke: var(--bar); stroke-width: 1; }
+.plan .rim { stroke: var(--ink); stroke-width: 3; }
+.plan .b { stroke: var(--accent); stroke-width: 3; stroke-dasharray: 8 6; }
+.plan .house { stroke: var(--ink); stroke-width: 1; }
+.plan { max-width: 640px; }
+.plan .lbl, .plan .dim { fill: var(--ink-muted); font: 500 15px var(--font); font-variant-numeric: tabular-nums; }
+.plan .lbl { letter-spacing: 0.08em; text-transform: uppercase; font-size: 12px; }
+
+.options { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.option {
+  appearance: none;
+  text-align: left;
+  display: grid;
+  gap: 4px;
+  align-content: start;
+  padding: 14px 16px;
+  border: 1px solid var(--hairline);
+  background: transparent;
+  color: var(--ink);
+  font: 400 var(--step--1) / 1.4 var(--font);
+  cursor: pointer;
+}
+.option:hover { border-color: var(--ink); }
+.option.on { border-color: var(--ink); box-shadow: inset 0 0 0 1px var(--ink); }
+.option .opt-tag { font-weight: 600; letter-spacing: 0.04em; color: var(--ink-muted); }
+.option.on .opt-tag { color: var(--accent); }
+.option .opt-member { font-size: var(--step-1); font-weight: 500; font-variant-numeric: tabular-nums; }
+.option .opt-line { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+@media (max-width: 640px) { .options { grid-template-columns: minmax(0, 1fr); } }
+
+.takeoff th, .takeoff td { text-align: left; }
+.takeoff td:nth-child(3), .takeoff th:nth-child(3) { text-align: right; }
+.takeoff tfoot td { font-weight: 500; border-bottom: 0; border-top: 1px solid var(--ink); }
+.area-notes { margin: 0; padding-left: 1.1em; display: grid; gap: 6px; font-size: var(--step--1); color: var(--ink-muted); max-width: 70ch; }
+
+.project-summary { border-top: 1px solid var(--ink); padding-top: 32px; display: grid; gap: 20px; }
+.project-summary h2 { font-size: var(--step-3); }
+.totals { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px 24px; margin: 0; }
+.totals dt { font-size: var(--step--1); color: var(--ink-muted); }
+.totals dd { margin: 2px 0 0; font-size: var(--step-2); font-weight: 500; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 860px) {
+  .project { padding-block: 28px 40px; gap: 32px; }
+  .area { grid-template-columns: minmax(0, 1fr); gap: 28px; padding-block: 24px 32px; }
+  .job-row { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+}
+
+/* Project summary sheet */
+.paper-area { display: grid; gap: 6px; break-inside: avoid; }
+.paper-area-line { font-size: 10pt; }
+.paper-area-notes { margin: 4px 0 0; padding-left: 1.1em; font-size: 8.5pt; color: var(--paper-muted); display: grid; gap: 2px; }
+@media print { .paper-area-notes { font-size: 8pt; } }
+.nw { white-space: nowrap; }
+@media (max-width: 560px) { .area-headline { font-size: var(--step-2); } }

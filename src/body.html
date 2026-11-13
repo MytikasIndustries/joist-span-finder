@@ -1,17 +1,41 @@
 <header class="masthead">
   <div class="wrap">
     <p class="eyebrow">Mytikas Steel</p>
-    <h1>Floor joist span finder.</h1>
-    <p class="lede">Describe the floor and the span. We list the Mytikas Steel 2" flange joists that make it, lightest first.</p>
+    <h1>Joist span finder.</h1>
+    <p class="lede">Describe your deck, floor or ceiling. We lay out the Mytikas Steel joists, count what goes on the truck, and our team prices it.</p>
+    <nav class="modes" aria-label="Tool">
+      <button type="button" class="mode" id="mode-project" data-mode="project">Plan a project</button>
+      <button type="button" class="mode" id="mode-span" data-mode="span">Look up one span</button>
+    </nav>
   </div>
 </header>
 
-<main class="wrap sheet">
+<main class="wrap project" id="project-view" hidden>
+  <section class="job-row" aria-label="Job details">
+    <div class="field"><label for="p-job">Job name <span class="optional">optional</span></label><div class="box"><input id="p-job" type="text" maxlength="80" autocomplete="off" placeholder="Smith residence"></div></div>
+    <div class="field"><label for="p-loc">Location <span class="optional">optional</span></label><div class="box"><input id="p-loc" type="text" maxlength="80" autocomplete="off" placeholder="Cañon City, CO"></div></div>
+  </section>
+  <div class="areas" id="areas"></div>
+  <div class="add-row"><button type="button" class="button quiet" id="add-area">Add another area</button><p class="hint">A second floor, a ceiling, a deck: one request covers the whole job.</p></div>
+  <section class="project-summary" id="project-summary" aria-labelledby="project-summary-title">
+    <h2 id="project-summary-title">Your project.</h2>
+    <div id="project-totals"></div>
+    <div class="actions">
+      <button type="button" class="button" id="p-sheet">Project summary</button>
+      <button type="button" class="button quiet" id="p-csv">Download takeoff</button>
+      <a class="button quiet" href="#quote">Request a quote</a>
+      <button type="button" class="button quiet" id="p-copy">Copy link</button>
+      <span class="status" id="p-status" role="status"></span>
+    </div>
+  </section>
+</main>
+
+<main class="wrap sheet" id="span-view" hidden>
   <form class="inputs" id="inputs" novalidate>
     <fieldset>
-      <legend>What's the floor for?</legend>
+      <legend>What are you building?</legend>
       <div class="choices" id="uses"></div>
-      <p class="hint">Typical minimum live loads from IBC Table 1607.1. Your local code and the engineer of record govern.</p>
+      <p class="hint">Live loads from IRC Table R301.5 and IBC Table 1607.1. Your local code and the engineer of record govern.</p>
     </fieldset>
 
     <fieldset id="custom-loads" hidden>
@@ -118,13 +142,33 @@
         <div class="field"><label for="q-email">Email</label><div class="box"><input id="q-email" name="email" type="email" autocomplete="email" maxlength="160" required></div><p class="error" id="q-email-error"></p></div>
         <div class="field"><label for="q-phone">Phone</label><div class="box"><input id="q-phone" name="phone" type="tel" autocomplete="tel" maxlength="30"></div><p class="error" id="q-phone-error"></p></div>
       </div>
+      <div class="pair">
+        <div class="field">
+          <label for="q-role">You are a</label>
+          <div class="box"><select id="q-role" name="role"></select><span class="unit" aria-hidden="true">▾</span></div>
+        </div>
+        <div class="field">
+          <label for="q-stage">Project stage</label>
+          <div class="box"><select id="q-stage" name="stage"></select><span class="unit" aria-hidden="true">▾</span></div>
+        </div>
+      </div>
+      <div class="pair">
+        <div class="field">
+          <label for="q-timing">Material needed</label>
+          <div class="box"><select id="q-timing" name="timing"></select><span class="unit" aria-hidden="true">▾</span></div>
+        </div>
+        <div class="field">
+          <label for="q-eor">Engineer of record</label>
+          <div class="box"><select id="q-eor" name="eor"></select><span class="unit" aria-hidden="true">▾</span></div>
+        </div>
+      </div>
       <div class="field">
-        <label for="q-role">You are a</label>
-        <div class="box"><select id="q-role" name="role"></select><span class="unit" aria-hidden="true">▾</span></div>
+        <label for="q-supply">How you want it</label>
+        <div class="box"><select id="q-supply" name="supply"></select><span class="unit" aria-hidden="true">▾</span></div>
       </div>
       <div class="field">
         <label for="q-notes">Anything else we should know</label>
-        <div class="box"><textarea id="q-notes" name="notes" rows="3" maxlength="2000" placeholder="Schedule, delivery address, openings, other members you need"></textarea></div>
+        <div class="box"><textarea id="q-notes" name="notes" rows="3" maxlength="2000" placeholder="Delivery address, openings, cantilevers, other members you need"></textarea></div>
       </div>
       <div class="trap" aria-hidden="true"><label for="q-website">Website</label><input id="q-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
       <div class="actions">
@@ -145,7 +189,7 @@
   <div class="sheet-scroll"><article class="paper" id="paper"></article></div>
 </div>
 
-<a class="jump" id="jump" href="#results"><span id="jump-text"></span><span class="go">See joists ↓</span></a>
+<a class="jump" id="jump" href="#project-summary"><span id="jump-text"></span><span class="go">See joists ↓</span></a>
 
 <div class="notes-band">
   <section class="wrap notes">
@@ -159,6 +203,7 @@
         <li>Total-load deflection is limited to L/240 in every table, with live-load deflection at L/360 or L/480 as selected.</li>
         <li>With sheathing on the top flange only, install bridging on the bottom flange at no more than 8 ft on center.</li>
         <li>Web punchouts near a support may need reinforcement.</li>
+        <li>Project takeoffs count joists, rim track, bridging and web stiffeners. Beams, posts, ledgers, connections and fasteners are not included. Joists are cut to length, up to 60 ft.</li>
       </ul>
     </div>
     <div class="stack">

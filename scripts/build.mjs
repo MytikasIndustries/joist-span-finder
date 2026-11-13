@@ -10,11 +10,14 @@ const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), 'utf8');
 // Join the ES modules into one script: drop imports, keep the code.
 const stripModule = (src) =>
   src.replace(/^import[\s\S]*?from\s+['"][^'"]+['"];\s*$/gm, '').replace(/^export\s+/gm, '');
-const script = ['src/data.js', 'src/logic.js', 'src/quote.js', 'src/app.js'].map((p) => stripModule(read(p))).join('\n');
+// project-ui.js only defines functions; app.js runs last and starts the page.
+const script = ['src/data.js', 'src/logic.js', 'src/project.js', 'src/quote.js', 'src/project-ui.js', 'src/app.js']
+  .map((p) => stripModule(read(p)))
+  .join('\n');
 
 const title = 'Mytikas Joist Span Finder';
 const description =
-  'Find which Mytikas Steel 2" flange floor joists make your span, by load, spacing, supports and stiffness.';
+  'Plan the Mytikas Steel joists for a deck, floor or ceiling: layout, options and a takeoff, or look up one span.';
 const head = `<title>${title}</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <meta name="description" content="${description.replace(/"/g, '&quot;')}">

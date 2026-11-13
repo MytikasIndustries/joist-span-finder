@@ -55,7 +55,7 @@ test('the sales note describes exactly what they selected', () => {
   assert.match(note, /Joist: 800S200-54 \(8" web, 16 ga, 54 mil, 50 ksi\), allowable 17'-6", 2\.47 lb\/ft/);
   assert.match(note, /about 900 lineal ft and 2,223 lb of joists/);
   assert.match(note, /Notes: Need by May/);
-  assert.match(note, /Open their selection: https:\/\/mytikas-spans\.pages\.dev\/\?use=living/);
+  assert.match(note, /Open their selection: https:\/\/mytikas-spans\.pages\.dev\/\?mode=span&use=house/);
 });
 
 test('the Go High Level contact carries name, company and the website fields, but no tags', () => {
@@ -73,7 +73,7 @@ test('the Go High Level contact carries name, company and the website fields, bu
     { id: 'DK4ut46iQGDQVjmnIERz', field_value: 'SUMMARY' },
   ]);
   assert.deepEqual(ghlTags(v), ['web-lead', 'web-joist', 'joist span finder', 'role: gc']);
-  assert.equal(productInterest(validateQuote({ ...GOOD, query: '?ft=0' }).value), 'Mytikas Steel floor joists');
+  assert.equal(productInterest(validateQuote({ ...GOOD, query: '?use=house&ft=0' }).value), 'Mytikas Steel floor joists');
 });
 
 // ---- the /api/quote endpoint, with Go High Level stubbed out ----

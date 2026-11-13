@@ -132,7 +132,9 @@ test('share links round-trip and reject junk', () => {
   const s = { use: 'custom', dl: 25, ll: 80, ft: 18, in: 6, oc: 24, span: 'two', defl: 'L/480', sel: '', area: 0, job: '', loc: '' };
   assert.deepEqual(fromQuery(toQuery(s)), s);
   const office = fromQuery('?use=office&ll=999&oc=19&span=x&defl=240');
-  assert.equal(office.ll, 50);
+  assert.equal(office.ll, 100);
+  assert.equal(fromQuery('?use=storage').use, 'industrial');
+  assert.equal(fromQuery('?use=living').use, 'house');
   assert.equal(office.oc, 16);
   assert.equal(office.span, 'single');
   assert.equal(office.defl, 'L/360');
