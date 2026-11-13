@@ -11,14 +11,14 @@
 </header>
 
 <main class="wrap project" id="project-view" hidden>
-  <section class="job-row" aria-label="Job details">
-    <div class="field"><label for="p-job">Job name <span class="optional">optional</span></label><div class="box"><input id="p-job" type="text" maxlength="80" autocomplete="off" placeholder="Smith residence"></div></div>
-    <div class="field"><label for="p-loc">Location <span class="optional">optional</span></label><div class="box"><input id="p-loc" type="text" maxlength="80" autocomplete="off" placeholder="Cañon City, CO"></div></div>
-  </section>
   <div class="areas" id="areas"></div>
   <div class="add-row"><button type="button" class="button quiet" id="add-area">Add another area</button><p class="hint">A second floor, a ceiling, a deck: one request covers the whole job.</p></div>
   <section class="project-summary" id="project-summary" aria-labelledby="project-summary-title">
     <h2 id="project-summary-title">Your project.</h2>
+    <div class="job-row" aria-label="Job details">
+      <div class="field"><label for="p-job">Job name <span class="optional">optional</span></label><div class="box"><input id="p-job" type="text" maxlength="80" autocomplete="off" placeholder="Smith residence"></div></div>
+      <div class="field"><label for="p-loc">Location <span class="optional">optional</span></label><div class="box"><input id="p-loc" type="text" maxlength="80" autocomplete="off" placeholder="Cañon City, CO"></div></div>
+  </div>
     <div id="project-totals"></div>
     <div class="actions">
       <button type="button" class="button" id="p-sheet">Project summary</button>
@@ -130,17 +130,17 @@
     <div class="stack">
       <p class="eyebrow">Mytikas Steel</p>
       <h2 id="quote-title">Request a quote.</h2>
-      <p>Send us your selection and our team will price the joists, delivered from our factory in Florence, Colorado.</p>
+      <p>Send us your selection and our team will price the joists, delivered from our factory in Florence, Colorado. Only your name and email are required.</p>
       <div class="sending" id="quote-summary"></div>
     </div>
     <form id="quote-form" novalidate>
       <div class="pair">
         <div class="field"><label for="q-name">Name</label><div class="box"><input id="q-name" name="name" type="text" autocomplete="name" maxlength="100" required></div><p class="error" id="q-name-error"></p></div>
-        <div class="field"><label for="q-company">Company</label><div class="box"><input id="q-company" name="company" type="text" autocomplete="organization" maxlength="120"></div></div>
+        <div class="field"><label for="q-company">Company <span class="optional">optional</span></label><div class="box"><input id="q-company" name="company" type="text" autocomplete="organization" maxlength="120"></div></div>
       </div>
       <div class="pair">
         <div class="field"><label for="q-email">Email</label><div class="box"><input id="q-email" name="email" type="email" autocomplete="email" maxlength="160" required></div><p class="error" id="q-email-error"></p></div>
-        <div class="field"><label for="q-phone">Phone</label><div class="box"><input id="q-phone" name="phone" type="tel" autocomplete="tel" maxlength="30"></div><p class="error" id="q-phone-error"></p></div>
+        <div class="field"><label for="q-phone">Phone <span class="optional">optional</span></label><div class="box"><input id="q-phone" name="phone" type="tel" autocomplete="tel" maxlength="30"></div><p class="error" id="q-phone-error"></p></div>
       </div>
       <div class="pair">
         <div class="field">
@@ -148,26 +148,26 @@
           <div class="box"><select id="q-role" name="role"></select><span class="unit" aria-hidden="true">▾</span></div>
         </div>
         <div class="field">
-          <label for="q-stage">Project stage</label>
+          <label for="q-stage">Project stage <span class="optional">optional</span></label>
           <div class="box"><select id="q-stage" name="stage"></select><span class="unit" aria-hidden="true">▾</span></div>
         </div>
       </div>
       <div class="pair">
         <div class="field">
-          <label for="q-timing">Material needed</label>
+          <label for="q-timing">Material needed <span class="optional">optional</span></label>
           <div class="box"><select id="q-timing" name="timing"></select><span class="unit" aria-hidden="true">▾</span></div>
         </div>
         <div class="field">
-          <label for="q-eor">Engineer of record</label>
+          <label for="q-eor">Engineer of record <span class="optional">optional</span></label>
           <div class="box"><select id="q-eor" name="eor"></select><span class="unit" aria-hidden="true">▾</span></div>
         </div>
       </div>
       <div class="field">
-        <label for="q-supply">How you want it</label>
+        <label for="q-supply">How you want it <span class="optional">optional</span></label>
         <div class="box"><select id="q-supply" name="supply"></select><span class="unit" aria-hidden="true">▾</span></div>
       </div>
       <div class="field">
-        <label for="q-notes">Anything else we should know</label>
+        <label for="q-notes">Anything else we should know <span class="optional">optional</span></label>
         <div class="box"><textarea id="q-notes" name="notes" rows="3" maxlength="2000" placeholder="Delivery address, openings, cantilevers, other members you need"></textarea></div>
       </div>
       <div class="trap" aria-hidden="true"><label for="q-website">Website</label><input id="q-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
@@ -189,7 +189,7 @@
   <div class="sheet-scroll"><article class="paper" id="paper"></article></div>
 </div>
 
-<a class="jump" id="jump" href="#project-summary"><span id="jump-text"></span><span class="go">See joists ↓</span></a>
+<a class="jump" id="jump" href="#quote"><span id="jump-text"></span><span class="go">See joists ↓</span></a>
 
 <div class="notes-band">
   <section class="wrap notes">

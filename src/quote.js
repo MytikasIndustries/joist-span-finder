@@ -119,8 +119,8 @@ function projectSummary(v, origin) {
   plans.forEach((p, i) => {
     const a = pr.areas[i];
     const t = projectType(a.type);
-    lines.push(`${i + 1}. ${a.name ? `${a.name}: ` : ''}${t.label}${p.lengthFt ? `, ${sizeLabel(a)}, ${n0(p.sqft)} sq ft` : ''}`);
-    if (p.status === 'incomplete') lines.push('   Size not given.');
+    lines.push(`${i + 1}. ${a.name ? `${a.name}: ` : ''}${a.type ? t.label : 'Type not chosen'}${p.lengthFt ? `, ${sizeLabel(a)}, ${n0(p.sqft)} sq ft` : ''}`);
+    if (p.status === 'incomplete' || p.status === 'notype') lines.push('   Not finished.');
     else if (p.status === 'beyond') lines.push(`   ${p.loads.dl} psf dead + ${p.loads.ll} psf live: beyond the published tables. Needs engineering.`);
     else if (p.status === 'nofit') lines.push('   No 2" flange joist makes this with up to three beam lines. Needs engineering.');
     else {
@@ -203,6 +203,7 @@ export function productInterest(v) {
     const sqft = areas.reduce((n, a) => n + a.len * a.wid, 0);
     if (areas.length === 1) {
       const a = areas[0];
+      if (!a.type) return 'Mytikas Steel joists';
       return a.len > 0 && a.wid > 0 ? `${projectType(a.type).noun} (${sizeLabel(a)})` : projectType(a.type).noun;
     }
     return `joists (${areas.length} areas${sqft > 0 ? `, ${n0(sqft)} sq ft` : ''})`;

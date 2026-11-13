@@ -40,12 +40,13 @@ export const OPTION_LABELS = {
 
 export const projectType = (id) => PROJECT_TYPES.find((t) => t.id === id) ?? PROJECT_TYPES[1];
 
-export function newArea(type = 'house', len = 0, wid = 0) {
+export function newArea(type = '', len = 0, wid = 0) {
   return { type, name: '', len, wid, beam: 'auto', snow: 'unsure', attach: 'house', stiff: null, dl: 10, ll: 40, opt: '' };
 }
 
 export function areaTitle(a, i) {
-  return a.name || `${projectType(a.type).label}${i === undefined ? '' : ` ${i + 1}`}`;
+  const label = a.type ? projectType(a.type).label : 'New area';
+  return a.name || `${label}${i === undefined ? '' : ` ${i + 1}`}`;
 }
 
 const dimText = (n) => `${Number.isInteger(n) ? n : n.toFixed(1)}`;
@@ -129,6 +130,7 @@ function pickOptions(cands) {
  * Lays out one area. Returns null-ish fields when the size is missing.
  */
 export function planArea(a) {
+  if (!a.type) return { status: 'notype', type: null, lengthFt: 0, widthFt: 0, sqft: 0 };
   const t = projectType(a.type);
   const lengthFt = Math.max(a.len, a.wid);
   const widthFt = Math.min(a.len, a.wid);
@@ -191,20 +193,21 @@ export function planProject(areas) {
   };
 }
 
-// Plain-English notes for one area.
-export function areaNotes(a, p) {
+// Plain-English notes for one area. The page shows the supports and snow
+// decisions next to the answer, so it can leave those out (skipDecisions).
+export function areaNotes(a, p, { skipDecisions = false } = {}) {
   const notes = [];
   if (p.status !== 'ok') return notes;
-  if (p.forced) notes.push(`No joist makes ${dimText(p.widthFt)} ft with the supports you chose, so this layout adds beam lines.`);
-  if (p.added) notes.push(`We added ${p.bays === 2 ? 'the mid-span support' : 'a beam line'} because it cuts the joist steel by about ${p.added.pct}%. If you need a clear span, answer No to the middle support.`);
+  if (p.forced && !skipDecisions) notes.push(`No joist makes ${dimText(p.widthFt)} ft with the supports you chose, so this layout adds beam lines.`);
+  if (p.added && !skipDecisions) notes.push(`We added ${p.bays === 2 ? 'the mid-span support' : 'a beam line'} because it cuts the joist steel by about ${p.added.pct}%. If you need a clear span, answer No to the middle support.`);
   if (p.bays > 1) {
     const lines = p.bays - 1;
     notes.push(`Needs ${lines === 1 ? 'a beam or bearing wall at mid-span' : `${lines} beam lines or bearing walls, evenly spaced`}. Beams and posts are not in this takeoff.`);
   }
-  if (p.saving) notes.push(`With ${p.saving.bays === 2 ? 'a beam at mid-span' : `${p.saving.bays - 1} beam lines`}, ${p.saving.member} would do it with about ${p.saving.pct}% less joist steel (beam not included).`);
-  if (!p.exact) notes.push(`No table matches ${p.loads.dl} psf dead + ${p.loads.ll} psf live exactly, so we use the next heavier one (${p.loadCase.dl} + ${p.loadCase.ll}). Spans are on the safe side.`);
+  if (p.saving && !skipDecisions) notes.push(`With ${p.saving.bays === 2 ? 'a beam at mid-span' : `${p.saving.bays - 1} beam lines`}, ${p.saving.member} would do it with about ${p.saving.pct}% less joist steel (beam not included).`);
+  if (!p.exact && !(skipDecisions && a.type === 'deck' && a.snow === 'unsure')) notes.push(`No table matches ${p.loads.dl} psf dead + ${p.loads.ll} psf live exactly, so we use the next heavier one (${p.loadCase.dl} + ${p.loadCase.ll}). Spans are on the safe side.`);
   if (a.type === 'deck') {
-    notes.push(
+    if (!(skipDecisions && a.snow === 'unsure')) notes.push(
       a.snow === 'unsure'
         ? 'Snow load not known, so we sized for 70 psf. Your building department sets it; above 70 psf, enter your own loads.'
         : 'Sized for the greater of 40 psf live load and your ground snow load.',
@@ -240,9 +243,9 @@ export function projectCsv(areas, project, job = '') {
   const lines = [['Job', 'Area', 'Type', 'Size', 'Item', 'Profile', 'Quantity', 'Unit', 'Cut length', 'Joist spacing', 'Weight (lb)']];
   project.plans.forEach((p, i) => {
     const a = areas[i];
-    const head = [job, areaTitle(a, i), projectType(a.type).label, p.lengthFt ? sizeLabel(a) : ''];
+    const head = [job, areaTitle(a, i), a.type ? projectType(a.type).label : '', p.lengthFt ? sizeLabel(a) : ''];
     if (p.status !== 'ok') {
-      lines.push([...head, p.status === 'incomplete' ? 'Size needed' : 'Sized by our engineering team', '', '', '', '', '', '']);
+      lines.push([...head, p.status === 'incomplete' || p.status === 'notype' ? 'Not finished' : 'Sized by our engineering team', '', '', '', '', '', '']);
       return;
     }
     for (const r of takeoffRows(p)) {
@@ -276,7 +279,7 @@ export function encodeArea(a) {
 
 export function decodeArea(s) {
   const [type, len, wid, beam, snow, attach, stiff, dl, ll, opt, name] = String(s).split(FIELD);
-  const a = newArea(oneOf(type, PROJECT_TYPES.map((t) => t.id), 'house'), feet(len), feet(wid));
+  const a = newArea(oneOf(type, PROJECT_TYPES.map((t) => t.id), ''), feet(len), feet(wid));
   a.beam = oneOf(beam, BEAMS.map((b) => b.id), 'auto');
   a.snow = oneOf(snow, SNOW.map((x) => x.id), 'unsure');
   a.attach = oneOf(attach, ['house', 'free'], 'house');
@@ -292,7 +295,7 @@ export function projectFromQuery(search) {
   const q = new URLSearchParams(search);
   const areas = q.getAll('a').slice(0, MAX_AREAS).map(decodeArea);
   return {
-    areas: areas.length ? areas : [newArea('house', 50, 30)],
+    areas: areas.length ? areas : [newArea()],
     job: cleanName(q.get('job')).slice(0, 80),
     loc: cleanName(q.get('loc')).slice(0, 80),
   };

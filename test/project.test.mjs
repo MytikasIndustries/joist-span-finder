@@ -110,7 +110,9 @@ test('project links round-trip, reject junk, and old links stay in span mode', (
   assert.equal(back.areas[1].stiff, true);
   assert.equal(back.areas[1].opt, 'fewest');
   const junk = projectFromQuery('?mode=project&a=bogus~-5~abc~zz');
-  assert.equal(junk.areas[0].type, 'house');
+  assert.equal(junk.areas[0].type, '');
+  assert.equal(planArea(junk.areas[0]).status, 'notype');
+  assert.equal(projectFromQuery('').areas[0].type, '');
   assert.equal(junk.areas[0].len, 0);
   assert.equal(junk.areas[0].beam, 'auto');
   assert.equal(projectFromQuery('?mode=project&' + 'a=deck~10~10&'.repeat(20)).areas.length, 8);

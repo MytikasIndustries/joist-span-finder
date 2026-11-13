@@ -522,10 +522,11 @@ form.addEventListener('change', onChange);
 form.addEventListener('submit', (e) => e.preventDefault());
 
 // Hide the phone answer bar once the results themselves are on screen.
+// In project mode the bar carries the open area's answer and goes to the quote.
 const jumpWatch =
   'IntersectionObserver' in window
     ? new IntersectionObserver((entries) => {
-        const target = mode === 'project' ? $('project-summary') : out;
+        const target = mode === 'project' ? $('quote') : out;
         for (const e of entries) if (e.target === target) $('jump').classList.toggle('away', e.isIntersecting);
       })
     : null;
@@ -535,11 +536,11 @@ function setMode(next, push) {
   $('project-view').hidden = mode !== 'project';
   $('span-view').hidden = mode !== 'span';
   for (const b of document.querySelectorAll('.mode')) b.setAttribute('aria-current', String(b.dataset.mode === mode));
-  $('jump').setAttribute('href', mode === 'project' ? '#project-summary' : '#results');
-  $('jump').querySelector('.go').textContent = mode === 'project' ? 'See totals ↓' : 'See joists ↓';
+  $('jump').setAttribute('href', mode === 'project' ? '#quote' : '#results');
+  $('jump').querySelector('.go').textContent = mode === 'project' ? 'Request a quote' : 'See joists ↓';
   document.querySelector('.sheet-bar-title').textContent = mode === 'project' ? 'Project summary' : 'Spec sheet';
   $('sheet-overlay').setAttribute('aria-label', mode === 'project' ? 'Project summary' : 'Spec sheet');
-  $('jump').classList.remove('away');
+  $('jump').classList.remove('away', 'none');
   if (mode === 'project') renderProjectResults();
   else render();
   if (push && !PREVIEW) {
@@ -559,5 +560,5 @@ syncForm();
 render();
 initProject();
 jumpWatch?.observe(out);
-jumpWatch?.observe($('project-summary'));
+jumpWatch?.observe($('quote'));
 setMode(mode, false);

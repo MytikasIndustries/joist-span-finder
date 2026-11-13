@@ -10,7 +10,6 @@ import {
   areaTitle,
   sizeLabel,
   areaStiff,
-  planArea,
   planProject,
   areaNotes,
   takeoffRows,
@@ -22,11 +21,33 @@ import { n0 } from './quote.js';
 
 // Project mode on the page. Only functions and state live here; app.js calls
 // initProject() once the page is ready.
+//
+// One area is open at a time: its questions on the left, its answer on the
+// right. The others fold to a one-line summary. A new area starts with the
+// type tiles alone, then asks for the size.
 
 let proj = null; // { areas, job, loc }
 let projPlans = null; // planProject(proj.areas)
+let openIdx = 0; // the area being edited
+const typeOpen = new Set(); // areas showing the type tiles again
 
 const q$ = (sel, root = document) => root.querySelector(sel);
+
+const OPTION_WHY = {
+  lightest: 'Least steel to buy',
+  shallowest: 'Most headroom below',
+  fewest: 'Fewest pieces to set',
+};
+
+const EXAMPLE = {
+  job: 'Example house',
+  loc: '',
+  areas: [
+    { ...newArea('house', 50, 30), name: 'First floor' },
+    { ...newArea('house', 50, 30), name: 'Second floor' },
+    { ...newArea('deck', 20, 12), name: 'Back deck', snow: '40' },
+  ],
+};
 
 function segHtml(name, items, value, field, i) {
   return `<div class="segmented">${items
@@ -36,23 +57,28 @@ function segHtml(name, items, value, field, i) {
     .join('')}</div>`;
 }
 
+function typeTilesHtml(a, i) {
+  const tile = (x) => `<label class="tile${x.id === 'custom' ? ' tile-wide' : ''}">
+      <input type="radio" name="type-${i}" value="${x.id}" data-i="${i}" data-field="type"${a.type === x.id ? ' checked' : ''}>
+      <span class="tile-name">${x.label}</span><span class="tile-detail">${x.detail}</span>
+    </label>`;
+  return `<fieldset><legend>What are you building?</legend><div class="tiles">${PROJECT_TYPES.map(tile).join('')}</div></fieldset>`;
+}
+
 function areaFormHtml(a, i) {
+  if (!a.type || typeOpen.has(i)) {
+    const tiles = typeTilesHtml(a, i);
+    return a.type ? `<div class="area-inputs">${tiles}${restOfFormHtml(a, i)}</div>` : `<div class="area-inputs">${tiles}</div>`;
+  }
   const t = projectType(a.type);
-  const types = PROJECT_TYPES.map(
-    (x) => `<label class="choice" for="type-${i}-${x.id}">
-      <input type="radio" name="type-${i}" id="type-${i}-${x.id}" value="${x.id}" data-i="${i}" data-field="type"${a.type === x.id ? ' checked' : ''}>
-      <span class="name">${x.label}</span><span class="psf">${x.id === 'custom' ? '' : x.id === 'deck' ? '40 psf + snow' : `${x.ll} psf live`}</span>
-      <span class="detail">${x.detail}</span>
-    </label>`,
-  ).join('');
-  const deck =
-    t.id === 'deck'
-      ? `<fieldset><legend>Ground snow load</legend>
-          ${segHtml(`snow-${i}`, SNOW.map((s) => [s.id, s.label]), a.snow, 'snow', i)}
-          <p class="hint">Your building department sets it. Decks are sized for the greater of 40 psf or the snow load.</p></fieldset>
-        <fieldset><legend>The deck is</legend>
-          ${segHtml(`attach-${i}`, [['house', 'Attached', 'to the house'], ['free', 'Freestanding', 'on its own beams']], a.attach, 'attach', i)}</fieldset>`
-      : '';
+  return `<div class="area-inputs">
+    <div class="type-line"><div><p class="eyebrow">Building</p><p class="type-name">${t.label}</p></div><button type="button" class="linkish" data-change-type="${i}">Change</button></div>
+    ${restOfFormHtml(a, i)}
+  </div>`;
+}
+
+function restOfFormHtml(a, i) {
+  const t = projectType(a.type);
   const custom =
     t.id === 'custom'
       ? `<fieldset><legend>Your loads</legend><div class="pair">
@@ -60,10 +86,16 @@ function areaFormHtml(a, i) {
           <div class="field"><label for="ll-${i}">Live load</label><div class="box"><input id="ll-${i}" type="number" inputmode="decimal" min="0" step="1" value="${a.ll}" data-i="${i}" data-field="ll"><span class="unit">psf</span></div></div>
         </div><p class="hint">Loads between our tables use the next heavier table.</p></fieldset>`
       : '';
-  return `<div class="area-inputs">
-    <fieldset><legend>What are you building?</legend><div class="choices">${types}</div></fieldset>
-    ${custom}
-    <fieldset><legend>Size</legend>
+  const deck =
+    t.id === 'deck'
+      ? `<fieldset id="snow-${i}"><legend>Ground snow load</legend>
+          ${segHtml(`snow-${i}`, SNOW.map((s) => [s.id, s.label]), a.snow, 'snow', i)}
+          <p class="hint">Your building department sets it. Decks are sized for the greater of 40 psf or the snow load.</p></fieldset>
+        <fieldset><legend>The deck is</legend>
+          ${segHtml(`attach-${i}`, [['house', 'Attached', 'to the house'], ['free', 'Freestanding', 'on its own beams']], a.attach, 'attach', i)}</fieldset>`
+      : '';
+  return `${custom}
+    <fieldset><legend>How big?</legend>
       <div class="pair">
         <div class="field"><label for="len-${i}">Length</label><div class="box"><input id="len-${i}" type="number" inputmode="decimal" min="0" max="1000" step="0.5" placeholder="0" value="${a.len || ''}" data-i="${i}" data-field="len"><span class="unit">ft</span></div></div>
         <div class="field"><label for="wid-${i}">Width</label><div class="box"><input id="wid-${i}" type="number" inputmode="decimal" min="0" max="1000" step="0.5" placeholder="0" value="${a.wid || ''}" data-i="${i}" data-field="wid"><span class="unit">ft</span></div></div>
@@ -73,11 +105,10 @@ function areaFormHtml(a, i) {
       ${segHtml(`beam-${i}`, BEAMS.map((b) => [b.id, b.label]), a.beam, 'beam', i)}
       <p class="hint">${BEAMS.find((b) => b.id === a.beam).detail}.</p></fieldset>
     ${deck}
-    <fieldset><legend>Floor stiffness</legend>
-      ${segHtml(`stiff-${i}`, [['0', 'Standard', 'L/360'], ['1', 'Stiffer, less bounce', 'L/480']], areaStiff(a) ? 1 : 0, 'stiff', i)}</fieldset>
+    <fieldset><legend>${t.id === 'ceiling' ? 'Stiffness' : 'Floor feel'}</legend>
+      ${segHtml(`stiff-${i}`, [['0', 'Standard', 'L/360, code minimum'], ['1', 'Firmer', 'L/480, less bounce']], areaStiff(a) ? 1 : 0, 'stiff', i)}</fieldset>
     <fieldset><legend>Area name <span class="optional">optional</span></legend>
-      <div class="field"><div class="box"><input type="text" maxlength="40" autocomplete="off" placeholder="${escapeHtml(areaTitle({ ...a, name: '' }, i))}" value="${escapeHtml(a.name)}" data-i="${i}" data-field="name" aria-label="Area name"></div></div></fieldset>
-  </div>`;
+      <div class="field"><div class="box"><input type="text" maxlength="40" autocomplete="off" placeholder="${escapeHtml(areaTitle({ ...a, name: '' }, i))}" value="${escapeHtml(a.name)}" data-i="${i}" data-field="name" aria-label="Area name"></div></div></fieldset>`;
 }
 
 // Plan view: rim track on the long sides, joists across, beam lines dashed.
@@ -95,8 +126,7 @@ function planSvg(a, p) {
     w = (h * p.lengthFt) / p.widthFt;
   }
   h = Math.max(h, 60);
-  const H = h;
-  const lines = c.row ? Math.floor((p.lengthFt * 12) / c.spacing) + 1 : 0;
+  const lines = Math.floor((p.lengthFt * 12) / c.spacing) + 1;
   const every = Math.max(1, Math.ceil(lines / 90));
   let joists = '';
   for (let k = 0; k < lines; k += every) {
@@ -112,14 +142,20 @@ function planSvg(a, p) {
     a.type === 'deck' && a.attach === 'house'
       ? `<text class="lbl" x="${x0}" y="${y0 - 9}">House · ledger</text><line class="house" x1="${x0}" y1="${y0 - 3}" x2="${x0 + w}" y2="${y0 - 3}"/>`
       : '';
-  return `<svg class="plan" viewBox="0 0 ${W} ${H + pad.t + pad.b}" role="img" aria-label="Plan: ${lines} joists at ${c.spacing} inches on center${p.bays > 1 ? `, ${p.bays - 1} beam line${p.bays > 2 ? 's' : ''}` : ''}">
+  const svg = `<svg class="plan" viewBox="0 0 ${W} ${h + pad.t + pad.b}" role="img" aria-label="Plan: ${lines} joists at ${c.spacing} inches on center${p.bays > 1 ? `, ${p.bays - 1} beam line${p.bays > 2 ? 's' : ''}` : ''}">
     ${house}
     <rect class="out" x="${x0}" y="${y0}" width="${w}" height="${h}"/>
     ${joists}${beams}
     <line class="rim" x1="${x0}" y1="${y0}" x2="${x0 + w}" y2="${y0}"/><line class="rim" x1="${x0}" y1="${y0 + h}" x2="${x0 + w}" y2="${y0 + h}"/>
-    <text class="dim" x="${x0 + w / 2}" y="${y0 + h + 20}" text-anchor="middle">${ftIn(Math.round(p.lengthFt * 12))}</text>
-    <text class="dim" x="${x0 - 10}" y="${y0 + h / 2}" text-anchor="middle" transform="rotate(-90 ${x0 - 10} ${y0 + h / 2})">${ftIn(Math.round(p.widthFt * 12))}</text>
+    <text class="dim" x="${x0 + w / 2}" y="${y0 + h + 22}" text-anchor="middle">${ftIn(Math.round(p.lengthFt * 12))}</text>
+    <text class="dim" x="${x0 - 12}" y="${y0 + h / 2}" text-anchor="middle" transform="rotate(-90 ${x0 - 12} ${y0 + h / 2})">${ftIn(Math.round(p.widthFt * 12))}</text>
   </svg>`;
+  const legend = `<p class="legend" aria-hidden="true">
+    <span><i class="k k-rim"></i>Rim track</span>
+    <span><i class="k k-joist"></i>Joists, ${c.spacing}" o.c., spanning ${ftIn(Math.round(p.widthFt * 12))}</span>
+    ${p.bays > 1 ? '<span><i class="k k-beam"></i>Beam or bearing wall, by others</span>' : ''}
+  </p>`;
+  return `<figure class="plan-fig">${svg}${legend}</figure>`;
 }
 
 function optionsHtml(p, i) {
@@ -128,9 +164,9 @@ function optionsHtml(p, i) {
       const on = o === p.chosen;
       return `<button type="button" class="option${on ? ' on' : ''}" role="radio" aria-checked="${on}" data-i="${i}" data-opt="${o.keys[0]}">
         <span class="opt-tag">${o.keys.map((k) => OPTION_LABELS[k]).join(' · ')}</span>
+        <span class="opt-why">${o.keys.map((k) => OPTION_WHY[k]).join('. ')}.</span>
         <span class="opt-member">${o.member}</span>
-        <span class="opt-line">${o.spacing}" o.c. · ${o.pieces} pcs</span>
-        <span class="opt-line">${n0(o.lb)} lb of joists</span>
+        <span class="opt-line">${o.spacing}" o.c. · ${o.pieces} pcs · ${n0(o.lb)} lb</span>
       </button>`;
     })
     .join('')}</div>`;
@@ -143,6 +179,25 @@ function layoutText(p) {
   return `${p.bays} spans of ${ftIn(c.spanIn)} on ${p.bays - 1} beam lines`;
 }
 
+// What the tool decided for them, said next to the answer, with a way back.
+function decisionsHtml(a, i, p) {
+  const out = [];
+  if (p.forced) out.push([`No joist makes ${ftIn(Math.round(p.widthFt * 12))} in one span, so we added ${p.bays === 2 ? 'a mid-span support' : `${p.bays - 1} beam lines`}.`]);
+  if (p.added) out.push([`We added ${p.bays === 2 ? 'a beam or bearing wall at mid-span' : `${p.bays - 1} beam lines`}: about ${p.added.pct}% less joist steel.`, 'clear', 'Make it a clear span']);
+  if (p.saving)
+    out.push([
+      `${p.saving.bays === 2 ? 'A beam at mid-span' : `${p.saving.bays - 1} beam lines`} would cut the joist steel by about ${p.saving.pct}%.`,
+      p.saving.bays === 2 ? 'beam' : '',
+      'Add the beam',
+    ]);
+  if (a.type === 'deck' && a.snow === 'unsure') out.push(['Snow load not known, so we sized for 70 psf.', 'snow', 'Set the snow load']);
+  else if (!p.exact) out.push([`No table matches ${p.loads.dl} + ${p.loads.ll} psf exactly, so we use the next heavier one.`]);
+  if (!out.length) return '';
+  return `<div class="decisions">${out
+    .map(([text, act, label]) => `<p>${text}${act ? ` <button type="button" class="linkish" data-act="${act}" data-i="${i}">${label}</button>` : ''}</p>`)
+    .join('')}</div>`;
+}
+
 function takeoffHtml(p) {
   const rows = takeoffRows(p);
   return `<div class="table-scroll"><table class="takeoff">
@@ -152,12 +207,24 @@ function takeoffHtml(p) {
   </table></div>`;
 }
 
+function answerText(p) {
+  if (p.status === 'ok') return `${p.chosen.pieces} × ${p.chosen.member} at ${p.chosen.spacing}" o.c.`;
+  if (p.status === 'beyond' || p.status === 'nofit') return 'Sized by our engineering team';
+  return 'Not finished';
+}
+
 function areaResultHtml(a, i, p) {
   const title = escapeHtml(areaTitle(a, i));
   const head = `<div class="area-head"><p class="eyebrow">${title}${p.lengthFt > 0 && p.widthFt > 0 ? ` · ${sizeLabel(a)} · ${n0(p.sqft)} sq ft` : ''}</p>${
     proj.areas.length > 1 ? `<button type="button" class="linkish" data-remove="${i}">Remove this area</button>` : ''
   }</div>`;
-  if (p.status === 'incomplete') return `${head}<h3 class="area-headline">Enter the length and width.</h3>`;
+  if (p.status === 'notype') {
+    const example = proj.areas.length === 1 ? '<button type="button" class="button quiet" data-example>See an example</button>' : '';
+    return `${head}<div class="empty"><h3 class="area-headline">Start with what you're building.</h3>
+      <p>Pick a type, then enter the size. We lay out the joists, show three ways to frame it and count what goes on the truck.</p>${example}</div>`;
+  }
+  if (p.status === 'incomplete')
+    return `${head}<div class="empty"><h3 class="area-headline">Now the size.</h3><p>Length and width, outside dimensions. Joists span the shorter side.</p></div>`;
   if (p.status === 'beyond')
     return `${head}<h3 class="area-headline">We size this one with you.</h3>
       <p class="notice">${a.type === 'heavy' ? 'Heavy storage and equipment loads' : `${p.loads.dl} psf dead + ${p.loads.ll} psf live`} go beyond our published tables. Send the request below and our engineering team will size the framing.</p>`;
@@ -165,29 +232,51 @@ function areaResultHtml(a, i, p) {
     return `${head}<h3 class="area-headline">None of our 2" flange joists make this, even with beam lines.</h3>
       <p class="notice">Send the request below and our engineering team will size a deeper or doubled member.</p>`;
   const c = p.chosen;
-  const notes = areaNotes(a, p);
+  const notes = areaNotes(a, p, { skipDecisions: true });
   return `${head}
     <h3 class="area-headline">${c.pieces} × <span class="nw">${c.member}</span> at <span class="nw">${c.spacing}" o.c.</span></h3>
     <p class="basis"><span>${layoutText(p)}</span><span>${p.loads.dl} + ${p.loads.ll} psf</span><span>${p.defl}</span></p>
+    ${decisionsHtml(a, i, p)}
     ${planSvg(a, p)}
-    ${optionsHtml(p, i)}
-    ${takeoffHtml(p)}
+    <div class="option-block"><h4 class="sub">${['', 'How to frame it.', 'Two ways to frame it.', 'Three ways to frame it.'][p.options.length]}</h4>${optionsHtml(p, i)}</div>
+    <div><h4 class="sub">What goes on the truck.</h4>${takeoffHtml(p)}</div>
     ${notes.length ? `<ul class="area-notes">${notes.map((n) => `<li>${n}</li>`).join('')}</ul>` : ''}`;
 }
 
+function summaryRowHtml(a, i, p) {
+  return `<article class="area folded" id="area-${i}">
+    <button type="button" class="area-summary" data-open="${i}" aria-label="Edit ${escapeHtml(areaTitle(a, i))}">
+      <span class="sum-title">${escapeHtml(areaTitle(a, i))}</span>
+      <span class="sum-size">${p.lengthFt > 0 && p.widthFt > 0 ? sizeLabel(a) : '—'}</span>
+      <span class="sum-answer">${answerText(p)}</span>
+      <span class="sum-lb">${p.status === 'ok' ? `${n0(p.chosen.lb)} lb` : ''}</span>
+      <span class="sum-edit">Edit</span>
+    </button>
+  </article>`;
+}
+
 function renderAreas() {
+  projPlans = planProject(proj.areas);
+  openIdx = Math.min(openIdx, proj.areas.length - 1);
   q$('#areas').innerHTML = proj.areas
-    .map((a, i) => `<article class="area" id="area-${i}"><form class="area-form" novalidate>${areaFormHtml(a, i)}</form><section class="area-result" id="area-result-${i}" aria-live="polite"></section></article>`)
+    .map((a, i) =>
+      i === openIdx
+        ? `<article class="area" id="area-${i}"><form class="area-form" novalidate>${areaFormHtml(a, i)}</form><section class="area-result" id="area-result-${i}" aria-live="polite"></section></article>`
+        : summaryRowHtml(a, i, projPlans.plans[i]),
+    )
     .join('');
   q$('#add-area').hidden = proj.areas.length >= MAX_AREAS;
   renderProjectResults();
 }
 
+function redrawForm(i) {
+  q$(`#area-${i} .area-form`).innerHTML = areaFormHtml(proj.areas[i], i);
+}
+
 function renderProjectResults() {
   projPlans = planProject(proj.areas);
-  proj.areas.forEach((a, i) => {
-    q$(`#area-result-${i}`).innerHTML = areaResultHtml(a, i, projPlans.plans[i]);
-  });
+  const p = projPlans.plans[openIdx];
+  q$(`#area-result-${openIdx}`).innerHTML = areaResultHtml(proj.areas[openIdx], openIdx, p);
   const t = projPlans.totals;
   q$('#project-totals').innerHTML = `<dl class="totals">
       <div><dt>Areas</dt><dd>${t.areas}</dd></div>
@@ -196,7 +285,8 @@ function renderProjectResults() {
       <div><dt>Joist steel</dt><dd>${n0(t.lb)} lb</dd></div>
     </dl>
     ${t.needsUs ? `<p class="hint">${t.needsUs} area${t.needsUs > 1 ? 's go' : ' goes'} to our engineering team; not in these totals.</p>` : ''}`;
-  q$('#jump-text').textContent = t.lb > 0 ? `${n0(t.pieces)} joists · ${n0(t.lb)} lb` : 'Your project';
+  q$('#jump').classList.toggle('none', !(p.status === 'ok' || t.lb > 0));
+  q$('#jump-text').textContent = p.status === 'ok' ? answerText(p) : t.lb > 0 ? `${n0(t.pieces)} joists · ${n0(t.lb)} lb` : 'Your project';
   renderQuoteSummary();
   if (!q$('#sheet-overlay').hidden) renderSheet();
   saveProjectUrl();
@@ -221,8 +311,10 @@ function onProjectInput(e) {
     a.type = el.value;
     a.stiff = null;
     a.opt = '';
+    typeOpen.delete(i);
     // Redraw this area's questions: decks and custom loads ask more.
-    q$(`#area-${i} .area-form`).innerHTML = areaFormHtml(a, i);
+    redrawForm(i);
+    if (!a.len) q$(`#len-${i}`)?.focus({ preventScroll: true });
   } else if (f === 'len' || f === 'wid') {
     a[f] = Math.max(0, Math.min(1000, Number(el.value) || 0));
   } else if (f === 'dl' || f === 'll') {
@@ -233,10 +325,16 @@ function onProjectInput(e) {
     a.name = el.value.replace(/~/g, ' ').slice(0, 40);
   } else {
     a[f] = el.value;
-    if (f === 'beam') q$(`#area-${i} .area-form`).innerHTML = areaFormHtml(a, i);
+    if (f === 'beam') redrawForm(i);
   }
   if (f === 'beam' || f === 'len' || f === 'wid' || f === 'snow' || f === 'stiff') a.opt = '';
   renderProjectResults();
+}
+
+function openArea(i) {
+  openIdx = i;
+  renderAreas();
+  q$(`#area-${i}`).scrollIntoView({ block: 'start' });
 }
 
 function onProjectClick(e) {
@@ -246,9 +344,44 @@ function onProjectClick(e) {
     renderProjectResults();
     return;
   }
+  const open = e.target.closest('[data-open]');
+  if (open) return openArea(Number(open.dataset.open));
+  const change = e.target.closest('[data-change-type]');
+  if (change) {
+    const i = Number(change.dataset.changeType);
+    typeOpen.add(i);
+    redrawForm(i);
+    return;
+  }
+  const act = e.target.closest('[data-act]');
+  if (act) {
+    const i = Number(act.dataset.i);
+    const a = proj.areas[i];
+    if (act.dataset.act === 'snow') {
+      const box = q$(`#snow-${i}`);
+      box.scrollIntoView({ block: 'center' });
+      box.querySelector('input:checked, input')?.focus({ preventScroll: true });
+      return;
+    }
+    a.beam = act.dataset.act === 'clear' ? 'none' : 'one';
+    a.opt = '';
+    redrawForm(i);
+    renderProjectResults();
+    return;
+  }
+  if (e.target.closest('[data-example]')) {
+    proj = { job: EXAMPLE.job, loc: EXAMPLE.loc, areas: EXAMPLE.areas.map((a) => ({ ...a })) };
+    q$('#p-job').value = proj.job;
+    openIdx = 0;
+    typeOpen.clear();
+    renderAreas();
+    return;
+  }
   const rm = e.target.closest('[data-remove]');
   if (rm) {
     proj.areas.splice(Number(rm.dataset.remove), 1);
+    typeOpen.clear();
+    openIdx = Math.max(0, Math.min(openIdx, proj.areas.length - 1));
     renderAreas();
   }
 }
@@ -256,10 +389,9 @@ function onProjectClick(e) {
 function addArea() {
   if (proj.areas.length >= MAX_AREAS) return;
   const last = proj.areas[proj.areas.length - 1];
-  // A second floor usually matches the first.
-  proj.areas.push(last && last.type === 'house' ? { ...newArea('house', last.len, last.wid) } : newArea('deck', 0, 0));
-  renderAreas();
-  q$(`#area-${proj.areas.length - 1}`).scrollIntoView({ block: 'start' });
+  // A second floor usually matches the first; anything else starts fresh.
+  proj.areas.push(last && last.type === 'house' && last.len > 0 ? newArea('house', last.len, last.wid) : newArea());
+  openArea(proj.areas.length - 1);
 }
 
 function downloadCsv() {
@@ -283,8 +415,8 @@ function projectSheetHtml() {
   const blocks = projPlans.plans
     .map((p, i) => {
       const a = proj.areas[i];
-      const head = `<h4>${a.name ? `${escapeHtml(a.name)} · ` : ''}${projectType(a.type).label}${p.lengthFt > 0 && p.widthFt > 0 ? ` · ${sizeLabel(a)}` : ''}</h4>`;
-      if (p.status !== 'ok') return `<section class="paper-area">${head}<p>${p.status === 'incomplete' ? 'Size not given.' : 'Sized by our engineering team.'}</p></section>`;
+      const head = `<h4>${a.name ? `${escapeHtml(a.name)} · ` : ''}${a.type ? projectType(a.type).label : 'Not finished'}${p.lengthFt > 0 && p.widthFt > 0 ? ` · ${sizeLabel(a)}` : ''}</h4>`;
+      if (p.status !== 'ok') return `<section class="paper-area">${head}<p>${p.status === 'incomplete' || p.status === 'notype' ? 'Not finished.' : 'Sized by our engineering team.'}</p></section>`;
       const c = p.chosen;
       return `<section class="paper-area">${head}
         <p class="paper-area-line"><strong>${c.pieces} × ${c.member} at ${c.spacing}" o.c.</strong> · ${layoutText(p)} · ${p.loads.dl} + ${p.loads.ll} psf, ${p.defl}${p.exact ? '' : ` (table ${p.loadCase.dl}/${p.loadCase.ll})`}</p>
@@ -336,8 +468,8 @@ function projectQuoteSummaryHtml() {
   const bits = projPlans.plans.map((p, i) => {
     const a = proj.areas[i];
     const name = escapeHtml(areaTitle(a, i));
-    if (p.status === 'ok') return `<strong>${name}</strong>, ${sizeLabel(a)}: ${p.chosen.pieces} × ${p.chosen.member} at ${p.chosen.spacing}" o.c.`;
-    if (p.status === 'incomplete') return `<strong>${name}</strong>: size not given yet`;
+    if (p.status === 'ok') return `<strong>${name}</strong>, ${sizeLabel(a)}: ${answerText(p)}`;
+    if (p.status === 'incomplete' || p.status === 'notype') return `<strong>${name}</strong>: not finished yet`;
     return `<strong>${name}</strong>${p.lengthFt ? `, ${sizeLabel(a)}` : ''}: our engineering team sizes it`;
   });
   const t = projPlans.totals;
