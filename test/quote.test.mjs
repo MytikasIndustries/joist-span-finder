@@ -111,7 +111,7 @@ test('endpoint: creates the contact, adds the note, then re-adds the trigger tag
     () => onRequestPost({ request: post(GOOD), env: ENV }),
   );
   assert.equal(result.status, 200);
-  assert.deepEqual(await result.json(), { ok: true });
+  assert.deepEqual(await result.json(), { ok: true, plans: 0 });
   assert.equal(calls.length, 4);
   assert.equal(calls[0].url, 'https://services.leadconnectorhq.com/contacts/upsert');
   assert.equal(calls[0].init.headers.Authorization, 'Bearer test-token');
@@ -176,4 +176,61 @@ test('endpoint: refuses bad input, other sites, bots and missing setup', async (
     onRequestPost({ request: post(GOOD), env: ENV }),
   );
   assert.equal(crmDown.status, 502);
+});
+
+// ---- plans attached ----
+
+function postFiles(payload, files) {
+  const form = new FormData();
+  form.append('payload', JSON.stringify(payload));
+  for (const [name, text] of files) form.append('files', new File([text], name, { type: 'application/pdf' }));
+  return new Request('https://mytikas-spans.pages.dev/api/quote', { method: 'POST', headers: { Origin: 'https://mytikas-spans.pages.dev' }, body: form });
+}
+
+test('endpoint: plans go to the media library first and the note links them', async () => {
+  const { result, calls } = await withFetch(
+    [
+      { status: 200, body: { fileId: 'f1', url: 'https://storage.example/f1.pdf' } },
+      { status: 200, body: { contact: { id: 'abc' } } },
+      { status: 201, body: {} },
+      { status: 200, body: {} },
+      { status: 201, body: {} },
+    ],
+    () => onRequestPost({ request: postFiles(GOOD, [['Smith plans.pdf', '%PDF-1.4 test']]), env: ENV }),
+  );
+  assert.equal(result.status, 200);
+  assert.deepEqual(await result.json(), { ok: true, plans: 1 });
+  assert.equal(calls[0].url, 'https://services.leadconnectorhq.com/medias/upload-file');
+  assert.equal(calls[0].init.headers['Content-Type'], undefined);
+  assert.ok(calls[0].init.body instanceof FormData);
+  assert.equal(calls[1].url, 'https://services.leadconnectorhq.com/contacts/upsert');
+  assert.match(JSON.parse(calls[2].init.body).body, /Plans:\n   Smith plans\.pdf: https:\/\/storage\.example\/f1\.pdf/);
+  assert.ok(JSON.parse(calls[4].init.body).tags.includes('plans attached'));
+  assert.ok(JSON.parse(calls[4].init.body).tags.includes('web-joist'));
+});
+
+test('endpoint: plans with nothing entered use web-plans, not the span finder reply', async () => {
+  const { calls } = await withFetch(
+    [{ status: 200, body: { url: 'https://storage.example/f2.pdf' } }, { status: 200, body: { contact: { id: 'abc' } } }],
+    () => onRequestPost({ request: postFiles({ ...GOOD, query: '?mode=project' }, [['a.pdf', 'x']]), env: ENV }),
+  );
+  const tags = JSON.parse(calls[4].init.body).tags;
+  assert.ok(tags.includes('web-plans') && tags.includes('web-lead') && !tags.includes('web-joist'));
+  assert.deepEqual(JSON.parse(calls[3].init.body).tags, ['web-lead', 'web-plans']);
+  assert.match(JSON.parse(calls[2].init.body).body, /Sent plans for a takeoff; nothing entered in the tool\./);
+});
+
+test('endpoint: refuses too many, too big or the wrong kind of file', async () => {
+  const six = Array.from({ length: 6 }, (_, k) => [`p${k}.pdf`, 'x']);
+  const { result: many, calls } = await withFetch([], () => onRequestPost({ request: postFiles(GOOD, six), env: ENV }));
+  assert.equal(many.status, 400);
+  assert.match((await many.json()).fields.files, /up to 5 files/);
+  assert.equal(calls.length, 0);
+  const { result: exe } = await withFetch([], () => onRequestPost({ request: postFiles(GOOD, [['setup.exe', 'x']]), env: ENV }));
+  assert.match((await exe.json()).fields.files, /PDF, DWG, DXF or a photo/);
+  const { result: failed } = await withFetch(
+    [{ status: 500, body: {} }, { status: 200, body: { contact: { id: 'abc' } } }],
+    () => onRequestPost({ request: postFiles(GOOD, [['a.pdf', 'x']]), env: ENV }),
+  );
+  assert.deepEqual(await failed.json(), { ok: true, plans: 0 });
 });

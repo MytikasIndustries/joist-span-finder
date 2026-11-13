@@ -43,6 +43,30 @@ export const SUPPLY = [
   ['panels', 'Panelized, ready to erect'],
   ['unsure', 'Not sure'],
 ];
+// Plans and drawings a contractor attaches. Go High Level's media library
+// takes files up to 25 MB.
+export const FILE_RULES = { max: 5, maxBytes: 25 * 1024 * 1024, exts: ['pdf', 'jpg', 'jpeg', 'png', 'heic', 'dwg', 'dxf'] };
+export const fileExt = (name) => (String(name).toLowerCase().match(/\.([a-z0-9]+)$/) ?? [])[1] ?? '';
+export function checkFiles(files) {
+  if (files.length > FILE_RULES.max) return `Attach up to ${FILE_RULES.max} files.`;
+  for (const f of files) {
+    if (!FILE_RULES.exts.includes(fileExt(f.name))) return `${f.name}: use PDF, DWG, DXF or a photo.`;
+    if (f.size > FILE_RULES.maxBytes) return `${f.name} is over 25 MB. Email it to info@mytikasindustries.com instead.`;
+    if (!(f.size > 0)) return `${f.name} is empty.`;
+  }
+  return '';
+}
+export const cleanFileName = (name) =>
+  String(name)
+    .replace(/[\u0000-\u001f\u007f/\\]/g, ' ')
+    .trim()
+    .slice(-120) || 'plans';
+
+function planLines(files) {
+  if (!files.length) return [];
+  return ['', 'Plans:', ...files.map((f) => (f.url ? `   ${f.name}: ${f.url}` : `   ${f.name}: could not be saved; ask them to email it.`))];
+}
+
 const pickFrom = (list, v) => (list.some(([id]) => id === v) ? v : '');
 const labelOf = (list, v) => list.find(([id]) => id === v)?.[1] ?? '';
 const n0 = (n) => Math.round(n).toLocaleString('en-US');
@@ -112,10 +136,17 @@ function headerLines(v, job, loc) {
   return lines;
 }
 
-function projectSummary(v, origin) {
+function projectSummary(v, origin, files) {
   const pr = v.project;
   const { plans, totals } = planProject(pr.areas);
   const lines = headerLines(v, pr.job, pr.loc);
+  // Plans only, nothing entered in the tool: the takeoff is ours to do.
+  if (files.length && pr.areas.every((a) => !a.type)) {
+    lines.push('Sent plans for a takeoff; nothing entered in the tool.');
+    lines.push(...planLines(files));
+    if (v.notes) lines.push('', `Notes: ${v.notes}`);
+    return lines.join('\n');
+  }
   plans.forEach((p, i) => {
     const a = pr.areas[i];
     const t = projectType(a.type);
@@ -140,13 +171,14 @@ function projectSummary(v, origin) {
   });
   lines.push('', `Total: ${totals.areas} area${totals.areas > 1 ? 's' : ''}, ${n0(totals.sqft)} sq ft, about ${n0(totals.joistLf)} lineal ft and ${n0(totals.lb)} lb of joists`);
   if (totals.needsUs) lines.push(`${totals.needsUs} area${totals.needsUs > 1 ? 's need' : ' needs'} our engineering team.`);
+  lines.push(...planLines(files));
   if (v.notes) lines.push('', `Notes: ${v.notes}`);
   lines.push('', `Open their project: ${origin}/${projectToQuery(pr)}`);
   return lines.join('\n');
 }
 
-export function quoteSummary(v, origin) {
-  if (v.mode === 'project') return projectSummary(v, origin);
+export function quoteSummary(v, origin, files = []) {
+  if (v.mode === 'project') return projectSummary(v, origin, files);
   const s = v.state;
   const required = requiredInches(s.ft, s.in);
   const result = evaluate({ dl: s.dl, ll: s.ll, deflection: s.defl, condition: s.span, spacing: s.oc, required });
@@ -170,6 +202,7 @@ export function quoteSummary(v, origin) {
       lines.push('No 2" flange joist makes this span at these settings. Needs engineering.');
     }
   }
+  lines.push(...planLines(files));
   if (v.notes) lines.push('', `Notes: ${v.notes}`);
   lines.push('', `Open their selection: ${origin}/${toQuery(s)}`);
   return lines.join('\n');
@@ -187,11 +220,15 @@ export const GHL_FIELDS = {
 // `web-joist` starts the span finder's own reply. They are removed and added
 // again on every request so a returning contact runs the workflows again,
 // the same way the website hand-off does it.
+// Plans sent with nothing entered in the tool get `web-plans` instead: the
+// span finder reply talks about spans they entered, so it would not fit.
 export const GHL_TRIGGER_TAGS = ['web-lead', 'web-joist'];
+export const plansOnly = (v, fileCount) => fileCount > 0 && v.mode === 'project' && v.project.areas.every((a) => !a.type);
+export const triggerTags = (v, fileCount = 0) => (plansOnly(v, fileCount) ? ['web-lead', 'web-plans'] : GHL_TRIGGER_TAGS);
 
 // Every tag the contact should carry after a quote request.
-export function ghlTags(v) {
-  return [...GHL_TRIGGER_TAGS, 'joist span finder', `role: ${v.role}`];
+export function ghlTags(v, fileCount = 0) {
+  return [...triggerTags(v, fileCount), 'joist span finder', `role: ${v.role}`, ...(fileCount > 0 ? ['plans attached'] : [])];
 }
 
 // What they selected, in a few words, for the "Web product interest" field.

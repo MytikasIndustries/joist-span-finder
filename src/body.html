@@ -2,13 +2,22 @@
   <div class="wrap">
     <p class="eyebrow">Mytikas Steel</p>
     <h1>Joist span finder.</h1>
-    <p class="lede">Describe your deck, floor or ceiling. We lay out the Mytikas Steel joists, count what goes on the truck, and our team prices it.</p>
+    <p class="lede">Use this to get the ball rolling. Plan a deck, floor or ceiling for a rough takeoff, or look up a single joist. Our team prices it and confirms the sizes against your plans.</p>
+    <p class="fine">For rough estimates and early pricing. Final sizes, beams and connections are confirmed by our team and your engineer of record.</p>
     <nav class="modes" aria-label="Tool">
       <button type="button" class="mode" id="mode-project" data-mode="project">Plan a project</button>
       <button type="button" class="mode" id="mode-span" data-mode="span">Look up one span</button>
     </nav>
   </div>
 </header>
+
+<section class="plans-band" aria-labelledby="plans-title">
+  <div class="wrap plans-row">
+    <p><strong id="plans-title">Have plans already?</strong> Upload them and we'll do the takeoff for you.</p>
+    <label class="button quiet" for="q-files">Upload plans</label>
+    <span class="status" id="plans-status" role="status"></span>
+  </div>
+</section>
 
 <main class="wrap project" id="project-view" hidden>
   <div class="areas" id="areas"></div>
@@ -170,11 +179,22 @@
         <label for="q-notes">Anything else we should know <span class="optional">optional</span></label>
         <div class="box"><textarea id="q-notes" name="notes" rows="3" maxlength="2000" placeholder="Delivery address, openings, cantilevers, other members you need"></textarea></div>
       </div>
+      <div class="field files">
+        <span class="file-label">Plans or drawings <span class="optional">optional</span></span>
+        <label class="dropzone" for="q-files" id="q-drop">
+          <input id="q-files" type="file" multiple accept=".pdf,.jpg,.jpeg,.png,.heic,.dwg,.dxf,application/pdf,image/*">
+          <span class="drop-main">Choose files or drop them here</span>
+          <span class="drop-sub">PDF, DWG or photos, up to 25 MB each, 5 files.</span>
+        </label>
+        <ul class="file-list" id="q-file-list"></ul>
+        <p class="error" id="q-files-error"></p>
+      </div>
       <div class="trap" aria-hidden="true"><label for="q-website">Website</label><input id="q-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
       <div class="actions">
         <button class="button" type="submit" id="q-send">Send quote request</button>
         <span class="status" id="q-status" role="status"></span>
       </div>
+      <p class="hint closing">A rough number today, a confirmed quote once we've seen your plans.</p>
     </form>
   </div>
 </section>

@@ -57,10 +57,18 @@ function segHtml(name, items, value, field, i) {
     .join('')}</div>`;
 }
 
+// The load each type is sized for, in small print on its tile.
+function tilePsf(x) {
+  if (x.id === 'custom') return 'Your dead and live loads';
+  if (x.id === 'deck') return '40 psf live, or your snow load';
+  if (x.id === 'heavy') return 'Over 125 psf live';
+  return `${x.ll} psf live`;
+}
+
 function typeTilesHtml(a, i) {
   const tile = (x) => `<label class="tile${x.id === 'custom' ? ' tile-wide' : ''}">
       <input type="radio" name="type-${i}" value="${x.id}" data-i="${i}" data-field="type"${a.type === x.id ? ' checked' : ''}>
-      <span class="tile-name">${x.label}</span><span class="tile-detail">${x.detail}</span>
+      <span class="tile-name">${x.label}</span><span class="tile-detail">${x.detail}</span>${tilePsf(x) ? `<span class="tile-psf">${tilePsf(x)}</span>` : ''}
     </label>`;
   return `<fieldset><legend>What are you building?</legend><div class="tiles">${PROJECT_TYPES.map(tile).join('')}</div></fieldset>`;
 }
@@ -72,7 +80,7 @@ function areaFormHtml(a, i) {
   }
   const t = projectType(a.type);
   return `<div class="area-inputs">
-    <div class="type-line"><div><p class="eyebrow">Building</p><p class="type-name">${t.label}</p></div><button type="button" class="linkish" data-change-type="${i}">Change</button></div>
+    <div class="type-line"><div><p class="eyebrow">Building</p><p class="type-name">${t.label}</p>${tilePsf(t) ? `<p class="tile-psf">${tilePsf(t)}</p>` : ''}</div><button type="button" class="linkish" data-change-type="${i}">Change</button></div>
     ${restOfFormHtml(a, i)}
   </div>`;
 }
@@ -465,8 +473,9 @@ function projectSheetHtml() {
 }
 
 function projectQuoteSummaryHtml() {
-  const bits = projPlans.plans.map((p, i) => {
+  const bits = projPlans.plans.flatMap((p, i) => {
     const a = proj.areas[i];
+    if (p.status === 'notype') return [];
     const name = escapeHtml(areaTitle(a, i));
     if (p.status === 'ok') return `<strong>${name}</strong>, ${sizeLabel(a)}: ${answerText(p)}`;
     if (p.status === 'incomplete' || p.status === 'notype') return `<strong>${name}</strong>: not finished yet`;

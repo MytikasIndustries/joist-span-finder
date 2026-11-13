@@ -639,3 +639,35 @@ strong { font-weight: 500; }
 @media (max-width: 560px) { .takeoff th, .takeoff td { padding: 7px 6px; white-space: normal; } .takeoff td:nth-child(3) { white-space: nowrap; } }
 .jump.none { display: none !important; }
 .project-summary .job-row { margin-top: 4px; }
+.tile-psf { font-size: 0.75rem; color: var(--ink-muted); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; margin-top: 2px; }
+.type-line .tile-psf { margin-top: 2px; }
+
+/* ---- Rough-estimate note, plans band, plan uploads ---- */
+.masthead .fine { color: var(--head-muted); font-size: var(--step--1); max-width: 62ch; opacity: 0.85; }
+.plans-band { border-bottom: 1px solid var(--hairline); background: var(--band); }
+.plans-band.over { box-shadow: inset 0 0 0 2px var(--accent); }
+.plans-row { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 20px; padding-block: 16px; }
+.plans-row p { margin-right: auto; }
+.plans-row .button { cursor: pointer; }
+.files { gap: 8px; }
+.file-label { font-size: var(--step--1); color: var(--ink-muted); }
+.dropzone {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  justify-items: start;
+  padding: 18px 20px;
+  border: 1px dashed var(--ink-muted);
+  cursor: pointer;
+}
+.dropzone:hover, .dropzone.over { border-color: var(--accent); background: var(--band); }
+.dropzone:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.dropzone input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.drop-main { font-weight: 500; }
+.drop-sub { font-size: var(--step--1); color: var(--ink-muted); }
+.file-list { list-style: none; margin: 0; padding: 0; display: grid; }
+.file-list:empty { display: none; }
+.file-list li { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 12px; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--hairline); font-size: var(--step--1); }
+.file-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.file-size { color: var(--ink-muted); font-variant-numeric: tabular-nums; }
+.closing { margin-top: -6px; }

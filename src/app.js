@@ -16,7 +16,7 @@ import {
   useLabel,
   escapeHtml,
 } from './logic.js';
-import { ROLES, STAGES, TIMING, EOR, SUPPLY } from './quote.js';
+import { ROLES, STAGES, TIMING, EOR, SUPPLY, FILE_RULES, checkFiles } from './quote.js';
 import { isProjectQuery, projectToQuery } from './project.js';
 
 // The private preview build sets this: it has no real address, so share
@@ -417,6 +417,7 @@ document.addEventListener('keydown', (e) => {
 function renderQuoteSummary() {
   if (mode === 'project') {
     $('quote-summary').innerHTML = projectQuoteSummaryHtml();
+    filesSummary();
     return;
   }
   const { result, required, row } = current;
@@ -428,6 +429,76 @@ function renderQuoteSummary() {
   if (state.job || state.loc) bits.push(escapeHtml([state.job, state.loc].filter(Boolean).join(', ')));
   if (row && state.area > 0) bits.push(`${fmt(state.area)} sq ft · ${quantityText(row).replace('About ', 'about ')}`);
   $('quote-summary').innerHTML = `<p class="eyebrow">We'll include</p><ul>${bits.map((b) => `<li>${b}</li>`).join('')}</ul>`;
+  filesSummary();
+}
+
+// ---- Plans and drawings ------------------------------------------------------
+
+let planFiles = [];
+let fromBand = false; // picked from the "Have plans already?" band at the top
+
+const mb = (n) => `${(n / 1048576).toFixed(n < 1048576 ? 2 : 1)} MB`;
+
+function filesSummary() {
+  const list = $('quote-summary').querySelector('ul');
+  if (!planFiles.length || !list) return;
+  list.insertAdjacentHTML('beforeend', `<li>Plans: ${planFiles.map((f) => escapeHtml(f.name)).join(', ')}</li>`);
+}
+
+function renderFiles(message = '') {
+  $('q-file-list').innerHTML = planFiles
+    .map((f, k) => `<li><span class="file-name">${escapeHtml(f.name)}</span><span class="file-size">${mb(f.size)}</span><button type="button" class="linkish" data-file="${k}" aria-label="Remove ${escapeHtml(f.name)}">Remove</button></li>`)
+    .join('');
+  $('q-files-error').textContent = message;
+  $('plans-status').textContent = planFiles.length ? `${planFiles.length} file${planFiles.length > 1 ? 's' : ''} attached to your quote request.` : '';
+  renderQuoteSummary();
+}
+
+function addFiles(list) {
+  let message = '';
+  for (const f of list) {
+    if (planFiles.some((p) => p.name === f.name && p.size === f.size)) continue;
+    const problem = checkFiles([f]);
+    if (problem) message = problem;
+    else if (planFiles.length >= FILE_RULES.max) message = `Attach up to ${FILE_RULES.max} files.`;
+    else planFiles.push(f);
+  }
+  renderFiles(message);
+}
+
+$('q-files').addEventListener('change', (e) => {
+  addFiles([...e.target.files]);
+  e.target.value = '';
+  if (fromBand) {
+    fromBand = false;
+    $('quote').scrollIntoView({ block: 'start' });
+    $('q-name').focus({ preventScroll: true });
+  }
+});
+document.querySelector('.plans-band label').addEventListener('click', () => {
+  fromBand = true;
+});
+$('q-drop').addEventListener('click', () => {
+  fromBand = false;
+});
+$('q-file-list').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-file]');
+  if (!b) return;
+  planFiles.splice(Number(b.dataset.file), 1);
+  renderFiles();
+});
+for (const zone of [$('q-drop'), document.querySelector('.plans-band')]) {
+  zone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    zone.classList.add('over');
+  });
+  zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('over');
+    addFiles([...(e.dataTransfer?.files ?? [])]);
+    if (zone !== $('q-drop')) $('quote').scrollIntoView({ block: 'start' });
+  });
 }
 
 function showFieldErrors(fields = {}) {
@@ -453,20 +524,32 @@ $('quote-form').addEventListener('submit', async (e) => {
   }
   const button = $('q-send');
   button.disabled = true;
-  status.textContent = 'Sending…';
+  status.textContent = planFiles.length ? 'Uploading your plans…' : 'Sending…';
   try {
-    const res = await fetch('/api/quote', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...data, query: mode === 'project' ? projectToQuery(proj) : toQuery(state) }),
-    });
+    const payload = { ...data, query: mode === 'project' ? projectToQuery(proj) : toQuery(state) };
+    let init;
+    if (planFiles.length) {
+      const body = new FormData();
+      body.append('payload', JSON.stringify(payload));
+      for (const f of planFiles) body.append('files', f, f.name);
+      init = { method: 'POST', body };
+    } else {
+      init = { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) };
+    }
+    const res = await fetch('/api/quote', init);
     const reply = await res.json().catch(() => ({}));
     if (res.ok) {
-      status.textContent = `Sent. Thank you, ${data.name.trim().split(/\s+/)[0]}. Our team will be in touch.`;
+      const sentPlans = planFiles.length;
+      status.textContent = `Sent. Thank you, ${data.name.trim().split(/\s+/)[0]}. Our team will be in touch.${
+        sentPlans && reply.plans < sentPlans ? ' Some plans did not upload; please email them to info@mytikasindustries.com.' : ''
+      }`;
       e.target.reset();
       $('q-role').value = 'gc';
+      planFiles = [];
+      renderFiles();
     } else if (reply.error === 'invalid') {
       showFieldErrors(reply.fields);
+      if (reply.fields?.files) $('q-files-error').textContent = reply.fields.files;
       status.textContent = 'Check the highlighted fields.';
     } else {
       status.textContent = "We couldn't send this right now. Email info@mytikasindustries.com or call (719) 258-9891.";
