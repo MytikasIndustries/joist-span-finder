@@ -61,27 +61,79 @@ export function areaLoads(a) {
 
 export const areaStiff = (a) => (a.stiff === null || a.stiff === undefined ? projectType(a.type).stiff : a.stiff);
 
-// Counts for one way of framing an area.
+// ---- Material pricing ------------------------------------------------------
+// From "20261019 - Steel Pricing Matrix.xlsx" (FFH LLC / 03 FacOp LLC /
+// 08 Sales & Customers / Pricing / Steel), the matrix Eric Bonick priced the
+// Oct 25, 2026 residence concept with: lb/ft = gauge x slit width x density x 12;
+// raw $/ft = lb/ft x coil $/lb, to the cent; sales $/ft = raw x (1 + markup),
+// rounded up to the cent. Cutting and punching are included. Nathan Fisk set
+// the web markup to 50% (the matrix carries 75%) and a 5% contingency on
+// quantities, Nov 16, 2026. Delivery and panelizing are not priced.
+export const PRICING = {
+  source: '20261019 - Steel Pricing Matrix.xlsx',
+  coilPerLb: 1.25,
+  markup: 0.5,
+  contingency: 0.05,
+  density: 0.283564815, // lb per cubic inch
+};
+const GAUGE_IN = { 43: 0.047, 54: 0.059, 68: 0.074, 97: 0.104 };
+// Slit widths for the 2" flange (7800 line) profiles, by web depth.
+const SLIT_200 = { 6: 10.375, 8: 12.375, 10: 14.375, 12: 16.375, 14: 18.375 };
+// Web stiffeners: 4" 18 ga stud, a profile we roll, cut 1/2" short of the web.
+export const STIFFENER = { member: '400S162-43', mil: 43, slit: 7.75 };
+
+const cents = (x) => Math.round(x * 100) / 100;
+const centsUp = (x) => Math.ceil(Math.round(x * 1e6) / 1e4) / 100;
+function perFt(mil, slit) {
+  const lbFt = GAUGE_IN[mil] * slit * PRICING.density * 12;
+  return { lbFt, price: centsUp(cents(lbFt * PRICING.coilPerLb) * (1 + PRICING.markup)) };
+}
+export const joistPerFt = (row) => perFt(row.mil, SLIT_200[row.web]);
+export const stiffenerPerFt = () => perFt(STIFFENER.mil, STIFFENER.slit);
+export const trackName = (row) => `${row.web * 100}T200-${row.mil}`;
+
+// Low end: the takeoff as counted. High end: plus the contingency. Whole $100s.
+export function budgetRange(cost) {
+  return { low: Math.floor(cost / 100) * 100, high: Math.ceil((cost * (1 + PRICING.contingency)) / 100) * 100 };
+}
+
+// Counts for one way of framing an area, following Eric Bonick's takeoffs:
+// a joist at each end (count rounded up), rim track both ends of the joists in
+// the joist's depth and gauge, solid blocking cut from the joist at no more
+// than 8 ft on center, web stiffeners from 4" 18 ga stud.
 function takeoff({ row, spacing, lengthFt, widthFt, bays, continuous, stiffener }) {
-  const lines = Math.floor((lengthFt * 12) / spacing) + 1;
+  const lines = Math.ceil((lengthFt * 12) / spacing - 1e-9) + 1;
   const onePiece = bays === 1 || continuous;
   const pieces = onePiece ? lines : lines * bays;
   const cutFt = onePiece ? widthFt : widthFt / bays;
   const joistLf = pieces * cutFt;
   const bayFt = widthFt / bays;
-  const bridgingRows = Math.max(0, Math.ceil(bayFt / 8) - 1);
+  const blockingRows = Math.max(0, Math.ceil(bayFt / 8 - 1e-9) - 1);
+  const blocks = blockingRows * bays * (lines - 1);
+  const blockingLf = (blocks * spacing) / 12;
+  const rimLf = 2 * lengthFt;
   // Web stiffeners: e = both ends, i = center support, a = all supports.
   const perPiece = continuous ? { e: 2, i: 1, a: 3 }[stiffener] ?? 0 : { e: 2, a: 2 }[stiffener] ?? 0;
+  const stiffeners = perPiece * pieces;
+  const stiffenerLf = (stiffeners * (row.web - 0.5)) / 12;
+  const j = joistPerFt(row);
+  const s = stiffenerPerFt();
+  const cost = (joistLf + rimLf + blockingLf) * j.price + stiffenerLf * s.price;
   return {
     lines,
     pieces,
     cutFt,
     joistLf,
     lb: joistLf * row.weight,
-    rimLf: 2 * lengthFt,
-    bridgingRows,
-    bridgingLf: bridgingRows * bays * lengthFt,
-    stiffeners: perPiece * pieces,
+    rimLf,
+    blockingRows,
+    blocks,
+    blockingLf,
+    stiffeners,
+    stiffenerLf,
+    steelLb: (joistLf + rimLf + blockingLf) * j.lbFt + stiffenerLf * s.lbFt,
+    pricePerFt: j.price,
+    cost,
   };
 }
 
@@ -186,8 +238,10 @@ export function planProject(areas) {
       lb: sum((c) => c.lb),
       pieces: sum((c) => c.pieces),
       rimLf: sum((c) => c.rimLf),
-      bridgingLf: sum((c) => c.bridgingLf),
+      blockingLf: sum((c) => c.blockingLf),
       stiffeners: sum((c) => c.stiffeners),
+      steelLb: sum((c) => c.steelLb),
+      cost: sum((c) => c.cost),
       needsUs: plans.filter((p) => p.status === 'beyond' || p.status === 'nofit').length,
     },
   };
@@ -220,17 +274,20 @@ export function areaNotes(a, p, { skipDecisions = false } = {}) {
   return notes;
 }
 
-// One row per item on the truck, for the takeoff table and the CSV.
+// One row per item on the truck, for the takeoff table, the CSV and the note.
+// price is $/ft; cost is the line total before the contingency.
 export function takeoffRows(p) {
   if (p.status !== 'ok') return [];
   const c = p.chosen;
   const web = c.row.web;
+  const sp = stiffenerPerFt().price;
   const rows = [
-    { item: 'Floor joists', profile: c.member, qty: c.pieces, unit: 'pcs', length: ftIn(Math.round(c.cutFt * 12)), lf: c.joistLf },
-    { item: 'Rim track', profile: `${web}" track, ${c.row.mil} mil`, qty: Math.round(c.rimLf), unit: 'lineal ft', length: '', lf: c.rimLf },
+    { item: 'Floor joists', profile: c.member, qty: c.pieces, unit: 'pcs', length: ftIn(Math.round(c.cutFt * 12)), lf: c.joistLf, price: c.pricePerFt },
+    { item: 'Rim track', profile: trackName(c.row), qty: Math.round(c.rimLf), unit: 'lineal ft', length: '', lf: c.rimLf, price: c.pricePerFt },
   ];
-  if (c.bridgingLf > 0) rows.push({ item: 'Bottom-flange bridging', profile: `${c.bridgingRows} row${c.bridgingRows > 1 ? 's' : ''} per bay`, qty: Math.round(c.bridgingLf), unit: 'lineal ft', length: '', lf: c.bridgingLf });
-  if (c.stiffeners > 0) rows.push({ item: 'Web stiffeners', profile: `${web}" web`, qty: c.stiffeners, unit: 'pcs', length: '', lf: 0 });
+  if (c.blocks > 0) rows.push({ item: 'Solid blocking', profile: c.member, qty: c.blocks, unit: 'pcs', length: ftIn(c.spacing), lf: c.blockingLf, price: c.pricePerFt, note: `${c.blockingRows} row${c.blockingRows > 1 ? 's' : ''} per span` });
+  if (c.stiffeners > 0) rows.push({ item: 'Web stiffeners', profile: STIFFENER.member, qty: c.stiffeners, unit: 'pcs', length: `${web - 1}-1/2"`, lf: c.stiffenerLf, price: sp });
+  for (const r of rows) r.cost = r.lf * r.price;
   return rows;
 }
 

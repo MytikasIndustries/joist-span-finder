@@ -16,6 +16,8 @@ import {
   projectCsv,
   projectToQuery,
   projectFromQuery,
+  budgetRange,
+  PRICING,
 } from './project.js';
 import { n0 } from './quote.js';
 
@@ -134,11 +136,11 @@ function planSvg(a, p) {
     w = (h * p.lengthFt) / p.widthFt;
   }
   h = Math.max(h, 60);
-  const lines = Math.floor((p.lengthFt * 12) / c.spacing) + 1;
+  const lines = c.lines;
   const every = Math.max(1, Math.ceil(lines / 90));
   let joists = '';
   for (let k = 0; k < lines; k += every) {
-    const x = x0 + (w * (k * c.spacing)) / (p.lengthFt * 12);
+    const x = x0 + (w * Math.min(k * c.spacing, p.lengthFt * 12)) / (p.lengthFt * 12);
     joists += `<line class="j" x1="${x.toFixed(1)}" y1="${y0}" x2="${x.toFixed(1)}" y2="${y0 + h}"/>`;
   }
   let beams = '';
@@ -175,6 +177,7 @@ function optionsHtml(p, i) {
         <span class="opt-why">${o.keys.map((k) => OPTION_WHY[k]).join('. ')}.</span>
         <span class="opt-member">${o.member}</span>
         <span class="opt-line">${o.spacing}" o.c. · ${o.pieces} pcs · ${n0(o.lb)} lb</span>
+        <span class="opt-price">About ${money(Math.round(o.cost / 100) * 100)}</span>
       </button>`;
     })
     .join('')}</div>`;
@@ -204,6 +207,21 @@ function decisionsHtml(a, i, p) {
   return `<div class="decisions">${out
     .map(([text, act, label]) => `<p>${text}${act ? ` <button type="button" class="linkish" data-act="${act}" data-i="${i}">${label}</button>` : ''}</p>`)
     .join('')}</div>`;
+}
+
+const money = (n) => `$${n0(n)}`;
+const rangeText = (cost) => {
+  const r = budgetRange(cost);
+  return `${money(r.low)} to ${money(r.high)}`;
+};
+
+// Shown on the page only; the printed sheet and the CSV carry no prices.
+function budgetHtml(cost) {
+  return `<div class="budget">
+    <p class="eyebrow">Rough material budget</p>
+    <p class="budget-figure">${rangeText(cost)}</p>
+    <p class="hint">Steel only, at today's price, cut to length and punched. The higher figure adds ${Math.round(PRICING.contingency * 100)}% for quantities. Delivery, panelizing, beams, posts, connections and sales tax are not included. Our team confirms the price against your plans.</p>
+  </div>`;
 }
 
 function takeoffHtml(p) {
@@ -248,6 +266,7 @@ function areaResultHtml(a, i, p) {
     ${planSvg(a, p)}
     <div class="option-block"><h4 class="sub">${['', 'How to frame it.', 'Two ways to frame it.', 'Three ways to frame it.'][p.options.length]}</h4>${optionsHtml(p, i)}</div>
     <div><h4 class="sub">What goes on the truck.</h4>${takeoffHtml(p)}</div>
+    ${budgetHtml(c.cost)}
     ${notes.length ? `<ul class="area-notes">${notes.map((n) => `<li>${n}</li>`).join('')}</ul>` : ''}`;
 }
 
@@ -291,6 +310,7 @@ function renderProjectResults() {
       <div><dt>Floor area</dt><dd>${n0(t.sqft)} sq ft</dd></div>
       <div><dt>Joists</dt><dd>${n0(t.pieces)} pcs · ${n0(t.joistLf)} lineal ft</dd></div>
       <div><dt>Joist steel</dt><dd>${n0(t.lb)} lb</dd></div>
+      ${t.cost > 0 ? `<div><dt>Rough material budget</dt><dd>${rangeText(t.cost)}</dd></div>` : ''}
     </dl>
     ${t.needsUs ? `<p class="hint">${t.needsUs} area${t.needsUs > 1 ? 's go' : ' goes'} to our engineering team; not in these totals.</p>` : ''}`;
   q$('#jump').classList.toggle('none', !(p.status === 'ok' || t.lb > 0));
@@ -462,7 +482,7 @@ function projectSheetHtml() {
       <ul>
         <li>Uniform loads only. Concentrated loads, openings and cantilevers need an engineer.</li>
         <li>Top flange braced by sheathing; joists braced and fastened at every support; 3-1/2" bearing.</li>
-        <li>Bottom-flange bridging at no more than 8 ft on center. Beams, posts and connections are not included.</li>
+        <li>Solid blocking at no more than 8 ft on center. Beams, posts and connections are not included.</li>
         <li>Joists are cut to length, up to 60 ft. Quantities are for pricing; confirm against your plans.</li>
       </ul>
       <p>Spans from the ClarkDietrich Technical Design Guide (CD-STR-TechGuide, eff. 06/01/24), AISI S100-16 (2020) w/S2-20. Mytikas Steel joists are roll-formed from 50 ksi steel and meet or exceed the ClarkDietrich sections. For preliminary sizing and pricing; the engineer of record is responsible for the final design.</p>
@@ -484,6 +504,7 @@ function projectQuoteSummaryHtml() {
   });
   const t = projPlans.totals;
   if (t.lb > 0) bits.push(`About ${n0(t.joistLf)} lineal ft and ${n0(t.lb)} lb of joists in all`);
+  if (t.cost > 0) bits.push(`Rough material budget ${rangeText(t.cost)}`);
   if (proj.job || proj.loc) bits.push(escapeHtml([proj.job, proj.loc].filter(Boolean).join(', ')));
   return `<p class="eyebrow">We'll include</p><ul>${bits.map((b) => `<li>${b}</li>`).join('')}</ul>`;
 }

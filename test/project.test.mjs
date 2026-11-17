@@ -11,6 +11,10 @@ import {
   projectCsv,
   areaLoads,
   MAX_LENGTH_FT,
+  joistPerFt,
+  stiffenerPerFt,
+  budgetRange,
+  PRICING,
 } from '../src/project.js';
 import { validateQuote, quoteSummary, productInterest } from '../src/quote.js';
 import { evaluate } from '../src/logic.js';
@@ -23,12 +27,13 @@ test('a 50 × 20 deck at 40 psf: clear span, with the beam saving offered', () =
   const c = p.chosen;
   assert.equal(c.member, '1000S200-54');
   assert.equal(c.spacing, 16);
-  // 50 ft at 16" o.c. = 38 joist lines; each one 20 ft.
-  assert.equal(c.pieces, 38);
-  assert.equal(c.joistLf, 760);
-  assert.equal(Math.round(c.lb), Math.round(760 * 2.86));
+  // 50 ft at 16" o.c. = 37.5 spaces, rounded up, plus one = 39 joists; each one 20 ft.
+  assert.equal(c.pieces, 39);
+  assert.equal(c.joistLf, 780);
+  assert.equal(Math.round(c.lb), Math.round(780 * 2.86));
   assert.equal(c.rimLf, 100);
-  assert.equal(c.bridgingRows, 2);
+  assert.equal(c.blockingRows, 2);
+  assert.equal(c.blocks, 2 * 38);
   assert.ok(p.saving && p.saving.bays === 2 && p.saving.member === '600S200-54');
 });
 
@@ -138,4 +143,37 @@ test('a project quote request becomes a sales note with every area and the total
   assert.equal(productInterest(v), 'joists (3 areas, 3,300 sq ft)');
   const one = validateQuote({ name: 'D', email: 'd@x.co', query: projectToQuery({ areas: [newArea('deck', 50, 20)], job: '', loc: '' }) }).value;
   assert.equal(productInterest(one), 'deck joists (50 × 20 ft)');
+});
+
+test('pricing follows the Oct 19 matrix at the markup we set', () => {
+  // At the matrix's own 75% these are Eric's Oct 25 figures to the cent.
+  const at = (markup, f) => {
+    const keep = PRICING.markup;
+    PRICING.markup = markup;
+    try { return f(); } finally { PRICING.markup = keep; }
+  };
+  assert.equal(at(0.75, () => joistPerFt({ web: 12, mil: 54 }).price), 7.2);
+  assert.equal(at(0.75, () => joistPerFt({ web: 14, mil: 68 }).price), 10.12);
+  assert.equal(at(0.75, () => joistPerFt({ web: 8, mil: 54 }).price), 5.45);
+  assert.equal(at(0.75, () => stiffenerPerFt().price), 2.72);
+  assert.equal(PRICING.markup, 0.5);
+  assert.equal(joistPerFt({ web: 10, mil: 54 }).price, 5.42); // $3.61 raw x 1.5
+  assert.deepEqual(budgetRange(6012), { low: 6000, high: 6400 });
+});
+
+test("Eric's takeoff rules: rim track named, solid blocking, 4-inch stiffeners, every line priced", () => {
+  const p = planArea(newArea('house', 50, 30));
+  const rows = takeoffRows(p);
+  assert.deepEqual(rows.map((r) => r.item), ['Floor joists', 'Rim track', 'Solid blocking', 'Web stiffeners']);
+  assert.equal(rows[1].profile, '800T200-54');
+  assert.equal(rows[2].profile, '800S200-54');
+  assert.equal(rows[2].length, `2'-0"`);
+  assert.equal(rows[3].profile, '400S162-43');
+  assert.equal(rows[3].length, '7-1/2"');
+  const sum = rows.reduce((n, r) => n + r.cost, 0);
+  assert.ok(Math.abs(sum - p.chosen.cost) < 0.01);
+  const note = quoteSummary(validateQuote({ name: 'D', email: 'd@x.co', query: projectToQuery({ areas: [newArea('house', 50, 30)], job: '', loc: '' }) }).value, 'https://x');
+  assert.match(note, /Rim track: 800T200-54, 100 lf = 100 lf × \$\d+\.\d\d = \$/);
+  assert.match(note, /\+ 5% contingency = .*Shown on the page as \$[\d,]+ to \$[\d,]+\./);
+  assert.match(note, /coil \$1\.25\/lb, 50% markup, cut and punched\. No delivery or panelizing\./);
 });

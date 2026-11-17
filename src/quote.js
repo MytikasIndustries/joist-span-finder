@@ -19,6 +19,8 @@ import {
   areaNotes,
   takeoffRows,
   projectType,
+  budgetRange,
+  PRICING,
 } from './project.js';
 
 // What the sales team asks on the first call, asked up front.
@@ -70,6 +72,8 @@ function planLines(files) {
 const pickFrom = (list, v) => (list.some(([id]) => id === v) ? v : '');
 const labelOf = (list, v) => list.find(([id]) => id === v)?.[1] ?? '';
 const n0 = (n) => Math.round(n).toLocaleString('en-US');
+const usd = (n) => `$${n.toFixed(2)}`;
+const usd0 = (n) => `$${n0(n)}`;
 
 export const ROLES = [
   ['gc', 'General contractor'],
@@ -161,15 +165,24 @@ function projectSummary(v, origin, files) {
         `   Layout: ${p.bays === 1 ? `one ${ftIn(c.spanIn)} span` : p.continuous ? `two ${ftIn(c.spanIn)} spans, continuous over a mid-span support` : `${p.bays} spans of ${ftIn(c.spanIn)} on ${p.bays - 1} beam lines`}`,
       );
       lines.push(`   Joists: ${c.pieces} × ${c.member} at ${c.spacing}" o.c., cut ${ftIn(Math.round(c.cutFt * 12))} (${n0(c.joistLf)} lineal ft, ${n0(c.lb)} lb)`);
-      const rest = takeoffRows(p)
-        .slice(1)
-        .map((r) => `${r.item} ${n0(r.qty)} ${r.unit === 'pcs' ? 'pcs' : 'lf'}`);
-      if (rest.length) lines.push(`   ${rest.join(' · ')}`);
+      for (const r of takeoffRows(p)) {
+        const qty = `${n0(r.qty)} ${r.unit === 'pcs' ? 'pcs' : 'lf'}${r.length && r.item !== 'Floor joists' ? ` × ${r.length}` : ''}`;
+        lines.push(`   ${r.item}: ${r.profile}, ${qty} = ${n0(r.lf)} lf × ${usd(r.price)} = ${usd0(r.cost)}`);
+      }
+      lines.push(`   Material: ${usd0(c.cost)}`);
       if (a.type === 'deck') lines.push(`   Deck: ${a.attach === 'house' ? 'attached to the house' : 'freestanding'}, snow ${a.snow === 'unsure' ? 'not known (sized at 70)' : `${a.snow === '70' ? '60 to 70' : a.snow} psf`}`);
       if (p.bays > 1) lines.push(`   Needs ${p.bays - 1} beam line${p.bays > 2 ? 's' : ''} (not in takeoff)${p.added ? ', added by the tool' : ''}`);
     }
   });
   lines.push('', `Total: ${totals.areas} area${totals.areas > 1 ? 's' : ''}, ${n0(totals.sqft)} sq ft, about ${n0(totals.joistLf)} lineal ft and ${n0(totals.lb)} lb of joists`);
+  if (totals.cost > 0) {
+    const r = budgetRange(totals.cost);
+    const pct = (x) => `${Math.round(x * 100)}%`;
+    lines.push(
+      `Material: ${usd0(totals.cost)} + ${pct(PRICING.contingency)} contingency = ${usd0(totals.cost * (1 + PRICING.contingency))}. Shown on the page as ${usd0(r.low)} to ${usd0(r.high)}.`,
+      `Priced from ${PRICING.source}: coil $${PRICING.coilPerLb.toFixed(2)}/lb, ${pct(PRICING.markup)} markup, cut and punched. No delivery or panelizing.`,
+    );
+  }
   if (totals.needsUs) lines.push(`${totals.needsUs} area${totals.needsUs > 1 ? 's need' : ' needs'} our engineering team.`);
   lines.push(...planLines(files));
   if (v.notes) lines.push('', `Notes: ${v.notes}`);
