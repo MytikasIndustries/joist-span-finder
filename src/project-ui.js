@@ -18,6 +18,7 @@ import {
   projectFromQuery,
   budgetRange,
   PRICING,
+  POINT_LABEL,
 } from './project.js';
 import { n0 } from './quote.js';
 
@@ -216,11 +217,12 @@ const rangeText = (cost) => {
 };
 
 // Shown on the page only; the printed sheet and the CSV carry no prices.
-function budgetHtml(cost) {
+function budgetHtml(a, i, cost) {
   return `<div class="budget">
     <p class="eyebrow">Rough material budget</p>
     <p class="budget-figure">${rangeText(cost)}</p>
-    <p class="hint">Steel only, at today's price, cut to length and punched. The higher figure adds ${Math.round(PRICING.contingency * 100)}% for quantities. Delivery, panelizing, beams, posts, connections and sales tax are not included. Our team confirms the price against your plans.</p>
+    <p class="hint">Steel only, at today’s price, cut to length and punched. The higher figure adds ${Math.round(PRICING.contingency * 100)}% for contingency. Delivery, panelizing, beams, posts, connections and sales tax are not included. Our team confirms the price against your plans. Need point loads? Check the box and our team will coordinate with our engineer (or yours) to make sure the design is right.</p>
+    <label class="point-box"><input type="checkbox" id="point-${i}" data-i="${i}" data-field="point"${a.point ? ' checked' : ''}> ${POINT_LABEL}</label>
   </div>`;
 }
 
@@ -249,6 +251,10 @@ function areaResultHtml(a, i, p) {
     return `${head}<div class="empty"><h3 class="area-headline">Start with what you're building.</h3>
       <p>Pick a type, then enter the size. We lay out the joists, show three ways to frame it and count what goes on the truck.</p>${example}</div>`;
   }
+  if (p.need === 'snow')
+    return `${head}<div class="empty"><h3 class="area-headline">One more: the snow load.</h3>
+      <p>Your building department sets the ground snow load. Decks are sized for the greater of 40 psf or that load, so it can change the joist. Not sure? Choose Not sure and we size for 70 psf.</p>
+      <button type="button" class="button quiet" data-act="snow" data-i="${i}">Set the snow load</button></div>`;
   if (p.status === 'incomplete')
     return `${head}<div class="empty"><h3 class="area-headline">Now the size.</h3><p>Length and width, outside dimensions. Joists span the shorter side.</p></div>`;
   if (p.status === 'beyond')
@@ -266,7 +272,7 @@ function areaResultHtml(a, i, p) {
     ${planSvg(a, p)}
     <div class="option-block"><h4 class="sub">${['', 'How to frame it.', 'Two ways to frame it.', 'Three ways to frame it.'][p.options.length]}</h4>${optionsHtml(p, i)}</div>
     <div><h4 class="sub">What goes on the truck.</h4>${takeoffHtml(p)}</div>
-    ${budgetHtml(c.cost)}
+    ${budgetHtml(a, i, c.cost)}
     ${notes.length ? `<ul class="area-notes">${notes.map((n) => `<li>${n}</li>`).join('')}</ul>` : ''}`;
 }
 
@@ -349,6 +355,11 @@ function onProjectInput(e) {
     a[f] = Math.max(0, Math.min(500, Number(el.value) || 0));
   } else if (f === 'stiff') {
     a.stiff = el.value === '1';
+  } else if (f === 'point') {
+    a.point = el.checked;
+    renderProjectResults();
+    q$(`#point-${i}`)?.focus({ preventScroll: true });
+    return;
   } else if (f === 'name') {
     a.name = el.value.replace(/~/g, ' ').slice(0, 40);
   } else {
@@ -525,7 +536,7 @@ function initProject() {
     if (e.target.type === 'number' || e.target.type === 'text') onProjectInput(e);
   });
   view.addEventListener('change', (e) => {
-    if (e.target.type === 'radio') onProjectInput(e);
+    if (e.target.type === 'radio' || e.target.type === 'checkbox') onProjectInput(e);
   });
   view.addEventListener('click', onProjectClick);
   view.addEventListener('submit', (e) => e.preventDefault());

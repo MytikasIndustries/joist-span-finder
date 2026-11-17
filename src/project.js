@@ -41,7 +41,8 @@ export const OPTION_LABELS = {
 export const projectType = (id) => PROJECT_TYPES.find((t) => t.id === id) ?? PROJECT_TYPES[1];
 
 export function newArea(type = '', len = 0, wid = 0) {
-  return { type, name: '', len, wid, beam: 'auto', snow: 'unsure', attach: 'house', stiff: null, dl: 10, ll: 40, opt: '' };
+  // Decks start with no snow load: the answer waits until they choose one.
+  return { type, name: '', len, wid, beam: 'auto', snow: '', attach: 'house', stiff: null, dl: 10, ll: 40, opt: '', point: false };
 }
 
 export function areaTitle(a, i) {
@@ -91,6 +92,12 @@ function perFt(mil, slit) {
 export const joistPerFt = (row) => perFt(row.mil, SLIT_200[row.web]);
 export const stiffenerPerFt = () => perFt(STIFFENER.mil, STIFFENER.slit);
 export const trackName = (row) => `${row.web * 100}T200-${row.mil}`;
+
+// Which stiffener, how long and how many per joist, for the span lookup.
+export function stiffenerDetail(code, web, condition) {
+  const per = (condition === 'two' ? { e: 2, i: 1, a: 3 } : { e: 2, a: 2 })[code] ?? 0;
+  return per ? `${STIFFENER.member}, ${web - 1}-1/2" long, ${per} per joist` : '';
+}
 
 // Low end: the takeoff as counted. High end: plus the contingency. Whole $100s.
 export function budgetRange(cost) {
@@ -188,6 +195,7 @@ export function planArea(a) {
   const widthFt = Math.min(a.len, a.wid);
   const base = { type: t, lengthFt, widthFt, sqft: lengthFt * widthFt, loads: areaLoads(a), defl: areaStiff(a) ? 'L/480' : 'L/360' };
   if (!(lengthFt > 0 && widthFt > 0)) return { ...base, status: 'incomplete' };
+  if (t.id === 'deck' && !a.snow) return { ...base, status: 'incomplete', need: 'snow' };
   const loadCase = governingCase(base.loads.dl, base.loads.ll);
   if (!loadCase || t.id === 'heavy') return { ...base, status: 'beyond' };
   const exact = loadCase.dl === base.loads.dl && loadCase.ll === base.loads.ll;
@@ -270,9 +278,13 @@ export function areaNotes(a, p, { skipDecisions = false } = {}) {
     notes.push('Joist spacing is limited to 16" or less, as most deck boards require.');
   }
   if (a.type === 'ceiling') notes.push('Sized from our floor-joist tables, which are stricter than ceiling tables.');
+  if (a.point) notes.push(POINT_NOTE);
   if (a.type === 'office') notes.push('Sized for 100 psf: 50 psf office load, 15 psf for movable partitions, and corridors above the first floor.');
   return notes;
 }
+
+export const POINT_LABEL = 'This area has point loads, such as a hot tub, posts or equipment';
+export const POINT_NOTE = 'Point loads noted. Our team will coordinate with our engineer (or yours) to make sure the design is right.';
 
 // One row per item on the truck, for the takeoff table, the CSV and the note.
 // price is $/ft; cost is the line total before the contingency.
@@ -331,20 +343,23 @@ const cleanName = (v) =>
     .slice(0, 40);
 
 export function encodeArea(a) {
-  return [a.type, a.len, a.wid, a.beam, a.snow, a.attach, a.stiff === null ? '' : a.stiff ? 1 : 0, a.dl, a.ll, a.opt, cleanName(a.name)].join(FIELD);
+  return [a.type, a.len, a.wid, a.beam, a.snow, a.attach, a.stiff === null ? '' : a.stiff ? 1 : 0, a.dl, a.ll, a.opt, cleanName(a.name), a.point ? 1 : ''].join(FIELD);
 }
 
 export function decodeArea(s) {
-  const [type, len, wid, beam, snow, attach, stiff, dl, ll, opt, name] = String(s).split(FIELD);
+  const [type, len, wid, beam, snow, attach, stiff, dl, ll, opt, name, point] = String(s).split(FIELD);
   const a = newArea(oneOf(type, PROJECT_TYPES.map((t) => t.id), ''), feet(len), feet(wid));
   a.beam = oneOf(beam, BEAMS.map((b) => b.id), 'auto');
-  a.snow = oneOf(snow, SNOW.map((x) => x.id), 'unsure');
+  // Links made before the snow question was required carry a value; a new
+  // link with none chosen stays unanswered.
+  a.snow = snow === '' ? '' : oneOf(snow, SNOW.map((x) => x.id), 'unsure');
   a.attach = oneOf(attach, ['house', 'free'], 'house');
   a.stiff = stiff === '1' ? true : stiff === '0' ? false : null;
   a.dl = psf(dl, 10);
   a.ll = psf(ll, 40);
   a.opt = oneOf(opt, Object.keys(OPTION_LABELS), '');
   a.name = cleanName(name);
+  a.point = point === '1';
   return a;
 }
 

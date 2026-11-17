@@ -17,7 +17,7 @@ import {
   escapeHtml,
 } from './logic.js';
 import { ROLES, STAGES, TIMING, EOR, SUPPLY, FILE_RULES, checkFiles } from './quote.js';
-import { isProjectQuery, projectToQuery } from './project.js';
+import { isProjectQuery, projectToQuery, stiffenerDetail } from './project.js';
 
 // The private preview build sets this: it has no real address, so share
 // links, printing and quote requests are shown but not live.
@@ -107,6 +107,11 @@ function readForm() {
 const sizeText = (p) => `${p.web}" web · ${p.gauge} ga (${p.mil} mil)`;
 const shortStiff = (code) =>
   stiffenerText(code).replace('Web stiffeners at', 'At').replace('No web stiffeners needed', 'Not needed');
+// "At end supports: 400S162-43, 9-1/2" long, 2 per joist"
+const stiffFull = (row) => {
+  const d = stiffenerDetail(row.stiffener, row.web, state.span);
+  return d ? `${shortStiff(row.stiffener)}: ${d}` : shortStiff(row.stiffener);
+};
 const STIFF_SHORT = { '': 'None', e: 'Ends', i: 'Center', a: 'All' };
 const supportsText = () => (state.span === 'two' ? 'Two equal spans' : 'One span');
 
@@ -164,7 +169,7 @@ function pickHtml(result, row, required, max) {
       <div><dt>Spare length</dt><dd>${row.spare === 0 ? 'None' : ftIn(row.spare)}</dd></div>
       <div><dt>Joist weight</dt><dd>${row.weight.toFixed(2)} lb/ft</dd></div>
       <div><dt>Steel per sq ft of floor</dt><dd>${row.perSqFt.toFixed(2)} lb at ${state.oc}" o.c.</dd></div>
-      <div><dt>Web stiffeners</dt><dd>${shortStiff(row.stiffener)}</dd></div>
+      <div><dt>Web stiffeners</dt><dd>${stiffFull(row)}</dd></div>
       ${qty ? `<div><dt>Rough quantity, ${fmt(state.area)} sq ft</dt><dd>${qty}</dd></div>` : ''}
     </dl>
     ${tight}
@@ -318,7 +323,7 @@ function sheetHtml() {
     ['Allowable span', ftIn(row.span)],
     ['Spare length', row.spare === 0 ? 'None' : ftIn(row.spare)],
     ['Weight', `${row.weight.toFixed(2)} lb/ft · ${row.perSqFt.toFixed(2)} lb per sq ft of floor`],
-    ['Web stiffeners', shortStiff(row.stiffener)],
+    ['Web stiffeners', stiffFull(row)],
     ...(qty ? [[`Rough quantity, ${fmt(state.area)} sq ft`, `${fmt(qty.linealFt)} lineal ft · ${fmt(qty.lb)} lb (joists only)`]] : []),
   ];
   const dl = (pairs) => pairs.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');

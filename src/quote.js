@@ -21,6 +21,7 @@ import {
   projectType,
   budgetRange,
   PRICING,
+  stiffenerDetail,
 } from './project.js';
 
 // What the sales team asks on the first call, asked up front.
@@ -171,6 +172,7 @@ function projectSummary(v, origin, files) {
       }
       lines.push(`   Material: ${usd0(c.cost)}`);
       if (a.type === 'deck') lines.push(`   Deck: ${a.attach === 'house' ? 'attached to the house' : 'freestanding'}, snow ${a.snow === 'unsure' ? 'not known (sized at 70)' : `${a.snow === '70' ? '60 to 70' : a.snow} psf`}`);
+      if (a.point) lines.push('   POINT LOADS: yes (hot tub, posts or equipment). Coordinate the design with an engineer.');
       if (p.bays > 1) lines.push(`   Needs ${p.bays - 1} beam line${p.bays > 2 ? 's' : ''} (not in takeoff)${p.added ? ', added by the tool' : ''}`);
     }
   });
@@ -208,7 +210,8 @@ export function quoteSummary(v, origin, files = []) {
     const row = required > 0 ? selectedRow(result, s.sel) : null;
     if (row) {
       lines.push(`Joist: ${row.member} (${row.web}" web, ${row.gauge} ga, ${row.mil} mil, 50 ksi), allowable ${ftIn(row.span)}, ${row.weight.toFixed(2)} lb/ft`);
-      lines.push(stiffenerText(row.stiffener));
+      const sd = stiffenerDetail(row.stiffener, row.web, s.span);
+      lines.push(`${stiffenerText(row.stiffener)}${sd ? `: ${sd}` : ''}`);
       const q = roughQuantity(row, s.area, s.oc);
       if (q) lines.push(`Floor area: ${s.area.toLocaleString('en-US')} sq ft, about ${q.linealFt.toLocaleString('en-US')} lineal ft and ${q.lb.toLocaleString('en-US')} lb of joists (rough, joists only)`);
     } else if (required > 0) {
@@ -241,7 +244,8 @@ export const triggerTags = (v, fileCount = 0) => (plansOnly(v, fileCount) ? ['we
 
 // Every tag the contact should carry after a quote request.
 export function ghlTags(v, fileCount = 0) {
-  return [...triggerTags(v, fileCount), 'joist span finder', `role: ${v.role}`, ...(fileCount > 0 ? ['plans attached'] : [])];
+  const point = v.mode === 'project' && v.project.areas.some((a) => a.point);
+  return [...triggerTags(v, fileCount), 'joist span finder', `role: ${v.role}`, ...(fileCount > 0 ? ['plans attached'] : []), ...(point ? ['point loads'] : [])];
 }
 
 // What they selected, in a few words, for the "Web product interest" field.

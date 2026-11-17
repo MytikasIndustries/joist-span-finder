@@ -10,13 +10,14 @@ import {
   isProjectQuery,
   projectCsv,
   areaLoads,
+  areaNotes,
   MAX_LENGTH_FT,
   joistPerFt,
   stiffenerPerFt,
   budgetRange,
   PRICING,
 } from '../src/project.js';
-import { validateQuote, quoteSummary, productInterest } from '../src/quote.js';
+import { validateQuote, quoteSummary, productInterest, ghlTags } from '../src/quote.js';
 import { evaluate } from '../src/logic.js';
 
 test('a 50 × 20 deck at 40 psf: clear span, with the beam saving offered', () => {
@@ -38,7 +39,7 @@ test('a 50 × 20 deck at 40 psf: clear span, with the beam saving offered', () =
 });
 
 test('decks never use 24" spacing; ceilings never use 12"', () => {
-  for (const a of [newArea('deck', 30, 12), { ...newArea('deck', 60, 16), snow: '40' }]) {
+  for (const a of [{ ...newArea('deck', 30, 12), snow: 'unsure' }, { ...newArea('deck', 60, 16), snow: '40' }]) {
     const p = planArea(a);
     assert.ok(p.options.every((o) => o.spacing <= 16));
   }
@@ -89,8 +90,8 @@ test('heavy storage and missing sizes go to our team', () => {
 });
 
 test('deck snow: not sure is sized at 70 psf, which uses the 100 psf table', () => {
-  assert.deepEqual(areaLoads(newArea('deck', 20, 12)), { dl: 10, ll: 70 });
-  assert.equal(planArea(newArea('deck', 20, 12)).loadCase.ll, 100);
+  assert.deepEqual(areaLoads({ ...newArea('deck', 20, 12), snow: 'unsure' }), { dl: 10, ll: 70 });
+  assert.equal(planArea({ ...newArea('deck', 20, 12), snow: 'unsure' }).loadCase.ll, 100);
   assert.deepEqual(areaLoads({ ...newArea('deck', 20, 12), snow: '50' }), { dl: 10, ll: 50 });
 });
 
@@ -176,4 +177,24 @@ test("Eric's takeoff rules: rim track named, solid blocking, 4-inch stiffeners, 
   assert.match(note, /Rim track: 800T200-54, 100 lf = 100 lf × \$\d+\.\d\d = \$/);
   assert.match(note, /\+ 5% contingency = .*Shown on the page as \$[\d,]+ to \$[\d,]+\./);
   assert.match(note, /coil \$1\.25\/lb, 50% markup, cut and punched\. No delivery or panelizing\./);
+});
+
+test('a deck waits for its snow load; old links keep theirs', () => {
+  const p = planArea(newArea('deck', 20, 14));
+  assert.equal(p.status, 'incomplete');
+  assert.equal(p.need, 'snow');
+  assert.equal(planArea({ ...newArea('deck', 20, 14), snow: '40' }).chosen.member, '600S200-54');
+  assert.equal(projectFromQuery(projectToQuery({ areas: [newArea('deck', 20, 14)], job: '', loc: '' })).areas[0].snow, '');
+  assert.equal(projectFromQuery('?mode=project&a=deck~20~14~auto~bogus~house').areas[0].snow, 'unsure');
+});
+
+test('point loads travel in the link, the notes, the sales note and the tags', () => {
+  const a = { ...newArea('deck', 20, 14), snow: '40', point: true };
+  const query = projectToQuery({ areas: [a], job: '', loc: '' });
+  assert.equal(projectFromQuery(query).areas[0].point, true);
+  assert.equal(projectFromQuery(projectToQuery({ areas: [newArea('house', 20, 14)], job: '', loc: '' })).areas[0].point, false);
+  assert.match(areaNotes(a, planArea(a)).join(' '), /Point loads noted/);
+  const v = validateQuote({ name: 'D', email: 'd@x.co', role: 'gc', query }).value;
+  assert.match(quoteSummary(v, 'https://x'), /POINT LOADS: yes/);
+  assert.ok(ghlTags(v).includes('point loads'));
 });

@@ -685,3 +685,5 @@ strong { font-weight: 500; }
 .budget .eyebrow { margin: 0; }
 .budget-figure { margin: 0; font: 500 var(--step-2) / 1.2 var(--font); font-variant-numeric: tabular-nums; }
 .budget .hint { margin: 0; max-width: 60ch; }
+.point-box { display: flex; gap: 10px; align-items: flex-start; margin-top: 6px; font-size: var(--step--1); cursor: pointer; }
+.point-box input { margin-top: 3px; width: 18px; height: 18px; flex: none; accent-color: var(--accent); }
