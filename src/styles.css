@@ -678,3 +678,10 @@ strong { font-weight: 500; }
 .paper .warning { border: 1.5px solid var(--paper-ink); padding: 8px 12px; font-size: 9.5pt; line-height: 1.45; margin: 0; }
 .paper .warning strong { font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
 @media print { .paper .warning { font-size: 9pt; padding: 6px 10px; } }
+
+/* Rough material budget: on the page only, not on the printed sheet. */
+.option .opt-price { font-variant-numeric: tabular-nums; }
+.budget { border-top: 1px solid var(--hairline); padding-top: 16px; display: grid; gap: 6px; }
+.budget .eyebrow { margin: 0; }
+.budget-figure { margin: 0; font: 500 var(--step-2) / 1.2 var(--font); font-variant-numeric: tabular-nums; }
+.budget .hint { margin: 0; max-width: 60ch; }
