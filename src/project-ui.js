@@ -10,6 +10,7 @@ import {
   areaTitle,
   sizeLabel,
   areaStiff,
+  areaSpacings,
   planProject,
   areaNotes,
   takeoffRows,
@@ -116,8 +117,12 @@ function restOfFormHtml(a, i) {
       ${segHtml(`beam-${i}`, BEAMS.map((b) => [b.id, b.label]), a.beam, 'beam', i)}
       <p class="hint">${BEAMS.find((b) => b.id === a.beam).detail}.</p></fieldset>
     ${deck}
+    <fieldset><legend>Joist spacing</legend>
+      ${segHtml(`oc-${i}`, [['0', 'Best fit'], ...t.spacings.map((s) => [String(s), `${s}"`])], areaSpacings(a).length > 1 ? 0 : areaSpacings(a)[0], 'oc', i)}
+      <p class="hint">${areaSpacings(a).length > 1 ? 'Best fit compares the spacings and shows the lightest, shallowest and fewest-piece options.' : 'Every option uses this spacing.'}</p></fieldset>
     <fieldset><legend>${t.id === 'ceiling' ? 'Stiffness' : 'Floor feel'}</legend>
-      ${segHtml(`stiff-${i}`, [['0', 'Standard', 'L/360, code minimum'], ['1', 'Firmer', 'L/480, less bounce']], areaStiff(a) ? 1 : 0, 'stiff', i)}</fieldset>
+      ${segHtml(`stiff-${i}`, [['0', 'Standard', 'L/360, code minimum'], ['1', 'Firmer', 'L/480, less bounce']], areaStiff(a) ? 1 : 0, 'stiff', i)}
+      <p class="hint">Firmer usually means the next joist size up, about 15% to 20% more for the floor joists.</p></fieldset>
     <fieldset><legend>Area name <span class="optional">optional</span></legend>
       <div class="field"><div class="box"><input type="text" maxlength="40" autocomplete="off" placeholder="${escapeHtml(areaTitle({ ...a, name: '' }, i))}" value="${escapeHtml(a.name)}" data-i="${i}" data-field="name" aria-label="Area name"></div></div></fieldset>`;
 }
@@ -221,7 +226,7 @@ function budgetHtml(a, i, cost) {
   return `<div class="budget">
     <p class="eyebrow">Rough material budget</p>
     <p class="budget-figure">${rangeText(cost)}</p>
-    <p class="hint">Steel only, at today’s price, cut to length and punched. The higher figure adds ${Math.round(PRICING.contingency * 100)}% for contingency. Delivery, panelizing, beams, posts, connections and sales tax are not included. Our team confirms the price against your plans. Need point loads? Check the box and our team will coordinate with our engineer (or yours) to make sure the design is right.</p>
+    <p class="hint">Steel only, at today’s price, cut to length and punched. The higher figure adds ${Math.round(PRICING.contingency * 100)}% for contingency. Delivery and sales tax are not included; flat-pack panels (versus individual components) are available. Our team confirms the price against your plans. Need point loads? Check the box and our team will coordinate with our engineer (or yours) to make sure the design is right.</p>
     <label class="point-box"><input type="checkbox" id="point-${i}" data-i="${i}" data-field="point"${a.point ? ' checked' : ''}> ${POINT_LABEL}</label>
   </div>`;
 }
@@ -353,6 +358,9 @@ function onProjectInput(e) {
     a[f] = Math.max(0, Math.min(1000, Number(el.value) || 0));
   } else if (f === 'dl' || f === 'll') {
     a[f] = Math.max(0, Math.min(500, Number(el.value) || 0));
+  } else if (f === 'oc') {
+    a.oc = Number(el.value) || 0;
+    redrawForm(i);
   } else if (f === 'stiff') {
     a.stiff = el.value === '1';
   } else if (f === 'point') {
@@ -366,7 +374,7 @@ function onProjectInput(e) {
     a[f] = el.value;
     if (f === 'beam') redrawForm(i);
   }
-  if (f === 'beam' || f === 'len' || f === 'wid' || f === 'snow' || f === 'stiff') a.opt = '';
+  if (f === 'beam' || f === 'len' || f === 'wid' || f === 'snow' || f === 'stiff' || f === 'oc') a.opt = '';
   renderProjectResults();
 }
 

@@ -198,3 +198,22 @@ test('point loads travel in the link, the notes, the sales note and the tags', (
   assert.match(quoteSummary(v, 'https://x'), /POINT LOADS: yes/);
   assert.ok(ghlTags(v).includes('point loads'));
 });
+
+test('an attached deck lists the ledger on its own line; a freestanding one does not', () => {
+  const att = takeoffRows(planArea({ ...newArea('deck', 20, 14), snow: '40' }));
+  assert.deepEqual(att.slice(1, 3).map((r) => [r.item, r.profile, r.qty]), [['Rim track', '600T200-54', 20], ['Ledger', '600T200-54', 20]]);
+  const free = takeoffRows(planArea({ ...newArea('deck', 20, 14), snow: '40', attach: 'free' }));
+  assert.ok(!free.some((r) => r.item === 'Ledger'));
+  assert.equal(free.find((r) => r.item === 'Rim track').qty, 40);
+});
+
+test('joist spacing: best fit compares all, a chosen spacing is kept, a disallowed one is ignored', () => {
+  const best = planArea(newArea('house', 40, 16));
+  assert.ok(new Set(best.options.map((o) => o.spacing)).size >= 1);
+  const twelve = planArea({ ...newArea('house', 40, 16), oc: 12 });
+  assert.ok(twelve.options.every((o) => o.spacing === 12));
+  const deck24 = planArea({ ...newArea('deck', 20, 14), snow: '40', oc: 24 });
+  assert.ok(deck24.options.every((o) => o.spacing <= 16));
+  assert.equal(projectFromQuery(projectToQuery({ areas: [{ ...newArea('house', 40, 16), oc: 12 }], job: '', loc: '' })).areas[0].oc, 12);
+  assert.equal(projectFromQuery('?mode=project&a=house~40~16').areas[0].oc, 0);
+});

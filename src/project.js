@@ -42,7 +42,8 @@ export const projectType = (id) => PROJECT_TYPES.find((t) => t.id === id) ?? PRO
 
 export function newArea(type = '', len = 0, wid = 0) {
   // Decks start with no snow load: the answer waits until they choose one.
-  return { type, name: '', len, wid, beam: 'auto', snow: '', attach: 'house', stiff: null, dl: 10, ll: 40, opt: '', point: false };
+  // oc 0 = best fit: compare every spacing the type allows.
+  return { type, name: '', len, wid, beam: 'auto', snow: '', attach: 'house', stiff: null, dl: 10, ll: 40, opt: '', point: false, oc: 0 };
 }
 
 export function areaTitle(a, i) {
@@ -59,6 +60,12 @@ export function areaLoads(a) {
   if (t.id === 'deck') return { dl: t.dl, ll: (SNOW.find((s) => s.id === a.snow) ?? SNOW[3]).ll };
   return { dl: t.dl, ll: t.ll };
 }
+
+// The spacings an area compares: the one they chose, if the type allows it.
+export const areaSpacings = (a) => {
+  const allowed = projectType(a.type).spacings;
+  return allowed.includes(Number(a.oc)) ? [Number(a.oc)] : allowed;
+};
 
 export const areaStiff = (a) => (a.stiff === null || a.stiff === undefined ? projectType(a.type).stiff : a.stiff);
 
@@ -193,14 +200,15 @@ export function planArea(a) {
   const t = projectType(a.type);
   const lengthFt = Math.max(a.len, a.wid);
   const widthFt = Math.min(a.len, a.wid);
-  const base = { type: t, lengthFt, widthFt, sqft: lengthFt * widthFt, loads: areaLoads(a), defl: areaStiff(a) ? 'L/480' : 'L/360' };
+  const base = { type: t, lengthFt, widthFt, sqft: lengthFt * widthFt, loads: areaLoads(a), defl: areaStiff(a) ? 'L/480' : 'L/360', ledger: t.id === 'deck' && a.attach === 'house' };
+  const spacings = areaSpacings(a);
   if (!(lengthFt > 0 && widthFt > 0)) return { ...base, status: 'incomplete' };
   if (t.id === 'deck' && !a.snow) return { ...base, status: 'incomplete', need: 'snow' };
   const loadCase = governingCase(base.loads.dl, base.loads.ll);
   if (!loadCase || t.id === 'heavy') return { ...base, status: 'beyond' };
   const exact = loadCase.dl === base.loads.dl && loadCase.ll === base.loads.ll;
   const tryBays = (bays) => {
-    const options = pickOptions(framings({ ...base, spacings: t.spacings, bays }));
+    const options = pickOptions(framings({ ...base, spacings, bays }));
     return options.length ? { bays, continuous: bays === 2 && widthFt <= MAX_LENGTH_FT, options } : null;
   };
   const wanted = { none: [1], one: [2], auto: [1, 2, 3, 4] }[a.beam] ?? [1, 2, 3, 4];
@@ -274,7 +282,7 @@ export function areaNotes(a, p, { skipDecisions = false } = {}) {
         ? 'Snow load not known, so we sized for 70 psf. Your building department sets it; above 70 psf, enter your own loads.'
         : 'Sized for the greater of 40 psf live load and your ground snow load.',
     );
-    notes.push(a.attach === 'house' ? 'Attached at the house: one rim track is the ledger. The ledger connection is designed by others.' : 'Freestanding: beams and posts on both long sides are not in this takeoff.');
+    notes.push(a.attach === 'house' ? 'Attached at the house: the ledger is its own line in the takeoff. Its connection to the house is designed by others.' : 'Freestanding: beams and posts on both long sides are not in this takeoff.');
     notes.push('Joist spacing is limited to 16" or less, as most deck boards require.');
   }
   if (a.type === 'ceiling') notes.push('Sized from our floor-joist tables, which are stricter than ceiling tables.');
@@ -295,8 +303,15 @@ export function takeoffRows(p) {
   const sp = stiffenerPerFt().price;
   const rows = [
     { item: 'Floor joists', profile: c.member, qty: c.pieces, unit: 'pcs', length: ftIn(Math.round(c.cutFt * 12)), lf: c.joistLf, price: c.pricePerFt },
-    { item: 'Rim track', profile: trackName(c.row), qty: Math.round(c.rimLf), unit: 'lineal ft', length: '', lf: c.rimLf, price: c.pricePerFt },
   ];
+  // An attached deck's house-side track is the ledger: same track, its own line.
+  if (p.ledger) {
+    const half = c.rimLf / 2;
+    rows.push({ item: 'Rim track', profile: trackName(c.row), qty: Math.round(half), unit: 'lineal ft', length: '', lf: half, price: c.pricePerFt });
+    rows.push({ item: 'Ledger', profile: trackName(c.row), qty: Math.round(half), unit: 'lineal ft', length: '', lf: half, price: c.pricePerFt });
+  } else {
+    rows.push({ item: 'Rim track', profile: trackName(c.row), qty: Math.round(c.rimLf), unit: 'lineal ft', length: '', lf: c.rimLf, price: c.pricePerFt });
+  }
   if (c.blocks > 0) rows.push({ item: 'Solid blocking', profile: c.member, qty: c.blocks, unit: 'pcs', length: ftIn(c.spacing), lf: c.blockingLf, price: c.pricePerFt, note: `${c.blockingRows} row${c.blockingRows > 1 ? 's' : ''} per span` });
   if (c.stiffeners > 0) rows.push({ item: 'Web stiffeners', profile: STIFFENER.member, qty: c.stiffeners, unit: 'pcs', length: `${web - 1}-1/2"`, lf: c.stiffenerLf, price: sp });
   for (const r of rows) r.cost = r.lf * r.price;
@@ -343,11 +358,11 @@ const cleanName = (v) =>
     .slice(0, 40);
 
 export function encodeArea(a) {
-  return [a.type, a.len, a.wid, a.beam, a.snow, a.attach, a.stiff === null ? '' : a.stiff ? 1 : 0, a.dl, a.ll, a.opt, cleanName(a.name), a.point ? 1 : ''].join(FIELD);
+  return [a.type, a.len, a.wid, a.beam, a.snow, a.attach, a.stiff === null ? '' : a.stiff ? 1 : 0, a.dl, a.ll, a.opt, cleanName(a.name), a.point ? 1 : '', a.oc || ''].join(FIELD);
 }
 
 export function decodeArea(s) {
-  const [type, len, wid, beam, snow, attach, stiff, dl, ll, opt, name, point] = String(s).split(FIELD);
+  const [type, len, wid, beam, snow, attach, stiff, dl, ll, opt, name, point, oc] = String(s).split(FIELD);
   const a = newArea(oneOf(type, PROJECT_TYPES.map((t) => t.id), ''), feet(len), feet(wid));
   a.beam = oneOf(beam, BEAMS.map((b) => b.id), 'auto');
   // Links made before the snow question was required carry a value; a new
@@ -360,6 +375,7 @@ export function decodeArea(s) {
   a.opt = oneOf(opt, Object.keys(OPTION_LABELS), '');
   a.name = cleanName(name);
   a.point = point === '1';
+  a.oc = [12, 16, 24].includes(Number(oc)) ? Number(oc) : 0;
   return a;
 }
 
