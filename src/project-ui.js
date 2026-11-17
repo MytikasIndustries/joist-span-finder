@@ -20,6 +20,8 @@ import {
   budgetRange,
   PRICING,
   POINT_LABEL,
+  XB_HINT,
+  XB_LABEL,
 } from './project.js';
 import { n0 } from './quote.js';
 
@@ -276,7 +278,9 @@ function areaResultHtml(a, i, p) {
     ${decisionsHtml(a, i, p)}
     ${planSvg(a, p)}
     <div class="option-block"><h4 class="sub">${['', 'How to frame it.', 'Two ways to frame it.', 'Three ways to frame it.'][p.options.length]}</h4>${optionsHtml(p, i)}</div>
-    <div><h4 class="sub">What goes on the truck.</h4>${takeoffHtml(p)}</div>
+    <div><h4 class="sub">What goes on the truck.</h4>${takeoffHtml(p)}
+      <div class="xb"><p class="hint">${XB_HINT}</p>
+      <label class="point-box"><input type="checkbox" id="xb-${i}" data-i="${i}" data-field="xb"${a.xb ? ' checked' : ''}> ${XB_LABEL}</label></div></div>
     ${budgetHtml(a, i, c.cost)}
     ${notes.length ? `<ul class="area-notes">${notes.map((n) => `<li>${n}</li>`).join('')}</ul>` : ''}`;
 }
@@ -363,10 +367,10 @@ function onProjectInput(e) {
     redrawForm(i);
   } else if (f === 'stiff') {
     a.stiff = el.value === '1';
-  } else if (f === 'point') {
-    a.point = el.checked;
+  } else if (f === 'point' || f === 'xb') {
+    a[f] = el.checked;
     renderProjectResults();
-    q$(`#point-${i}`)?.focus({ preventScroll: true });
+    q$(`#${f}-${i}`)?.focus({ preventScroll: true });
     return;
   } else if (f === 'name') {
     a.name = el.value.replace(/~/g, ' ').slice(0, 40);

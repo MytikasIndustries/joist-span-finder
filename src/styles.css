@@ -687,3 +687,5 @@ strong { font-weight: 500; }
 .budget .hint { margin: 0; max-width: 60ch; }
 .point-box { display: flex; gap: 10px; align-items: flex-start; margin-top: 6px; font-size: var(--step--1); cursor: pointer; }
 .point-box input { margin-top: 3px; width: 18px; height: 18px; flex: none; accent-color: var(--accent); }
+.xb { display: grid; gap: 6px; margin-top: 12px; }
+.xb .hint { margin: 0; max-width: 60ch; }

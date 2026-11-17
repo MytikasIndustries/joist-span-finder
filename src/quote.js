@@ -173,6 +173,7 @@ function projectSummary(v, origin, files) {
       lines.push(`   Material: ${usd0(c.cost)}`);
       if (a.type === 'deck') lines.push(`   Deck: ${a.attach === 'house' ? 'attached to the house' : 'freestanding'}, snow ${a.snow === 'unsure' ? 'not known (sized at 70)' : `${a.snow === '70' ? '60 to 70' : a.snow} psf`}`);
       if (a.point) lines.push('   POINT LOADS: yes (hot tub, posts or equipment). Coordinate the design with an engineer.');
+      if (a.xb) lines.push('   CROSS BRIDGING: requested. Add it to the quote (not in the budget above).');
       if (p.bays > 1) lines.push(`   Needs ${p.bays - 1} beam line${p.bays > 2 ? 's' : ''} (not in takeoff)${p.added ? ', added by the tool' : ''}`);
     }
   });
@@ -244,8 +245,15 @@ export const triggerTags = (v, fileCount = 0) => (plansOnly(v, fileCount) ? ['we
 
 // Every tag the contact should carry after a quote request.
 export function ghlTags(v, fileCount = 0) {
-  const point = v.mode === 'project' && v.project.areas.some((a) => a.point);
-  return [...triggerTags(v, fileCount), 'joist span finder', `role: ${v.role}`, ...(fileCount > 0 ? ['plans attached'] : []), ...(point ? ['point loads'] : [])];
+  const any = (k) => v.mode === 'project' && v.project.areas.some((a) => a[k]);
+  return [
+    ...triggerTags(v, fileCount),
+    'joist span finder',
+    `role: ${v.role}`,
+    ...(fileCount > 0 ? ['plans attached'] : []),
+    ...(any('point') ? ['point loads'] : []),
+    ...(any('xb') ? ['cross bridging'] : []),
+  ];
 }
 
 // What they selected, in a few words, for the "Web product interest" field.

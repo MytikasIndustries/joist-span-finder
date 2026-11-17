@@ -43,7 +43,7 @@ export const projectType = (id) => PROJECT_TYPES.find((t) => t.id === id) ?? PRO
 export function newArea(type = '', len = 0, wid = 0) {
   // Decks start with no snow load: the answer waits until they choose one.
   // oc 0 = best fit: compare every spacing the type allows.
-  return { type, name: '', len, wid, beam: 'auto', snow: '', attach: 'house', stiff: null, dl: 10, ll: 40, opt: '', point: false, oc: 0 };
+  return { type, name: '', len, wid, beam: 'auto', snow: '', attach: 'house', stiff: null, dl: 10, ll: 40, opt: '', point: false, oc: 0, xb: false };
 }
 
 export function areaTitle(a, i) {
@@ -282,16 +282,20 @@ export function areaNotes(a, p, { skipDecisions = false } = {}) {
         ? 'Snow load not known, so we sized for 70 psf. Your building department sets it; above 70 psf, enter your own loads.'
         : 'Sized for the greater of 40 psf live load and your ground snow load.',
     );
-    notes.push(a.attach === 'house' ? 'Attached at the house: the ledger is its own line in the takeoff. Its connection to the house is designed by others.' : 'Freestanding: beams and posts on both long sides are not in this takeoff.');
+    notes.push(a.attach === 'house' ? 'Attached at the house: the ledger is its own line in the takeoff.' : 'Freestanding: beams and posts on both long sides are not in this takeoff.');
     notes.push('Joist spacing is limited to 16" or less, as most deck boards require.');
   }
   if (a.type === 'ceiling') notes.push('Sized from our floor-joist tables, which are stricter than ceiling tables.');
   if (a.point) notes.push(POINT_NOTE);
+  if (a.xb) notes.push(XB_NOTE);
   if (a.type === 'office') notes.push('Sized for 100 psf: 50 psf office load, 15 psf for movable partitions, and corridors above the first floor.');
   return notes;
 }
 
 export const POINT_LABEL = 'This area has point loads, such as a hot tub, posts or equipment';
+export const XB_HINT = 'Cross bridging (also called X-bridging) is pairs of diagonal pieces between neighboring joists that keep them from twisting. We use solid blocking instead, which does the same job. If your job calls for cross bridging, check this box and we will add it in.';
+export const XB_LABEL = 'My job calls for cross bridging';
+export const XB_NOTE = 'Cross bridging requested. Our team will add it to your quote.';
 export const POINT_NOTE = 'Point loads noted. Our team will coordinate with our engineer (or yours) to make sure the design is right.';
 
 // One row per item on the truck, for the takeoff table, the CSV and the note.
@@ -358,11 +362,11 @@ const cleanName = (v) =>
     .slice(0, 40);
 
 export function encodeArea(a) {
-  return [a.type, a.len, a.wid, a.beam, a.snow, a.attach, a.stiff === null ? '' : a.stiff ? 1 : 0, a.dl, a.ll, a.opt, cleanName(a.name), a.point ? 1 : '', a.oc || ''].join(FIELD);
+  return [a.type, a.len, a.wid, a.beam, a.snow, a.attach, a.stiff === null ? '' : a.stiff ? 1 : 0, a.dl, a.ll, a.opt, cleanName(a.name), a.point ? 1 : '', a.oc || '', a.xb ? 1 : ''].join(FIELD);
 }
 
 export function decodeArea(s) {
-  const [type, len, wid, beam, snow, attach, stiff, dl, ll, opt, name, point, oc] = String(s).split(FIELD);
+  const [type, len, wid, beam, snow, attach, stiff, dl, ll, opt, name, point, oc, xb] = String(s).split(FIELD);
   const a = newArea(oneOf(type, PROJECT_TYPES.map((t) => t.id), ''), feet(len), feet(wid));
   a.beam = oneOf(beam, BEAMS.map((b) => b.id), 'auto');
   // Links made before the snow question was required carry a value; a new
@@ -376,6 +380,7 @@ export function decodeArea(s) {
   a.name = cleanName(name);
   a.point = point === '1';
   a.oc = [12, 16, 24].includes(Number(oc)) ? Number(oc) : 0;
+  a.xb = xb === '1';
   return a;
 }
 

@@ -217,3 +217,14 @@ test('joist spacing: best fit compares all, a chosen spacing is kept, a disallow
   assert.equal(projectFromQuery(projectToQuery({ areas: [{ ...newArea('house', 40, 16), oc: 12 }], job: '', loc: '' })).areas[0].oc, 12);
   assert.equal(projectFromQuery('?mode=project&a=house~40~16').areas[0].oc, 0);
 });
+
+test('cross bridging: link, notes, sales note and tag', () => {
+  const a = { ...newArea('house', 40, 16), xb: true };
+  const query = projectToQuery({ areas: [a], job: '', loc: '' });
+  assert.equal(projectFromQuery(query).areas[0].xb, true);
+  assert.match(areaNotes(a, planArea(a)).join(' '), /Cross bridging requested/);
+  const v = validateQuote({ name: 'D', email: 'd@x.co', role: 'gc', query }).value;
+  assert.match(quoteSummary(v, 'https://x'), /CROSS BRIDGING: requested/);
+  assert.ok(ghlTags(v).includes('cross bridging'));
+  assert.ok(!ghlTags(v).includes('point loads'));
+});
